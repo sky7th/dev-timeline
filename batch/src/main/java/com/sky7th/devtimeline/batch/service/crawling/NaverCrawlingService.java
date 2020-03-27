@@ -19,33 +19,36 @@ public class NaverCrawlingService {
 
     private final WebDriver driver;
 
+    private Company company;
+
     public List<CrawlingDto> crawling(Company company) {
-        driver.get(company.getUrl());
+        this.company = company;
+        driver.get(this.company.getUrl());
 
         CrawlingUtils.clickMoreBtnUntilTheEnd(driver, By.className("more_btn"));
 
         By by = By.cssSelector("#jobListDiv > ul");
-        WebElement element = CrawlingUtils.getWebElements(driver, company.getUrl(), by);
+        WebElement element = CrawlingUtils.getWebElements(driver, this.company.getUrl(), by);
 
-        return parseWebElement(company, element);
+        return parseWebElement(element);
     }
 
-    private List<CrawlingDto> parseWebElement(Company company, WebElement element) {
+    private List<CrawlingDto> parseWebElement(WebElement element) {
         if (element == null) {
             return new ArrayList<>();
         }
         return element.findElements(By.tagName("li")).stream()
-                .map(li -> getCrawlingDto(company, li))
+                .map(this::getCrawlingDto)
                 .collect(Collectors.toList());
     }
 
-    private CrawlingDto getCrawlingDto(Company company, WebElement li) {
+    private CrawlingDto getCrawlingDto(WebElement li) {
         String title = li.findElement(By.className("crd_tit")).getText();
         String endDate = li.findElement(By.className("crd_date")).getText();
         String url = li.findElement(By.tagName("a")).getAttribute("href");
 
         return CrawlingDto.builder()
-                .name(company.getName())
+                .name(this.company.getName())
                 .title(title)
                 .date(endDate)
                 .url("https://recruit.navercorp.com" + url)
