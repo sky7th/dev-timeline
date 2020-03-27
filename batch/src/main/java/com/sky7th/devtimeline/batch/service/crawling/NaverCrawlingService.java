@@ -2,17 +2,13 @@ package com.sky7th.devtimeline.batch.service.crawling;
 
 import com.sky7th.devtimeline.batch.domain.company.Company;
 import com.sky7th.devtimeline.batch.dto.CrawlingDto;
+import com.sky7th.devtimeline.batch.utils.CrawlingUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.openqa.selenium.By;
-import org.openqa.selenium.NotFoundException;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.*;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,45 +17,38 @@ import java.util.stream.Collectors;
 @Service
 public class NaverCrawlingService {
 
-    private final WebDriver webDriver;
+    private final WebDriver driver;
 
     public List<CrawlingDto> crawling(Company company) {
-        readyToCrawling(company.getUrl());
+        driver.get(company.getUrl());
 
-        return parsing(company);
+        CrawlingUtils.clickMoreBtnUntilTheEnd(driver, By.className("more_btn"));
+
+        By by = By.cssSelector("#jobListDiv > ul");
+        WebElement element = CrawlingUtils.getWebElements(driver, company.getUrl(), by);
+
+        return parseWebElement(company, element);
     }
 
-    private void readyToCrawling(String url) {
-        webDriver.get(url);
-        clickMoreBtnUntilTheEnd();
-    }
-
-    private void clickMoreBtnUntilTheEnd() {
-        while (true) {
-            try {
-                webDriver.findElement(By.className("more_btn")).click();
-                Thread.sleep(500L);
-            } catch (Exception e) {
-                break;
-            }
+    private List<CrawlingDto> parseWebElement(Company company, WebElement element) {
+        if (element == null) {
+            return new ArrayList<>();
         }
-    }
-
-    private List<CrawlingDto> parsing(Company company) {
-        List<Document> documents = Collections.singletonList(Jsoup.parse(webDriver.getPageSource()));
-        Document document = documents.stream().findFirst().orElseThrow(NotFoundException::new);
-
-        return document.getElementById("jobListDiv").child(0).children().stream()
+        return element.findElements(By.tagName("li")).stream()
                 .map(li -> getCrawlingDto(company, li))
                 .collect(Collectors.toList());
     }
 
-    private CrawlingDto getCrawlingDto(Company company, Element li) {
+    private CrawlingDto getCrawlingDto(Company company, WebElement li) {
+        String title = li.findElement(By.className("crd_tit")).getText();
+        String endDate = li.findElement(By.className("crd_date")).getText();
+        String url = li.findElement(By.tagName("a")).getAttribute("href");
+
         return CrawlingDto.builder()
                 .name(company.getName())
-                .title(li.getElementsByClass("crd_tit").first().text())
-                .date(li.getElementsByClass("crd_date").first().text())
-                .url("https://recruit.navercorp.com" + li.getElementsByTag("a").first().attr("href"))
+                .title(title)
+                .date(endDate)
+                .url("https://recruit.navercorp.com" + url)
                 .build();
     }
 }
