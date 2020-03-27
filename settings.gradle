@@ -1,1 +1,12 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+    }
+}
+
 rootProject.name = 'dev-timeline'
+
+include 'api'
+include 'batch'
+include 'core'
+
