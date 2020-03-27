@@ -15,12 +15,13 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class KakaoCrawlingService {
+public class KakaoCrawlingService implements CrawlingInterface {
 
     private final WebDriver driver;
 
     private Company company;
 
+    @Override
     public List<CrawlingDto> crawling(Company company) {
         this.company = company;
         driver.get(company.getUrl());
@@ -43,7 +44,8 @@ public class KakaoCrawlingService {
         return crawlingItems;
     }
 
-    private List<CrawlingDto> parseWebElement(WebElement element) {
+    @Override
+    public List<CrawlingDto> parseWebElement(WebElement element) {
         if (element == null) {
             return new ArrayList<>();
         }
@@ -52,9 +54,10 @@ public class KakaoCrawlingService {
                 .collect(Collectors.toList());
     }
 
-    private CrawlingDto getCrawlingDto(WebElement li) {
-        String title = li.findElement(By.className("txt_tit")).getText();
-        String url = li.findElement(By.tagName("a")).getAttribute("href");
+    @Override
+    public CrawlingDto getCrawlingDto(WebElement element) {
+        String title = element.findElement(By.className("txt_tit")).getText();
+        String url = element.findElement(By.tagName("a")).getAttribute("href");
 
         return CrawlingDto.builder()
                 .name(this.company.getName())

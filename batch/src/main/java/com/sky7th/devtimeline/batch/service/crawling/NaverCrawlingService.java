@@ -15,12 +15,13 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class NaverCrawlingService {
+public class NaverCrawlingService implements CrawlingInterface {
 
     private final WebDriver driver;
 
     private Company company;
 
+    @Override
     public List<CrawlingDto> crawling(Company company) {
         this.company = company;
         driver.get(this.company.getUrl());
@@ -33,7 +34,8 @@ public class NaverCrawlingService {
         return parseWebElement(element);
     }
 
-    private List<CrawlingDto> parseWebElement(WebElement element) {
+    @Override
+    public List<CrawlingDto> parseWebElement(WebElement element) {
         if (element == null) {
             return new ArrayList<>();
         }
@@ -42,10 +44,11 @@ public class NaverCrawlingService {
                 .collect(Collectors.toList());
     }
 
-    private CrawlingDto getCrawlingDto(WebElement li) {
-        String title = li.findElement(By.className("crd_tit")).getText();
-        String endDate = li.findElement(By.className("crd_date")).getText();
-        String url = li.findElement(By.tagName("a")).getAttribute("href");
+    @Override
+    public CrawlingDto getCrawlingDto(WebElement element) {
+        String title = element.findElement(By.className("crd_tit")).getText();
+        String endDate = element.findElement(By.className("crd_date")).getText();
+        String url = element.findElement(By.tagName("a")).getAttribute("href");
 
         return CrawlingDto.builder()
                 .name(this.company.getName())
