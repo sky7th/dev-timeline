@@ -1,16 +1,9 @@
-plugins {
-    id 'java'
+bootJar {
+    enabled = true
 }
-
-group 'com.sky7th'
-version '0.0.1-SNAPSHOT'
-
-sourceCompatibility = 1.8
-
-repositories {
-    mavenCentral()
+jar {
+    enabled = true
 }
-
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+
 }

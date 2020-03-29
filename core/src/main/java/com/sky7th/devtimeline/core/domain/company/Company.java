@@ -1,10 +1,10 @@
-package com.sky7th.devtimeline.batch.domain.company;
+package com.sky7th.devtimeline.core.domain.company;
 
 import lombok.*;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "company")
+@Table(name = "COMPANY")
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -13,11 +13,10 @@ public class Company {
 
     @Id
     @GeneratedValue
-    @Column(name = "company_id")
+    @Column(name = "COMPANY_ID")
     private Long id;
 
-    private String name;
-
-    private String url;
+    @Column(name = "NAME")
+    private CompanyType companyType;
 
 }
