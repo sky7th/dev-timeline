@@ -12,8 +12,11 @@ import lombok.NoArgsConstructor;
 public class CrawlingDto {
 
     private String name;
+
     private String title;
+
     private String url;
+
     private String date;
 
 }
