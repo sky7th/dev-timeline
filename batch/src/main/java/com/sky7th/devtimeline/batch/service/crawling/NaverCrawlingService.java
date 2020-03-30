@@ -1,8 +1,8 @@
 package com.sky7th.devtimeline.batch.service.crawling;
 
-import com.sky7th.devtimeline.batch.domain.company.Company;
 import com.sky7th.devtimeline.batch.dto.CrawlingDto;
 import com.sky7th.devtimeline.batch.utils.CrawlingUtils;
+import com.sky7th.devtimeline.core.domain.dto.CompanyDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.*;
@@ -19,17 +19,17 @@ public class NaverCrawlingService implements CrawlingInterface {
 
     private final WebDriver driver;
 
-    private Company company;
+    private CompanyDto companyDto;
 
     @Override
-    public List<CrawlingDto> crawling(Company company) {
-        this.company = company;
-        driver.get(this.company.getUrl());
+    public List<CrawlingDto> crawling(CompanyDto companyDto) {
+        this.companyDto = companyDto;
+        driver.get(this.companyDto.getUrl());
 
         CrawlingUtils.clickMoreBtnUntilTheEnd(driver, By.className("more_btn"));
 
         By by = By.cssSelector("#jobListDiv > ul");
-        WebElement element = CrawlingUtils.getWebElements(driver, this.company.getUrl(), by);
+        WebElement element = CrawlingUtils.getWebElements(driver, by);
 
         return parseWebElement(element);
     }
@@ -51,7 +51,7 @@ public class NaverCrawlingService implements CrawlingInterface {
         String url = element.findElement(By.tagName("a")).getAttribute("href");
 
         return CrawlingDto.builder()
-                .name(this.company.getName())
+                .name(this.companyDto.getCompanyType().getName())
                 .title(title)
                 .date(endDate)
                 .url("https://recruit.navercorp.com" + url)

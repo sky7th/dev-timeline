@@ -1,6 +1,6 @@
 buildscript {
 	ext {
-		springBootVersion = '2.2.1.RELEASE'
+		springBootVersion = '2.2.5.RELEASE'
 	}
 	repositories {
 		mavenCentral()
@@ -20,20 +20,15 @@ subprojects {
 	apply plugin: 'io.spring.dependency-management'
 
 	sourceCompatibility = '1.8'
-//    configurations {
-//        compileOnly {
-//            extendsFrom annotationProcessor
-//        }
-//    }
+    configurations {
+        compileOnly {
+            extendsFrom annotationProcessor
+        }
+    }
 
 	dependencies {
 		implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 		implementation 'org.springframework.boot:spring-boot-starter-web'
-		implementation 'org.springframework.boot:spring-boot-starter-batch'
-		// https://mvnrepository.com/artifact/org.jsoup/jsoup
-		compile group: 'org.jsoup', name: 'jsoup', version: '1.12.1'
-		// https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java
-		compile group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '3.141.59'
 		compileOnly 'org.projectlombok:lombok'
 		runtimeOnly 'com.h2database:h2'
 		annotationProcessor 'org.projectlombok:lombok'
@@ -53,7 +48,8 @@ subprojects {
 
 project(':core') {
 	dependencies {
-
+		compile group: 'org.jsoup', name: 'jsoup', version: '1.12.1'
+		compile group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '3.141.59'
 	}
 }
 
@@ -66,5 +62,6 @@ project(':api') {
 project(':batch') {
 	dependencies {
 		compile project(':core')
+		implementation 'org.springframework.boot:spring-boot-starter-batch'
 	}
 }

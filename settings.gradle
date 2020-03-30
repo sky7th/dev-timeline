@@ -4,7 +4,7 @@ pluginManagement {
     }
 }
 
-rootProject.name = 'dev-timeline'
+rootProject.name = 'devtimeline'
 
 include 'api'
 include 'batch'

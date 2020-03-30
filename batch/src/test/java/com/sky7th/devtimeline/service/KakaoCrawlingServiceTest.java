@@ -1,9 +1,10 @@
 package com.sky7th.devtimeline.service;
 
 import com.sky7th.devtimeline.batch.config.SeleniumConfig;
-import com.sky7th.devtimeline.batch.domain.company.Company;
 import com.sky7th.devtimeline.batch.dto.CrawlingDto;
 import com.sky7th.devtimeline.batch.service.crawling.KakaoCrawlingService;
+import com.sky7th.devtimeline.core.domain.company.CompanyType;
+import com.sky7th.devtimeline.core.domain.dto.CompanyDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,8 +22,8 @@ class KakaoCrawlingServiceTest {
     @Test
     void testKakaoRecruitListCrawling() {
         // given
-        Company kakaoCompany = Company.builder()
-                .name("카카오")
+        CompanyDto kakaoCompany = CompanyDto.builder()
+                .companyType(CompanyType.KAKAO)
                 .url("https://careers.kakao.com/jobs")
                 .build();
 

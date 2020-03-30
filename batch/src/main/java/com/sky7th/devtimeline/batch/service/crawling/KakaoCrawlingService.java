@@ -1,8 +1,8 @@
 package com.sky7th.devtimeline.batch.service.crawling;
 
-import com.sky7th.devtimeline.batch.domain.company.Company;
 import com.sky7th.devtimeline.batch.dto.CrawlingDto;
 import com.sky7th.devtimeline.batch.utils.CrawlingUtils;
+import com.sky7th.devtimeline.core.domain.dto.CompanyDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.*;
@@ -19,12 +19,12 @@ public class KakaoCrawlingService implements CrawlingInterface {
 
     private final WebDriver driver;
 
-    private Company company;
+    private CompanyDto companyDto;
 
     @Override
-    public List<CrawlingDto> crawling(Company company) {
-        this.company = company;
-        driver.get(company.getUrl());
+    public List<CrawlingDto> crawling(CompanyDto companyDto) {
+        this.companyDto = companyDto;
+        driver.get(companyDto.getUrl());
 
         int pageSize = Integer.parseInt(driver.findElement(By.className("btn_lst"))
                 .getAttribute("href").split("=")[1]);
@@ -36,9 +36,9 @@ public class KakaoCrawlingService implements CrawlingInterface {
         List<CrawlingDto> crawlingItems = new ArrayList<>();
 
         for (int i = 1; i <= pageSize; i++) {
-            driver.get(this.company.getUrl() + "?page=" + i);
+            driver.get(this.companyDto.getUrl() + "?page=" + i);
             By by = By.className("list_notice");
-            WebElement element = CrawlingUtils.getWebElements(driver, this.company.getUrl(), by);
+            WebElement element = CrawlingUtils.getWebElements(driver, by);
             crawlingItems.addAll(parseWebElement(element));
         }
         return crawlingItems;
@@ -60,7 +60,7 @@ public class KakaoCrawlingService implements CrawlingInterface {
         String url = element.findElement(By.tagName("a")).getAttribute("href");
 
         return CrawlingDto.builder()
-                .name(this.company.getName())
+                .name(this.companyDto.getCompanyType().getName())
                 .title(title)
                 .url("https://careers.kakao.com" + url)
                 .build();
