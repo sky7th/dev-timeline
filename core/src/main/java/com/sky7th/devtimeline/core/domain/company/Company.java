@@ -4,19 +4,20 @@ import lombok.*;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "COMPANY")
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
 @Getter
 public class Company {
 
     @Id
-    @GeneratedValue
-    @Column(name = "COMPANY_ID")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "NAME")
+    @Enumerated(EnumType.STRING)
+    @Column(name = "name")
     private CompanyType companyType;
 
+    @Builder
+    public Company(CompanyType companyType) {
+        this.companyType = companyType;
+    }
 }

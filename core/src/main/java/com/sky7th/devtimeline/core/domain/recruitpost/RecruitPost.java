@@ -9,20 +9,16 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "RECRUIT_POST")
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
 @Getter
 public class RecruitPost {
 
     @Id
-    @GeneratedValue
-    @Column(name = "RECRUIT_POST_ID")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name="COMPANY_ID")
+    @JoinColumn(name="company_id", foreignKey = @ForeignKey(name = "fk_recruit_post_company"))
     private Company company;
 
     private String title;
@@ -31,4 +27,14 @@ public class RecruitPost {
 
     private String contentUrl;
 
+    @Builder
+    public RecruitPost(String title, String closingDate, String contentUrl) {
+        this.title = title;
+        this.closingDate = closingDate;
+        this.contentUrl = contentUrl;
+    }
+
+    public void setCompany(Company company) {
+        this.company = company;
+    }
 }

@@ -9,24 +9,29 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "COMPANY_URL")
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
 @Getter
 public class CompanyUrl {
 
     @Id
-    @GeneratedValue
-    @Column(name = "COMPANY_URL_ID")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name="COMPANY_ID")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="company_id", foreignKey = @ForeignKey(name = "fk_url_company"))
     private Company company;
 
     private CompanyUrlType companyUrlType;
 
     private String url;
 
+    @Builder
+    public CompanyUrl(CompanyUrlType companyUrlType, String url) {
+        this.companyUrlType = companyUrlType;
+        this.url = url;
+    }
+
+    public void setCompany(Company company) {
+        this.company = company;
+    }
 }
