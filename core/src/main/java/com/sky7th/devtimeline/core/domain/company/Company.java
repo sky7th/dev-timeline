@@ -1,12 +1,13 @@
 package com.sky7th.devtimeline.core.domain.company;
 
+import com.sky7th.devtimeline.core.domain.common.BaseTimeEntity;
 import lombok.*;
 import javax.persistence.*;
 
 @Entity
 @NoArgsConstructor
 @Getter
-public class Company {
+public class Company extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

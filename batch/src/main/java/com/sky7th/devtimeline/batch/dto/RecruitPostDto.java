@@ -1,4 +1,4 @@
-package com.sky7th.devtimeline.core.domain.dto;
+package com.sky7th.devtimeline.batch.dto;
 
 import com.sky7th.devtimeline.core.domain.company.Company;
 import lombok.AllArgsConstructor;
