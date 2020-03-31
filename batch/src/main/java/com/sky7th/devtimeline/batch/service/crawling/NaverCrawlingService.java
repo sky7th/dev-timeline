@@ -53,8 +53,8 @@ public class NaverCrawlingService implements CrawlingInterface {
         return CrawlingDto.builder()
                 .companyUrl(this.companyDto.getCompanyUrl())
                 .title(title)
-                .date(endDate)
-                .url("https://recruit.navercorp.com" + url)
+                .closingDate(endDate)
+                .contentUrl("https://recruit.navercorp.com" + url)
                 .build();
     }
 }

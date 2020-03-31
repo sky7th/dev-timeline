@@ -1,4 +1,8 @@
 spring:
+  profiles:
+    active: test
+---
+spring:
   profiles: test
   datasource:
     url: jdbc:h2:mem:test
@@ -19,3 +23,6 @@ logging:
   level:
     org.hibernate.SQL: debug
     org.hibernate.type: trace
+
+selenium:
+  web-driver-path: C:\\chromedriver\\chromedriver.exe

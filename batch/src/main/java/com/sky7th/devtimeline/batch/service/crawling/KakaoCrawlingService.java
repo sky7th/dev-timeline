@@ -2,7 +2,7 @@ package com.sky7th.devtimeline.batch.service.crawling;
 
 import com.sky7th.devtimeline.batch.dto.CrawlingDto;
 import com.sky7th.devtimeline.batch.utils.CrawlingUtils;
-import com.sky7th.devtimeline.core.domain.dto.CompanyDto;
+import com.sky7th.devtimeline.batch.dto.CompanyDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.*;
@@ -57,12 +57,18 @@ public class KakaoCrawlingService implements CrawlingInterface {
     @Override
     public CrawlingDto getCrawlingDto(WebElement element) {
         String title = element.findElement(By.className("txt_tit")).getText();
+        List<WebElement> periodSpanElements = element.findElement(By.className("txt_period")).findElements(By.tagName("span"));
+        WebElement closingDateElement = periodSpanElements.stream()
+                .filter(webElement -> webElement.getText().contains("년") || webElement.getText().contains("영입종료시"))
+                .findFirst().orElse(null);
+        String closingDate = closingDateElement==null ? "" : closingDateElement.getText();
         String url = element.findElement(By.tagName("a")).getAttribute("href");
 
         return CrawlingDto.builder()
                 .companyUrl(this.companyDto.getCompanyUrl())
                 .title(title)
-                .url("https://careers.kakao.com" + url)
+                .closingDate(closingDate)
+                .contentUrl("https://careers.kakao.com" + url)
                 .build();
     }
 

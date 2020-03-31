@@ -61,7 +61,7 @@ class CrawlingServiceTest {
         List<CrawlingDto> crawlings = crawlingService.crawlingAllCompany();
 
         for (CrawlingDto crawlingDto : crawlings) {
-            System.out.println(crawlingDto.getTitle()+"/"+crawlingDto.getName());
+            System.out.println(crawlingDto.getTitle()+"/"+crawlingDto.getClosingDate());
         }
         System.out.println(crawlings.size());
 

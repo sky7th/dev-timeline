@@ -36,8 +36,11 @@ class KakaoCrawlingServiceTest {
                 .build();
 
         // when
-        List<CrawlingDto> crawlings = kakaoCrawlingService.crawling(kakaoCompany);
-
+        List<CrawlingDto> crawlings = kakaoCrawlingService.crawling(companyDto);
+        for (CrawlingDto crawlingDto : crawlings) {
+            System.out.println(crawlingDto.getTitle()+"/"+crawlingDto.getClosingDate());
+        }
+        System.out.println(crawlings.size());
         // then
         assertTrue(crawlings.size() > 0);
     }
