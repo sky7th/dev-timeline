@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@Entity
+@Entity(name = "company_url")
 @NoArgsConstructor
 @Getter
 public class CompanyUrl extends BaseTimeEntity {

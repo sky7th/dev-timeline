@@ -2,7 +2,7 @@ package com.sky7th.devtimeline.batch.service.crawling;
 
 import com.sky7th.devtimeline.batch.dto.CrawlingDto;
 import com.sky7th.devtimeline.batch.utils.CrawlingUtils;
-import com.sky7th.devtimeline.core.domain.dto.CompanyDto;
+import com.sky7th.devtimeline.batch.dto.CompanyDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.*;
@@ -24,7 +24,7 @@ public class NaverCrawlingService implements CrawlingInterface {
     @Override
     public List<CrawlingDto> crawling(CompanyDto companyDto) {
         this.companyDto = companyDto;
-        driver.get(this.companyDto.getUrl());
+        driver.get(this.companyDto.getCompanyUrl().getUrl());
 
         CrawlingUtils.clickMoreBtnUntilTheEnd(driver, By.className("more_btn"));
 
@@ -51,7 +51,7 @@ public class NaverCrawlingService implements CrawlingInterface {
         String url = element.findElement(By.tagName("a")).getAttribute("href");
 
         return CrawlingDto.builder()
-                .name(this.companyDto.getCompanyType().getName())
+                .companyUrl(this.companyDto.getCompanyUrl())
                 .title(title)
                 .date(endDate)
                 .url("https://recruit.navercorp.com" + url)

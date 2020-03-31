@@ -1,7 +1,7 @@
 package com.sky7th.devtimeline.batch.dto;
 
-import com.sky7th.devtimeline.core.domain.company.CompanyType;
-import com.sky7th.devtimeline.core.domain.companyUrl.CompanyUrlType;
+import com.sky7th.devtimeline.core.domain.company.Company;
+import com.sky7th.devtimeline.core.domain.companyUrl.CompanyUrl;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,10 +13,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CompanyDto {
 
-    private CompanyType companyType;
+    private Company company;
 
-    private CompanyUrlType companyUrlType;
-
-    private String url;
+    private CompanyUrl companyUrl;
 
 }

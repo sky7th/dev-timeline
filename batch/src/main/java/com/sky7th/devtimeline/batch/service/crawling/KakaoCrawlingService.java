@@ -24,7 +24,7 @@ public class KakaoCrawlingService implements CrawlingInterface {
     @Override
     public List<CrawlingDto> crawling(CompanyDto companyDto) {
         this.companyDto = companyDto;
-        driver.get(companyDto.getUrl());
+        driver.get(companyDto.getCompanyUrl().getUrl());
 
         int pageSize = Integer.parseInt(driver.findElement(By.className("btn_lst"))
                 .getAttribute("href").split("=")[1]);
@@ -36,7 +36,7 @@ public class KakaoCrawlingService implements CrawlingInterface {
         List<CrawlingDto> crawlingItems = new ArrayList<>();
 
         for (int i = 1; i <= pageSize; i++) {
-            driver.get(this.companyDto.getUrl() + "?page=" + i);
+            driver.get(this.companyDto.getCompanyUrl().getUrl() + "?page=" + i);
             By by = By.className("list_notice");
             WebElement element = CrawlingUtils.getWebElements(driver, by);
             crawlingItems.addAll(parseWebElement(element));
@@ -60,7 +60,7 @@ public class KakaoCrawlingService implements CrawlingInterface {
         String url = element.findElement(By.tagName("a")).getAttribute("href");
 
         return CrawlingDto.builder()
-                .name(this.companyDto.getCompanyType().getName())
+                .companyUrl(this.companyDto.getCompanyUrl())
                 .title(title)
                 .url("https://careers.kakao.com" + url)
                 .build();

@@ -1,7 +1,7 @@
 package com.sky7th.devtimeline.core.domain.recruitpost;
 
 import com.sky7th.devtimeline.core.domain.common.BaseTimeEntity;
-import com.sky7th.devtimeline.core.domain.company.Company;
+import com.sky7th.devtimeline.core.domain.companyUrl.CompanyUrl;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,8 +18,8 @@ public class RecruitPost extends BaseTimeEntity {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name="company_id", foreignKey = @ForeignKey(name = "fk_recruit_post_company"))
-    private Company company;
+    @JoinColumn(name="company_url_id", foreignKey = @ForeignKey(name = "fk_recruit_post_company_url"))
+    private CompanyUrl companyUrl;
 
     private String title;
 
@@ -34,7 +34,16 @@ public class RecruitPost extends BaseTimeEntity {
         this.contentUrl = contentUrl;
     }
 
-    public void setCompany(Company company) {
-        this.company = company;
+    public void setCompanyUrl(CompanyUrl companyUrl) {
+        this.companyUrl = companyUrl;
     }
+
+    public String toString() {
+        return companyUrl.getCompany().getCompanyType().getName()+","+title+","+closingDate+","+contentUrl;
+    }
+
+    public boolean isEqual(String str) {
+        return toString().equals(str);
+    }
+
 }
