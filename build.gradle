@@ -1,13 +1,16 @@
 buildscript {
 	ext {
 		springBootVersion = '2.2.5.RELEASE'
+		querydslPluginVersion = '1.0.10'
 	}
 	repositories {
 		mavenCentral()
+		maven { url "https://plugins.gradle.org/m2/" }
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
 		classpath "io.spring.gradle:dependency-management-plugin:0.6.0.RELEASE"
+		classpath("gradle.plugin.com.ewerk.gradle.plugins:querydsl-plugin:${querydslPluginVersion}")
 	}
 }
 
@@ -51,10 +54,12 @@ project(':core') {
 	dependencies {
 		compile group: 'org.jsoup', name: 'jsoup', version: '1.12.1'
 		compile group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '3.141.59'
+		compile 'com.querydsl:querydsl-jpa'
+		compile 'com.querydsl:querydsl-apt'
 	}
 }
 
-project(':api') {
+project(':web') {
 	dependencies {
 		compile project(':core')
 	}
