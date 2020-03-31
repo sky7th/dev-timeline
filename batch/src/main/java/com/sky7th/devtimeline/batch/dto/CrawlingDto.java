@@ -1,7 +1,9 @@
 package com.sky7th.devtimeline.batch.dto;
 
 import com.sky7th.devtimeline.core.domain.companyUrl.CompanyUrl;
+import com.sky7th.devtimeline.core.domain.companyUrl.CompanyUrlType;
 import com.sky7th.devtimeline.core.domain.recruitpost.RecruitPost;
+import com.sky7th.devtimeline.core.domain.techpost.TechPost;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,25 +23,39 @@ public class CrawlingDto {
 
     private String closingDate;
 
+    private String thumbnailUrl;
+
     private String contentUrl;
 
     public String toString() {
         return companyUrl.getCompany().getCompanyType().getName()+","+title+","+closingDate+","+contentUrl;
     }
 
-    public RecruitPost toRecruitPost(CrawlingDto crawlingDto) {
+    public RecruitPost toRecruitPost() {
         RecruitPost recruitPost = RecruitPost.builder()
-                .contentUrl(crawlingDto.getContentUrl())
-                .closingDate(crawlingDto.getClosingDate())
-                .title(crawlingDto.getTitle())
+                .contentUrl(this.contentUrl)
+                .closingDate(this.closingDate)
+                .title(this.title)
                 .build();
-        recruitPost.setCompanyUrl(crawlingDto.getCompanyUrl());
+        recruitPost.setCompanyUrl(this.companyUrl);
 
         return recruitPost;
     }
 
-    public boolean isCompanyType(RecruitPost recruitPost) {
-        return this.companyUrl.getCompany().getCompanyType().equals(recruitPost.getCompanyUrl().getCompany().getCompanyType());
+    public TechPost toTechPost() {
+        TechPost techPost = TechPost.builder()
+                .contentUrl(this.contentUrl)
+                .author(this.author)
+                .title(this.title)
+                .thumbnailUrl(this.thumbnailUrl)
+                .build();
+        techPost.setCompanyUrl(this.companyUrl);
+
+        return techPost;
+    }
+
+    public boolean isCompanyUrlType(CompanyUrlType companyUrlType) {
+        return this.companyUrl.getCompanyUrlType().equals(companyUrlType);
     }
 
 }

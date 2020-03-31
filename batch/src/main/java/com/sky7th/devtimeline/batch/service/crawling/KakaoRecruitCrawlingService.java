@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class KakaoCrawlingService implements CrawlingInterface {
+public class KakaoRecruitCrawlingService implements CrawlingInterface {
 
     private final WebDriver driver;
 

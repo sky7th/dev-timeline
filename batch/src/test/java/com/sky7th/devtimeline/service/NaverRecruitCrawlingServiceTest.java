@@ -2,7 +2,7 @@ package com.sky7th.devtimeline.service;
 
 import com.sky7th.devtimeline.batch.config.SeleniumConfig;
 import com.sky7th.devtimeline.batch.dto.CrawlingDto;
-import com.sky7th.devtimeline.batch.service.crawling.NaverCrawlingService;
+import com.sky7th.devtimeline.batch.service.crawling.NaverRecruitCrawlingService;
 import com.sky7th.devtimeline.core.domain.company.Company;
 import com.sky7th.devtimeline.core.domain.company.CompanyType;
 import com.sky7th.devtimeline.batch.dto.CompanyDto;
@@ -15,11 +15,11 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@SpringBootTest(classes = {SeleniumConfig.class, NaverCrawlingService.class})
-class NaverCrawlingServiceTest {
+@SpringBootTest(classes = {SeleniumConfig.class, NaverRecruitCrawlingService.class})
+class NaverRecruitCrawlingServiceTest {
 
     @Autowired
-    NaverCrawlingService naverCrawlingService;
+    NaverRecruitCrawlingService naverRecruitCrawlingService;
 
     @Test
     void testNaverRecruitListCrawling() {
@@ -36,7 +36,7 @@ class NaverCrawlingServiceTest {
                 .build();
 
         // when
-        List<CrawlingDto> crawlings = naverCrawlingService.crawling(companyDto);
+        List<CrawlingDto> crawlings = naverRecruitCrawlingService.crawling(companyDto);
 
         // then
         assertTrue(crawlings.size() > 0);

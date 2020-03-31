@@ -2,7 +2,7 @@ package com.sky7th.devtimeline.service;
 
 import com.sky7th.devtimeline.batch.config.SeleniumConfig;
 import com.sky7th.devtimeline.batch.dto.CrawlingDto;
-import com.sky7th.devtimeline.batch.service.crawling.KakaoCrawlingService;
+import com.sky7th.devtimeline.batch.service.crawling.KakaoRecruitCrawlingService;
 import com.sky7th.devtimeline.core.domain.company.Company;
 import com.sky7th.devtimeline.core.domain.company.CompanyType;
 import com.sky7th.devtimeline.batch.dto.CompanyDto;
@@ -15,11 +15,11 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@SpringBootTest(classes = {SeleniumConfig.class, KakaoCrawlingService.class})
-class KakaoCrawlingServiceTest {
+@SpringBootTest(classes = {SeleniumConfig.class, KakaoRecruitCrawlingService.class})
+class KakaoRecruitCrawlingServiceTest {
 
     @Autowired
-    KakaoCrawlingService kakaoCrawlingService;
+    KakaoRecruitCrawlingService kakaoRecruitCrawlingService;
 
     @Test
     void testKakaoRecruitListCrawling() {
@@ -36,7 +36,7 @@ class KakaoCrawlingServiceTest {
                 .build();
 
         // when
-        List<CrawlingDto> crawlings = kakaoCrawlingService.crawling(companyDto);
+        List<CrawlingDto> crawlings = kakaoRecruitCrawlingService.crawling(companyDto);
         for (CrawlingDto crawlingDto : crawlings) {
             System.out.println(crawlingDto.getTitle()+"/"+crawlingDto.getClosingDate());
         }

@@ -2,8 +2,8 @@ package com.sky7th.devtimeline.batch.service;
 
 import com.sky7th.devtimeline.batch.dto.CrawlingDto;
 import com.sky7th.devtimeline.batch.service.crawling.CrawlingInterface;
-import com.sky7th.devtimeline.batch.service.crawling.KakaoCrawlingService;
-import com.sky7th.devtimeline.batch.service.crawling.NaverCrawlingService;
+import com.sky7th.devtimeline.batch.service.crawling.KakaoRecruitCrawlingService;
+import com.sky7th.devtimeline.batch.service.crawling.NaverRecruitCrawlingService;
 import com.sky7th.devtimeline.core.domain.company.CompanyType;
 import com.sky7th.devtimeline.core.domain.companyUrl.CompanyUrl;
 import com.sky7th.devtimeline.core.domain.companyUrl.CompanyUrlRepository;
@@ -24,8 +24,8 @@ import java.util.Map;
 public class CrawlingService {
 
     private final CompanyUrlRepository companyUrlRepository;
-    private final NaverCrawlingService naverCrawlingService;
-    private final KakaoCrawlingService kakaoCrawlingService;
+    private final NaverRecruitCrawlingService naverRecruitCrawlingService;
+    private final KakaoRecruitCrawlingService kakaoRecruitCrawlingService;
 
     @Transactional(readOnly = true)
     public List<CrawlingDto> crawlingAllCompany() {
@@ -45,8 +45,8 @@ public class CrawlingService {
 
     public List<CrawlingDto> crawling(CompanyDto companyDto) {
         Map<CompanyType, CrawlingInterface> crawlingServiceMap = new HashMap<>();
-        crawlingServiceMap.put(CompanyType.NAVER, naverCrawlingService);
-        crawlingServiceMap.put(CompanyType.KAKAO, kakaoCrawlingService);
+        crawlingServiceMap.put(CompanyType.NAVER, naverRecruitCrawlingService);
+        crawlingServiceMap.put(CompanyType.KAKAO, kakaoRecruitCrawlingService);
         CompanyType companyType = companyDto.getCompanyUrl().getCompany().getCompanyType();
 
         List<CrawlingDto> crawling = crawlingServiceMap.get(companyType).crawling(companyDto);
