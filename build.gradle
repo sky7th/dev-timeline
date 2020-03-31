@@ -64,5 +64,6 @@ project(':batch') {
 	dependencies {
 		compile project(':core')
 		implementation 'org.springframework.boot:spring-boot-starter-batch'
+		testCompile group: 'org.springframework.batch', name: 'spring-batch-test', version: '4.2.1.RELEASE'
 	}
 }
