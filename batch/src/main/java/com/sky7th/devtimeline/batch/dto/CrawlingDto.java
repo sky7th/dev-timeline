@@ -23,6 +23,8 @@ public class CrawlingDto {
 
     private String closingDate;
 
+    private String date;
+
     private String thumbnailUrl;
 
     private String contentUrl;

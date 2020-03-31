@@ -68,7 +68,7 @@ public class KakaoRecruitCrawlingService implements CrawlingInterface {
                 .companyUrl(this.companyDto.getCompanyUrl())
                 .title(title)
                 .closingDate(closingDate)
-                .contentUrl("https://careers.kakao.com" + url)
+                .contentUrl(this.companyDto.getCompanyUrl().getUrl() + url)
                 .build();
     }
 

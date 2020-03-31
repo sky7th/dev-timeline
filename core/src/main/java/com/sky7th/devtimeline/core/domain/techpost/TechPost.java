@@ -25,14 +25,17 @@ public class TechPost extends BaseTimeEntity {
 
     private String author;
 
+    private String date;
+
     private String thumbnailUrl;
 
     private String contentUrl;
 
     @Builder
-    public TechPost(String title, String author, String thumbnailUrl, String contentUrl) {
+    public TechPost(String title, String author, String date, String thumbnailUrl, String contentUrl) {
         this.title = title;
         this.author = author;
+        this.date = date;
         this.thumbnailUrl = thumbnailUrl;
         this.contentUrl = contentUrl;
     }
@@ -42,7 +45,7 @@ public class TechPost extends BaseTimeEntity {
     }
 
     public String toString() {
-        return companyUrl.getCompany().getCompanyType().getName()+","+title+","+author+","+contentUrl;
+        return companyUrl.getCompany().getCompanyType().getName()+","+title+","+author+","+date+","+contentUrl;
     }
 
     public boolean isEqual(String str) {
