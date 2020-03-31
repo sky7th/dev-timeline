@@ -22,7 +22,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManagerFactory;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -83,19 +85,41 @@ public class BatchConfig {
                 return;
             }
             List<RecruitPost> existRecruitPosts = recruitPostRepository.findAll();
+            Map<String, Integer> addedPostCountMap = new HashMap<>();
+            int addedPostCount = 0;
 
-            crawlingResults.forEach(crawlingResult ->
-                crawlingResult.forEach(crawlingDto -> {
+            for (List<CrawlingDto> crawlingResult : crawlingResults) {
+                for (CrawlingDto crawlingDto : crawlingResult) {
+
                     long existCount = existRecruitPosts.stream()
                             .filter(existRecruitPost -> existRecruitPost.isEqual(crawlingDto.toString()))
                             .count();
-                    if (existCount == 0)
-                        recruitPostRepository.save(crawlingDto.toRecruitPost(crawlingDto));
-                })
-            );
 
-            log.info(">>>>>>>> 신규 크롤링 정보 업데이트 성공");
+                    if (existCount == 0) {
+                        RecruitPost newRecruitPost = crawlingDto.toRecruitPost(crawlingDto);
+                        recruitPostRepository.save(newRecruitPost);
+
+                        updateAddedPostCountMap(addedPostCountMap, newRecruitPost);
+                        addedPostCount += 1;
+                    }
+                }
+            }
+            for ( String key : addedPostCountMap.keySet() ) {
+                log.info(">>>>>>>> {}: {} 개 새로 추가", key, addedPostCountMap.get(key));
+            }
+
+            log.info(">>>>>>>> 신규 크롤링 정보 {} 개 추가 성공", addedPostCount);
         };
+    }
+
+    private void updateAddedPostCountMap(Map<String, Integer> map, RecruitPost recruitPost) {
+        String key = recruitPost.getCompanyUrl().getCompany().getCompanyType().getName()
+                +" "+recruitPost.getCompanyUrl().getCompanyUrlType().getName();
+
+        if (map.containsKey(key))
+            map.put(key, map.get(key) + 1);
+        else
+            map.put(key, 1);
     }
 
     private boolean isEmpty(List<? extends List<CrawlingDto>> crawlingResults) {

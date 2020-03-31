@@ -21,6 +21,8 @@ public class CompanyUrl extends BaseTimeEntity {
     @JoinColumn(name="company_id", foreignKey = @ForeignKey(name = "fk_url_company"))
     private Company company;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "url_type")
     private CompanyUrlType companyUrlType;
 
     private String url;
