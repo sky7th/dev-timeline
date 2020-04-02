@@ -1,10 +1,7 @@
 package com.sky7th.devtimeline.batch.service;
 
 import com.sky7th.devtimeline.batch.dto.CrawlingDto;
-import com.sky7th.devtimeline.batch.service.crawling.CompanyCrawlingService;
-import com.sky7th.devtimeline.batch.service.crawling.KakaoRecruitCrawlingService;
-import com.sky7th.devtimeline.batch.service.crawling.NaverRecruitCrawlingService;
-import com.sky7th.devtimeline.batch.service.crawling.NaverTechCrawlingService;
+import com.sky7th.devtimeline.batch.service.crawling.*;
 import com.sky7th.devtimeline.core.domain.company.CompanyType;
 import com.sky7th.devtimeline.core.domain.companyUrl.CompanyUrl;
 import com.sky7th.devtimeline.core.domain.companyUrl.CompanyUrlRepository;
@@ -29,6 +26,7 @@ public class CrawlingService {
     private final NaverRecruitCrawlingService naverRecruitCrawlingService;
     private final NaverTechCrawlingService naverTechCrawlingService;
     private final KakaoRecruitCrawlingService kakaoRecruitCrawlingService;
+    private final KakaoTechCrawlingService kakaoTechCrawlingService;
 
     @Transactional(readOnly = true)
     public List<CrawlingDto> crawlingAllCompany() {
@@ -51,6 +49,7 @@ public class CrawlingService {
         crawlingServiceMap.put(CompanyType.NAVER.getName()+"/"+CompanyUrlType.RECRUIT.getName(), naverRecruitCrawlingService);
         crawlingServiceMap.put(CompanyType.NAVER.getName()+"/"+CompanyUrlType.TECH.getName(), naverTechCrawlingService);
         crawlingServiceMap.put(CompanyType.KAKAO.getName()+"/"+CompanyUrlType.RECRUIT.getName(), kakaoRecruitCrawlingService);
+        crawlingServiceMap.put(CompanyType.KAKAO.getName()+"/"+CompanyUrlType.TECH.getName(), kakaoTechCrawlingService);
         String key = companyDto.getCompanyUrl().getCompany().getCompanyType().getName()
                 + "/" + companyDto.getCompanyUrl().getCompanyUrlType().getName();
 

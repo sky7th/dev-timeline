@@ -8,16 +8,39 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 @Slf4j
 public class CrawlingUtils {
 
-    public static WebElement getWebElement(WebDriver driver, By by, int timeOutInSeconds, int retryTimeOutInSeconds) {
-        WebElement element = null;
+    public static WebElement getWebElement(WebElement targetElement, By by) {
+        WebElement webElement = null;
+        try {
+            webElement = targetElement.findElement(by);
+        } catch(NoSuchElementException e) {
+            log.error("조건에 해당하는 element를 찾지 못했습니다.");
+        }
+        return webElement;
+    }
+
+    public static WebElement getWebElement(WebDriver driver, By by, int timeOutInSeconds) {
+        WebElement contentsElement = null;
         WebDriverWait driverWait = new WebDriverWait(driver, timeOutInSeconds);
+        try {
+            driverWait.until(ExpectedConditions.visibilityOfElementLocated(by));
+            contentsElement = driver.findElement(by);
+        } catch(TimeoutException e) {
+            log.error("url: {} 시간초과({} 초), 해당 element 없음", driver.getCurrentUrl(), 40);
+        }
+
+        return contentsElement;
+    }
+
+    public static WebElement getWebElement(WebDriver driver, By by) {
+        WebElement element = null;
+        WebDriverWait driverWait = new WebDriverWait(driver, 40);
         try {
             try {
                 driverWait.until(ExpectedConditions.visibilityOfElementLocated(by));
 
             } catch(TimeoutException e) {
-                log.error("url: {} 시간초과", driver.getCurrentUrl());
-                Thread.sleep(retryTimeOutInSeconds);
+                log.error("url: {} 시간초과({} 초)", driver.getCurrentUrl(), 40);
+                Thread.sleep(10000);
             }
             element = driver.findElement(by);
 
@@ -44,7 +67,7 @@ public class CrawlingUtils {
                 driver.findElement(moreBtnBy).click();
                 Thread.sleep(1000L);
             } catch (Exception e) {
-                log.error("naver 채용 더보기 끝까지 다 누름");
+                log.error("더보기 끝까지 다 누름");
                 break;
             }
         }
