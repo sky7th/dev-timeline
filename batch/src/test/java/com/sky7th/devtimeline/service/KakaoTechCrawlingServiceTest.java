@@ -40,11 +40,6 @@ class KakaoTechCrawlingServiceTest {
         // when
         List<CrawlingDto> crawlings = kakaoTechCrawlingService.crawling(companyDto);
 
-        for (CrawlingDto crawlingDto : crawlings) {
-            System.out.println(crawlingDto.getTitle()+"/"+crawlingDto.getDate()+"/"+crawlingDto.getThumbnailUrl()+"/"+crawlingDto.getContentUrl());
-        }
-        System.out.println(crawlings.size());
-
         // then
         assertTrue(crawlings.size() > 0);
     }

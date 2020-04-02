@@ -75,7 +75,7 @@ class BatchTest {
 
         //then
         assertEquals(BatchStatus.COMPLETED, jobExecution.getStatus());
-        System.out.println(recruitPostRepository.count());
+
         assertTrue(recruitPostRepository.count() > 0);
 
     }

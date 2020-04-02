@@ -39,10 +39,7 @@ class KakaoRecruitCrawlingServiceTest {
 
         // when
         List<CrawlingDto> crawlings = kakaoRecruitCrawlingService.crawling(companyDto);
-        for (CrawlingDto crawlingDto : crawlings) {
-            System.out.println(crawlingDto.getTitle()+"/"+crawlingDto.getClosingDate());
-        }
-        System.out.println(crawlings.size());
+
         // then
         assertTrue(crawlings.size() > 0);
     }

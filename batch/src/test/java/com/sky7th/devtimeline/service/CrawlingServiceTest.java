@@ -60,11 +60,6 @@ class CrawlingServiceTest {
         // when
         List<CrawlingDto> crawlings = crawlingService.crawlingAllCompany();
 
-        for (CrawlingDto crawlingDto : crawlings) {
-            System.out.println(crawlingDto.getTitle()+"/"+crawlingDto.getClosingDate());
-        }
-        System.out.println(crawlings.size());
-
         // then
         assertTrue(crawlings.size() > 0);
     }
