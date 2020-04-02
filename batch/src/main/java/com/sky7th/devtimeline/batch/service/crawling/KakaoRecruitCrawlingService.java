@@ -24,15 +24,19 @@ public class KakaoRecruitCrawlingService implements CompanyCrawlingService {
     @Override
     public List<CrawlingDto> crawling(CompanyDto companyDto) {
         this.companyDto = companyDto;
-        this.driver.get(companyDto.getCompanyUrl().getUrl());
-
-        int pageSize = Integer.parseInt(this.driver.findElement(By.className("btn_lst"))
-                .getAttribute("href").split("=")[1]);
+        int pageSize = getKakaoRecruitLastPageNum();
 
         return getAllCrawlingDtoUntilLastPage(pageSize);
     }
 
-    private List<CrawlingDto> getAllCrawlingDtoUntilLastPage(int pageSize) {
+    private int getKakaoRecruitLastPageNum() {
+        this.driver.get(companyDto.getCompanyUrl().getUrl());
+
+        return Integer.parseInt(this.driver.findElement(By.className("btn_lst"))
+                .getAttribute("href").split("=")[1]);
+    }
+
+   private List<CrawlingDto> getAllCrawlingDtoUntilLastPage(int pageSize) {
         List<CrawlingDto> crawlingItems = new ArrayList<>();
 
         for (int i = 1; i <= pageSize; i++) {

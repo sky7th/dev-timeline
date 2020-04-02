@@ -25,7 +25,7 @@ public class CrawlingUtils {
             driverWait.until(ExpectedConditions.visibilityOfElementLocated(by));
             contentsElement = driver.findElement(by);
         } catch(TimeoutException e) {
-            log.error("url: {} 시간초과({} 초), 해당 element 없음", driver.getCurrentUrl(), 40);
+            log.error("url: {} 시간초과({} 초), 해당 element 없음", driver.getCurrentUrl(), timeOutInSeconds);
         }
 
         return contentsElement;

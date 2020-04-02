@@ -58,11 +58,13 @@ public class KakaoTechCrawlingService implements CompanyCrawlingService {
 
     @Override
     public CrawlingDto getCrawlingDto(WebElement element) {
+        WebElement authorElement = CrawlingUtils.getWebElement(element, By.cssSelector(".info_writer > .area_txt > .inner_cell > .txt_name"));
+        WebElement dateElement = CrawlingUtils.getWebElement(element, By.cssSelector(".link_post > .txt_date"));
         WebElement thumnailUrlElement = CrawlingUtils.getWebElement(element, By.cssSelector(".link_post > .thumb_img > img"));
 
         String title = element.findElement(By.cssSelector(".link_post > .tit_post")).getText();
-        String author = element.findElement(By.cssSelector(".info_writer > .area_txt > .inner_cell > .txt_name")).getText();
-        String date = element.findElement(By.cssSelector(".link_post > .txt_date")).getText();
+        String author = authorElement==null ? "" : authorElement.getText();
+        String date = dateElement==null ? "" : dateElement.getText();
         String thumbnailUrl = thumnailUrlElement==null ? "" : thumnailUrlElement.getAttribute("src");
         String contentUrl = element.findElement(By.className("link_post")).getAttribute("href");
 
