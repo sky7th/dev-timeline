@@ -8,16 +8,16 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 @Slf4j
 public class CrawlingUtils {
 
-    public static WebElement getWebElements(WebDriver driver, By by) {
+    public static WebElement getWebElement(WebDriver driver, By by, int timeOutInSeconds, int retryTimeOutInSeconds) {
         WebElement element = null;
-        WebDriverWait driverWait = new WebDriverWait(driver, 40);
+        WebDriverWait driverWait = new WebDriverWait(driver, timeOutInSeconds);
         try {
             try {
                 driverWait.until(ExpectedConditions.visibilityOfElementLocated(by));
 
             } catch(TimeoutException e) {
                 log.error("url: {} 시간초과", driver.getCurrentUrl());
-                Thread.sleep(10000);
+                Thread.sleep(retryTimeOutInSeconds);
             }
             element = driver.findElement(by);
 
