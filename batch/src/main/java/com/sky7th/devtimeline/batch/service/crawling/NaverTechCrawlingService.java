@@ -26,7 +26,6 @@ public class NaverTechCrawlingService implements CompanyCrawlingService {
     @Override
     public List<CrawlingDto> crawling(CompanyDto companyDto) {
         this.companyDto = companyDto;
-        driver.get(companyDto.getCompanyUrl().getUrl());
 
         return getAllCrawlingDtoUntilLastPage();
     }
@@ -36,20 +35,28 @@ public class NaverTechCrawlingService implements CompanyCrawlingService {
         int pageNum = 0;
 
         while (true) {
-            try {
-                driver.get(this.companyDto.getCompanyUrl().getUrl() + "?page=" + pageNum);
-//                driver.findElement(contentsBy);
-                By contentsBy = By.className("contents");
-                WebElement element = CrawlingUtils.getWebElements(driver, contentsBy);
-                crawlingItems.addAll(parseWebElement(element));
-                pageNum += 1;
-            } catch (Exception e) {
-                log.error("naver tech 페이지 끝까지 다 누름 {}", pageNum);
+            driver.get(this.companyDto.getCompanyUrl().getUrl() + "?page=" + pageNum);
+            if (isNotExistNaverD2Contents())
                 break;
-            }
-
+            waitNaverD2ContentsChanged();
+            WebElement element = CrawlingUtils.getWebElement(driver, By.className("contents"));
+            crawlingItems.addAll(parseWebElement(element));
+            pageNum += 1;
         }
+
         return crawlingItems;
+    }
+
+    private void waitNaverD2ContentsChanged() {
+        By firstContentTitle = By.cssSelector(".contents > .post_article > .cont_post > h2 > a");
+        CrawlingUtils.getWebElement(driver, firstContentTitle);
+    }
+
+    private boolean isNotExistNaverD2Contents() {
+        By contentsBy = By.cssSelector(".contents > .post_article");
+        WebElement webElement = CrawlingUtils.getWebElement(driver, contentsBy, 2);
+
+        return webElement == null;
     }
 
     @Override
@@ -64,23 +71,25 @@ public class NaverTechCrawlingService implements CompanyCrawlingService {
 
     @Override
     public CrawlingDto getCrawlingDto(WebElement element) {
-        String title = element.findElement(By.cssSelector("h2 > a")).getText();
-        String thumnailUrl = element.findElement(By.cssSelector(".cont_img > a > img")).getAttribute("src");
+        WebElement thumnailUrlElement = CrawlingUtils.getWebElement(element, By.cssSelector(".cont_img > a > img"));
         List<WebElement> bottomSpanElements = element.findElement(By.tagName("dl")).findElements(By.tagName("dd"));
         WebElement dateElement = bottomSpanElements.stream()
                 .filter(webElement -> webElement.getText().contains("."))
                 .findFirst().orElse(null);
+
+        String title = element.findElement(By.cssSelector("h2 > a")).getText();
         String date = dateElement==null ? "" : dateElement.getText();
-        String url = element.findElement(By.cssSelector("h2 > a")).getAttribute("href");
+        String thumbnailUrl = thumnailUrlElement==null ? "" : thumnailUrlElement.getAttribute("src");
+        String contentUrl = element.findElement(By.cssSelector("h2 > a")).getAttribute("href");
 
         String NAVER_D2_SITE_URL = "https://d2.naver.com";
-
         return CrawlingDto.builder()
                 .companyUrl(this.companyDto.getCompanyUrl())
                 .title(title)
+                .author("")
                 .date(date)
-                .thumbnailUrl(thumnailUrl)
-                .contentUrl(NAVER_D2_SITE_URL + url)
+                .thumbnailUrl(thumbnailUrl)
+                .contentUrl(NAVER_D2_SITE_URL + contentUrl)
                 .build();
     }
 }

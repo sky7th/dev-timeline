@@ -39,7 +39,11 @@ public class RecruitPost extends BaseTimeEntity {
     }
 
     public String toString() {
-        return companyUrl.getCompany().getCompanyType().getName()+","+title+","+closingDate+","+contentUrl;
+        return companyUrl.getCompany().getCompanyType().getName()
+                +","+companyUrl.getCompanyUrlType().getName()
+                +","+title
+                +","+closingDate
+                +","+contentUrl;
     }
 
     public boolean isEqual(String str) {

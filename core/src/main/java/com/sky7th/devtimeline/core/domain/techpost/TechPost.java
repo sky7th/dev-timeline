@@ -45,7 +45,11 @@ public class TechPost extends BaseTimeEntity {
     }
 
     public String toString() {
-        return companyUrl.getCompany().getCompanyType().getName()+","+title+","+author+","+date+","+contentUrl;
+        return companyUrl.getCompany().getCompanyType().getName()
+                +","+companyUrl.getCompanyUrlType().getName()
+                +","+title
+                +","+date
+                +","+contentUrl;
     }
 
     public boolean isEqual(String str) {

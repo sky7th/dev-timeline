@@ -30,7 +30,11 @@ public class CrawlingDto {
     private String contentUrl;
 
     public String toString() {
-        return companyUrl.getCompany().getCompanyType().getName()+","+title+","+closingDate+","+contentUrl;
+        return companyUrl.getCompany().getCompanyType().getName()
+                +","+companyUrl.getCompanyUrlType().getName()
+                +","+title
+                +","+(date==null ? "" : date)+(closingDate==null ? "" : closingDate)
+                +","+contentUrl;
     }
 
     public RecruitPost toRecruitPost() {
@@ -49,6 +53,7 @@ public class CrawlingDto {
                 .contentUrl(this.contentUrl)
                 .author(this.author)
                 .title(this.title)
+                .date(this.date)
                 .thumbnailUrl(this.thumbnailUrl)
                 .build();
         techPost.setCompanyUrl(this.companyUrl);

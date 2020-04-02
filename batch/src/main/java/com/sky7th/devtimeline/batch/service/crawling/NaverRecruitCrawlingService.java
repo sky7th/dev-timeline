@@ -29,7 +29,7 @@ public class NaverRecruitCrawlingService implements CompanyCrawlingService {
         CrawlingUtils.clickMoreBtnUntilTheEnd(driver, By.className("more_btn"));
 
         By by = By.cssSelector("#jobListDiv > ul");
-        WebElement element = CrawlingUtils.getWebElement(driver, by, 30, 10);
+        WebElement element = CrawlingUtils.getWebElement(driver, by);
 
         return parseWebElement(element);
     }

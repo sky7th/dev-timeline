@@ -38,7 +38,7 @@ public class KakaoRecruitCrawlingService implements CompanyCrawlingService {
         for (int i = 1; i <= pageSize; i++) {
             driver.get(this.companyDto.getCompanyUrl().getUrl() + "?page=" + i);
             By by = By.className("list_notice");
-            WebElement element = CrawlingUtils.getWebElement(driver, by, 30, 10);
+            WebElement element = CrawlingUtils.getWebElement(driver, by);
             crawlingItems.addAll(parseWebElement(element));
         }
         return crawlingItems;
