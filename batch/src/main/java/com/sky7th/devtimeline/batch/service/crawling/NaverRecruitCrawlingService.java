@@ -24,12 +24,12 @@ public class NaverRecruitCrawlingService implements CompanyCrawlingService {
     @Override
     public List<CrawlingDto> crawling(CompanyDto companyDto) {
         this.companyDto = companyDto;
-        driver.get(this.companyDto.getCompanyUrl().getUrl());
+        this.driver.get(this.companyDto.getCompanyUrl().getUrl());
 
-        CrawlingUtils.clickMoreBtnUntilTheEnd(driver, By.className("more_btn"));
+        CrawlingUtils.clickMoreBtnUntilTheEnd(this.driver, By.className("more_btn"));
 
         By by = By.cssSelector("#jobListDiv > ul");
-        WebElement element = CrawlingUtils.getWebElement(driver, by);
+        WebElement element = CrawlingUtils.getWebElement(this.driver, by);
 
         return parseWebElement(element);
     }
@@ -48,13 +48,13 @@ public class NaverRecruitCrawlingService implements CompanyCrawlingService {
     public CrawlingDto getCrawlingDto(WebElement element) {
         String title = element.findElement(By.className("crd_tit")).getText();
         String endDate = element.findElement(By.className("crd_date")).getText();
-        String url = element.findElement(By.tagName("a")).getAttribute("href");
+        String contentUrl = element.findElement(By.tagName("a")).getAttribute("href");
 
         return CrawlingDto.builder()
                 .companyUrl(this.companyDto.getCompanyUrl())
                 .title(title)
                 .closingDate(endDate)
-                .contentUrl(this.companyDto.getCompanyUrl().getUrl() + url)
+                .contentUrl(contentUrl)
                 .build();
     }
 }

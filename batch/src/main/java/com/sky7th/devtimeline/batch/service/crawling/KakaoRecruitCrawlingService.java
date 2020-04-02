@@ -24,9 +24,9 @@ public class KakaoRecruitCrawlingService implements CompanyCrawlingService {
     @Override
     public List<CrawlingDto> crawling(CompanyDto companyDto) {
         this.companyDto = companyDto;
-        driver.get(companyDto.getCompanyUrl().getUrl());
+        this.driver.get(companyDto.getCompanyUrl().getUrl());
 
-        int pageSize = Integer.parseInt(driver.findElement(By.className("btn_lst"))
+        int pageSize = Integer.parseInt(this.driver.findElement(By.className("btn_lst"))
                 .getAttribute("href").split("=")[1]);
 
         return getAllCrawlingDtoUntilLastPage(pageSize);
@@ -36,9 +36,9 @@ public class KakaoRecruitCrawlingService implements CompanyCrawlingService {
         List<CrawlingDto> crawlingItems = new ArrayList<>();
 
         for (int i = 1; i <= pageSize; i++) {
-            driver.get(this.companyDto.getCompanyUrl().getUrl() + "?page=" + i);
+            this.driver.get(this.companyDto.getCompanyUrl().getUrl() + "?page=" + i);
             By by = By.className("list_notice");
-            WebElement element = CrawlingUtils.getWebElement(driver, by);
+            WebElement element = CrawlingUtils.getWebElement(this.driver, by);
             crawlingItems.addAll(parseWebElement(element));
         }
         return crawlingItems;
@@ -62,13 +62,13 @@ public class KakaoRecruitCrawlingService implements CompanyCrawlingService {
                 .filter(webElement -> webElement.getText().contains("년") || webElement.getText().contains("영입종료시"))
                 .findFirst().orElse(null);
         String closingDate = closingDateElement==null ? "" : closingDateElement.getText();
-        String url = element.findElement(By.tagName("a")).getAttribute("href");
+        String contentUrl = element.findElement(By.tagName("a")).getAttribute("href");
 
         return CrawlingDto.builder()
                 .companyUrl(this.companyDto.getCompanyUrl())
                 .title(title)
                 .closingDate(closingDate)
-                .contentUrl(this.companyDto.getCompanyUrl().getUrl() + url)
+                .contentUrl(contentUrl)
                 .build();
     }
 

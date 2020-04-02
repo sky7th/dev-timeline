@@ -35,11 +35,11 @@ public class NaverTechCrawlingService implements CompanyCrawlingService {
         int pageNum = 0;
 
         while (true) {
-            driver.get(this.companyDto.getCompanyUrl().getUrl() + "?page=" + pageNum);
+            this.driver.get(this.companyDto.getCompanyUrl().getUrl() + "?page=" + pageNum);
             if (isNotExistNaverD2Contents())
                 break;
             waitNaverD2ContentsChanged();
-            WebElement element = CrawlingUtils.getWebElement(driver, By.className("contents"));
+            WebElement element = CrawlingUtils.getWebElement(this.driver, By.className("contents"));
             crawlingItems.addAll(parseWebElement(element));
             pageNum += 1;
         }
@@ -49,12 +49,12 @@ public class NaverTechCrawlingService implements CompanyCrawlingService {
 
     private void waitNaverD2ContentsChanged() {
         By firstContentTitle = By.cssSelector(".contents > .post_article > .cont_post > h2 > a");
-        CrawlingUtils.getWebElement(driver, firstContentTitle);
+        CrawlingUtils.getWebElement(this.driver, firstContentTitle);
     }
 
     private boolean isNotExistNaverD2Contents() {
         By contentsBy = By.cssSelector(".contents > .post_article");
-        WebElement webElement = CrawlingUtils.getWebElement(driver, contentsBy, 2);
+        WebElement webElement = CrawlingUtils.getWebElement(this.driver, contentsBy, 2);
 
         return webElement == null;
     }
@@ -82,14 +82,13 @@ public class NaverTechCrawlingService implements CompanyCrawlingService {
         String thumbnailUrl = thumnailUrlElement==null ? "" : thumnailUrlElement.getAttribute("src");
         String contentUrl = element.findElement(By.cssSelector("h2 > a")).getAttribute("href");
 
-        String NAVER_D2_SITE_URL = "https://d2.naver.com";
         return CrawlingDto.builder()
                 .companyUrl(this.companyDto.getCompanyUrl())
                 .title(title)
                 .author("")
                 .date(date)
                 .thumbnailUrl(thumbnailUrl)
-                .contentUrl(NAVER_D2_SITE_URL + contentUrl)
+                .contentUrl(contentUrl)
                 .build();
     }
 }
