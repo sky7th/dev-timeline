@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class NaverTechCrawlingService implements CrawlingInterface {
+public class NaverTechCrawlingService implements CompanyCrawlingService {
 
     private final WebDriver driver;
 

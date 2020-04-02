@@ -6,7 +6,7 @@ import org.openqa.selenium.WebElement;
 
 import java.util.List;
 
-public interface CrawlingInterface {
+public interface CompanyCrawlingService {
 
     List<CrawlingDto> crawling(CompanyDto companyDto);
 

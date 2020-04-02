@@ -1,7 +1,7 @@
 package com.sky7th.devtimeline.batch.service;
 
 import com.sky7th.devtimeline.batch.dto.CrawlingDto;
-import com.sky7th.devtimeline.batch.service.crawling.CrawlingInterface;
+import com.sky7th.devtimeline.batch.service.crawling.CompanyCrawlingService;
 import com.sky7th.devtimeline.batch.service.crawling.KakaoRecruitCrawlingService;
 import com.sky7th.devtimeline.batch.service.crawling.NaverRecruitCrawlingService;
 import com.sky7th.devtimeline.core.domain.company.CompanyType;
@@ -44,7 +44,7 @@ public class CrawlingService {
     }
 
     public List<CrawlingDto> crawling(CompanyDto companyDto) {
-        Map<CompanyType, CrawlingInterface> crawlingServiceMap = new HashMap<>();
+        Map<CompanyType, CompanyCrawlingService> crawlingServiceMap = new HashMap<>();
         crawlingServiceMap.put(CompanyType.NAVER, naverRecruitCrawlingService);
         crawlingServiceMap.put(CompanyType.KAKAO, kakaoRecruitCrawlingService);
         CompanyType companyType = companyDto.getCompanyUrl().getCompany().getCompanyType();
