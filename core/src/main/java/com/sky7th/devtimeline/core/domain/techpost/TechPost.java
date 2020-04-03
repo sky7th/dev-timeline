@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor
@@ -31,13 +32,16 @@ public class TechPost extends BaseTimeEntity {
 
     private String contentUrl;
 
+    private LocalDateTime sortDate;
+
     @Builder
-    public TechPost(String title, String author, String date, String thumbnailUrl, String contentUrl) {
+    public TechPost(String title, String author, String date, String thumbnailUrl, String contentUrl, LocalDateTime sortDate) {
         this.title = title;
         this.author = author;
         this.date = date;
         this.thumbnailUrl = thumbnailUrl;
         this.contentUrl = contentUrl;
+        this.sortDate = sortDate;
     }
 
     public void setCompanyUrl(CompanyUrl companyUrl) {

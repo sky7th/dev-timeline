@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor
@@ -27,11 +28,14 @@ public class RecruitPost extends BaseTimeEntity {
 
     private String contentUrl;
 
+    private LocalDateTime sortDate;
+
     @Builder
-    public RecruitPost(String title, String closingDate, String contentUrl) {
+    public RecruitPost(String title, String closingDate, String contentUrl, LocalDateTime sortDate) {
         this.title = title;
         this.closingDate = closingDate;
         this.contentUrl = contentUrl;
+        this.sortDate = sortDate;
     }
 
     public void setCompanyUrl(CompanyUrl companyUrl) {
