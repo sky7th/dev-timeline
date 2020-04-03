@@ -46,14 +46,15 @@ public class NaverRecruitCrawlingService implements CompanyCrawlingService {
 
     @Override
     public CrawlingDto getCrawlingDto(WebElement element) {
+        WebElement closingDateElement = CrawlingUtils.getWebElement(element, By.className("crd_date"));
         String title = element.findElement(By.className("crd_tit")).getText();
-        String endDate = element.findElement(By.className("crd_date")).getText();
+        String closingDate = closingDateElement==null ? "" : closingDateElement.getText();
         String contentUrl = element.findElement(By.tagName("a")).getAttribute("href");
 
         return CrawlingDto.builder()
                 .companyUrl(this.companyDto.getCompanyUrl())
                 .title(title)
-                .closingDate(endDate)
+                .closingDate(closingDate)
                 .contentUrl(contentUrl)
                 .build();
     }
