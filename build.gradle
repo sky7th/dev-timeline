@@ -9,7 +9,7 @@ buildscript {
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-		classpath "io.spring.gradle:dependency-management-plugin:0.6.0.RELEASE"
+		classpath "io.spring.gradle:dependency-management-plugin:1.0.9.RELEASE"
 		classpath("gradle.plugin.com.ewerk.gradle.plugins:querydsl-plugin:${querydslPluginVersion}")
 	}
 }
@@ -30,15 +30,14 @@ subprojects {
     }
 
 	dependencies {
-		implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-		implementation 'org.springframework.boot:spring-boot-starter-web'
-        compileOnly 'org.projectlombok:lombok'
-        runtimeOnly 'com.h2database:h2'
-        runtimeOnly 'mysql:mysql-connector-java'
-        annotationProcessor 'org.projectlombok:lombok'
-		testImplementation('org.springframework.boot:spring-boot-starter-test') {
-			exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-		}
+		annotationProcessor 'org.projectlombok:lombok'
+		implementation 'org.projectlombok:lombok'
+		testAnnotationProcessor 'org.projectlombok:lombok'
+		testImplementation 'org.projectlombok:lombok'
+
+		implementation 'org.springframework.boot:spring-boot-starter'
+
+		testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	}
 
 	repositories {
@@ -56,19 +55,27 @@ project(':core') {
 		compile group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '3.141.59'
 		compile 'com.querydsl:querydsl-jpa'
 		compile 'com.querydsl:querydsl-apt'
+		compile 'org.springframework.boot:spring-boot-starter-data-jpa'
+		compile 'com.h2database:h2'
+		compile 'mysql:mysql-connector-java'
 	}
 }
 
 project(':web') {
 	dependencies {
-		compile project(':core')
+		implementation project(':core')
+		implementation 'org.springframework.boot:spring-boot-starter-web'
+		testImplementation('org.springframework.boot:spring-boot-starter-test') {
+			exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+		}
 	}
 }
 
 project(':batch') {
 	dependencies {
-		compile project(':core')
+		implementation project(':core')
 		implementation 'org.springframework.boot:spring-boot-starter-batch'
-		testCompile group: 'org.springframework.batch', name: 'spring-batch-test', version: '4.2.1.RELEASE'
+		implementation 'org.springframework:spring-web'
+		testImplementation 'org.springframework.batch:spring-batch-test'
 	}
 }

@@ -6,7 +6,7 @@ pluginManagement {
 
 rootProject.name = 'devtimeline'
 
-include 'api'
 include 'batch'
 include 'core'
+include 'web'
 
