@@ -23,4 +23,16 @@ public class RecruitPostWebRepositoryImpl implements RecruitPostWebRepositoryCus
                 .orderBy(recruitPost.sortDate.desc())
                 .fetch();
     }
+
+    @Override
+    public List<RecruitPost> findByTitleContainingLimitDesc(String title, long offset, long limit) {
+        return queryFactory
+                .selectFrom(recruitPost)
+                .leftJoin(recruitPost.companyUrl).fetchJoin()
+                .where(recruitPost.title.contains(title))
+                .offset(offset)
+                .limit(limit)
+                .orderBy(recruitPost.sortDate.desc())
+                .fetch();
+    }
 }

@@ -27,4 +27,16 @@ public class RecruitPostService {
         return recruitPostViewItems;
     }
 
+    @Transactional(readOnly = true)
+    public List<RecruitPostViewItem> findByTitleContainingLimitDesc(String title, long offset, long limit) {
+        List<RecruitPost> recruitPosts = recruitPostWebRepository.findByTitleContainingLimitDesc(title, offset, limit);
+        List<RecruitPostViewItem> recruitPostViewItems = new ArrayList<>();
+
+        for (RecruitPost recruitPost : recruitPosts) {
+            recruitPostViewItems.add(new RecruitPostViewItem(recruitPost));
+        }
+        return recruitPostViewItems;
+    }
+
+
 }

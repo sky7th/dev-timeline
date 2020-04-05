@@ -7,5 +7,6 @@ import java.util.List;
 public interface RecruitPostWebRepositoryCustom {
 
     List<RecruitPost> findAllLimitDesc(long offset, long limit);
+    List<RecruitPost> findByTitleContainingLimitDesc(String title, long offset, long limit);
 
 }

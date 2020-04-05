@@ -6,7 +6,7 @@ import com.sky7th.devtimeline.web.service.dto.TechPostViewItem;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
@@ -23,10 +23,17 @@ public class TechPostApiController {
 
     private final TechPostService techPostService;
 
-    @GetMapping("/api/v1/tech-posts/{offset}")
-    public WebResponseDto<Object> readMore(@PathVariable(value = "offset") Long offset) {
+    @GetMapping("/api/v1/tech-posts")
+    public WebResponseDto<Object> getTechPosts(@RequestParam(value = "offset") Long offset,
+                                           @RequestParam(value = "title", required = false) String title) {
         Map<String, Object> templateData = new HashMap<>();
-        List<TechPostViewItem> items = techPostService.findAllLimitDesc(offset, PAGE_SIZE);
+        List<TechPostViewItem> items;
+
+        if (title == null)
+            items = techPostService.findAllLimitDesc(offset, PAGE_SIZE);
+        else
+            items = techPostService.findByTitleContainingLimitDesc(title, offset, PAGE_SIZE);
+
         templateData.put("techPosts", items);
         templateData.put("offset", (offset + 1) * items.size());
 

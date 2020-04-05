@@ -23,4 +23,16 @@ public class TechPostWebRepositoryImpl implements TechPostWebRepositoryCustom {
                 .orderBy(techPost.sortDate.desc())
                 .fetch();
     }
+
+    @Override
+    public List<TechPost> findByTitleContainingLimitDesc(String title, long offset, long limit) {
+        return queryFactory
+                .selectFrom(techPost)
+                .leftJoin(techPost.companyUrl).fetchJoin()
+                .where(techPost.title.contains(title))
+                .offset(offset)
+                .limit(limit)
+                .orderBy(techPost.sortDate.desc())
+                .fetch();
+    }
 }

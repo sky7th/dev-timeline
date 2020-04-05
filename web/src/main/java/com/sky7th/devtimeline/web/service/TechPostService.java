@@ -27,4 +27,15 @@ public class TechPostService {
         return techPostViewItems;
     }
 
+    @Transactional(readOnly = true)
+    public List<TechPostViewItem> findByTitleContainingLimitDesc(String title, long offset, long limit) {
+        List<TechPost> techPosts = techPostWebRepository.findByTitleContainingLimitDesc(title, offset, limit);
+        List<TechPostViewItem> techPostViewItems = new ArrayList<>();
+
+        for (TechPost techPost : techPosts) {
+            techPostViewItems.add(new TechPostViewItem(techPost));
+        }
+        return techPostViewItems;
+    }
+
 }
