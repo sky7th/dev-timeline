@@ -18,7 +18,6 @@ public class RecruitPostWebRepositoryImpl implements RecruitPostWebRepositoryCus
         return queryFactory
                 .selectFrom(recruitPost)
                 .leftJoin(recruitPost.companyUrl).fetchJoin()
-                .leftJoin(recruitPost.companyUrl.company).fetchJoin()
                 .offset(offset)
                 .limit(limit)
                 .orderBy(recruitPost.sortDate.desc())

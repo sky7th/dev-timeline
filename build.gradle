@@ -51,8 +51,6 @@ subprojects {
 
 project(':core') {
 	dependencies {
-		compile group: 'org.jsoup', name: 'jsoup', version: '1.12.1'
-		compile group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '3.141.59'
 		compile 'com.querydsl:querydsl-jpa'
 		compile 'com.querydsl:querydsl-apt'
 		compile 'org.springframework.boot:spring-boot-starter-data-jpa'
@@ -75,7 +73,9 @@ project(':batch') {
 	dependencies {
 		implementation project(':core')
 		implementation 'org.springframework.boot:spring-boot-starter-batch'
-		implementation 'org.springframework:spring-web'
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+		implementation group: 'org.jsoup', name: 'jsoup', version: '1.12.1'
+		implementation group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '3.141.59'
 		testImplementation 'org.springframework.batch:spring-batch-test'
 	}
 }
