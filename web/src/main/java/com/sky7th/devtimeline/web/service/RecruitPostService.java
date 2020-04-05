@@ -14,7 +14,7 @@ import java.util.List;
 @Service
 public class RecruitPostService {
 
-    public final RecruitPostWebRepository recruitPostWebRepository;
+    private final RecruitPostWebRepository recruitPostWebRepository;
 
     @Transactional(readOnly = true)
     public List<RecruitPostViewItem> findAllLimitDesc(long offset, long limit) {

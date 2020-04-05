@@ -1,8 +1,8 @@
 package com.sky7th.devtimeline.web.presentation.api;
 
 import com.sky7th.devtimeline.web.presentation.api.dto.WebResponseDto;
-import com.sky7th.devtimeline.web.service.RecruitPostService;
-import com.sky7th.devtimeline.web.service.dto.RecruitPostViewItem;
+import com.sky7th.devtimeline.web.service.TechPostService;
+import com.sky7th.devtimeline.web.service.dto.TechPostViewItem;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,15 +19,15 @@ import static com.sky7th.devtimeline.web.presentation.api.dto.WebResponseStatus.
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-public class RecruitPostApiController {
+public class TechPostApiController {
 
-    private final RecruitPostService recruitPostService;
+    private final TechPostService techPostService;
 
-    @GetMapping("/api/v1/recruit-posts/{offset}")
+    @GetMapping("/api/v1/tech-posts/{offset}")
     public WebResponseDto<Object> readMore(@PathVariable(value = "offset") Long offset) {
         Map<String, Object> templateData = new HashMap<>();
-        List<RecruitPostViewItem> items = recruitPostService.findAllLimitDesc(offset, PAGE_SIZE);
-        templateData.put("recruitPosts", items);
+        List<TechPostViewItem> items = techPostService.findAllLimitDesc(offset, PAGE_SIZE);
+        templateData.put("techPosts", items);
         templateData.put("offset", (offset + 1) * items.size());
 
         return WebResponseDto.builder().status(OK).data(templateData).build();
