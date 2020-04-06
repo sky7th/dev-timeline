@@ -22,6 +22,7 @@ var getOffsetQuery = (offset) => '&offset=' + offset;
 
 export default new Vuex.Store({
   state: {
+    selectedMenu: 'recruit-posts',
     posts: [],
     checkedCompanies: [],
     offset: 0,
@@ -35,10 +36,11 @@ export default new Vuex.Store({
   },
   mutations: {
     updatePosts: state => {
-      axios.get('http://127.0.0.1:8080/api/v1/recruit-posts?'
+      axios.get('http://127.0.0.1:8080/api/v1/'+state.selectedMenu+'?'
                 + getCheckedCompaniesQuery(state.checkedCompanies))
       .then(response => {
-        state.posts = response.data.data.recruitPosts
+        console.log(response)
+        state.posts = response.data.data.posts
         state.offset = response.data.data.offset
       })
       .catch(e => {
@@ -46,12 +48,12 @@ export default new Vuex.Store({
       })
     },
     updatePostsByTags: state => {
-      axios.get('http://127.0.0.1:8080/api/v1/recruit-posts?'
+      axios.get('http://127.0.0.1:8080/api/v1/'+state.selectedMenu+'?'
                 + getOffsetQuery(state.offset)
                 + getCheckedCompaniesQuery(state.checkedCompanies)
                 + getTagsQuery(state.tags))
       .then(response => {
-        state.posts = response.data.data.recruitPosts
+        state.posts = response.data.data.posts
         state.offset = response.data.data.offset
       })
       .catch(e => {
@@ -65,7 +67,14 @@ export default new Vuex.Store({
     removeTag: (state, payload) =>  {
       state.tags = state.tags.filter(tag => tag.id !== payload.id);
     },
-    removeAllTag: state => state.tags = []
+    removeAllTag: state => state.tags = [],
+    updateSelectedMenu: (state, payload) => {
+      state.selectedMenu = payload.selectedMenu,
+      state.posts = []
+      state.checkedCompanies = []
+      state.tags = []
+      state.offset = 0
+    }
   },
   actions: {
     updatePosts: context => context.commit('updatePosts'),
@@ -74,6 +83,7 @@ export default new Vuex.Store({
     resetOffset: context => context.commit('resetOffset'),
     insertTag: (context, payload) => context.commit('insertTag', { tagName: payload.tagName }),
     removeTag: (context, payload) => context.commit('removeTag', { id: payload.id }),
-    removeAllTag: context => context.commit('removeAllTag')
+    removeAllTag: context => context.commit('removeAllTag'),
+    updateSelectedMenu: (context, payload) => context.commit('updateSelectedMenu', { selectedMenu: payload.selectedMenu })
   }
 });

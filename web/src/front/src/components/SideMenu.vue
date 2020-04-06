@@ -1,15 +1,26 @@
 <template>
   <div class="side-menu">
     <ul>
-      <li>채용</li>
-      <li>기술 블로그</li>
+      <li @click="handleUpdateSelectedMenu('recruit-posts')">채용</li>
+      <li @click="handleUpdateSelectedMenu('tech-posts')">기술 블로그</li>
     </ul>
   </div>
 </template>
 
 <script>
+import { mapGetters, mapActions } from "vuex";
+
 export default {
-  
+  computed: {
+    ...mapGetters(['selectedMenu'])
+  },
+  methods: {
+    ...mapActions(['updateSelectedMenu', 'updatePosts']),
+    handleUpdateSelectedMenu(val) {
+      this.updateSelectedMenu({ selectedMenu: val })
+      this.updatePosts()
+    }
+  }
 }
 </script>
 
