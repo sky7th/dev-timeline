@@ -53,11 +53,13 @@ export default new Vuex.Store({
         console.log('error : ', e)
       })
     },
-    updateCheckedCompanies: (state, payload) => state.checkedCompanies = payload.checkedCompanies
+    updateCheckedCompanies: (state, payload) => state.checkedCompanies = payload.checkedCompanies,
+    resetOffset: state => state.offset = 0
   },
   actions: {
     updatePosts: context => context.commit('updatePosts'),
     updatePostsByTitle: (context, payload) => context.commit('updatePostsByTitle', { title: payload.title }),
-    updateCheckedCompanies: (context, payload) => context.commit('updateCheckedCompanies', { checkedCompanies: payload.checkedCompanies })
+    updateCheckedCompanies: (context, payload) => context.commit('updateCheckedCompanies', { checkedCompanies: payload.checkedCompanies }),
+    resetOffset: context => context.commit('resetOffset')
   }
 });
