@@ -16,7 +16,7 @@ import static com.sky7th.devtimeline.web.config.PagingConstant.PAGE_SIZE;
 @Setter
 public class PostSearchForm {
 
-    Long offset;
+    Long offset = 0L;
     Long limit = PAGE_SIZE;
     String title;
     List<String> companies;

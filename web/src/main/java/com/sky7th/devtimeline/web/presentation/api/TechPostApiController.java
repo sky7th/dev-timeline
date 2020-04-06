@@ -31,7 +31,7 @@ public class TechPostApiController {
         items = techPostService.findBySearchForm(searchForm);
 
         templateData.put("techPosts", items);
-        templateData.put("offset", (searchForm.getOffset() + 1) * items.size());
+        templateData.put("offset", searchForm.getOffset() + items.size());
 
         return WebResponseDto.builder().status(OK).data(templateData).build();
     }
