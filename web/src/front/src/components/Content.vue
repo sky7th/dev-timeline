@@ -1,20 +1,26 @@
 <template>
   <div class="content">
-    <!-- <Recruit/> -->
     <TagBar/>
-    <RecruitPosts/>
-    
+    <RecruitPosts v-if="selectedMenu==='recruit-posts'"/>
+    <TechPosts v-else-if="selectedMenu==='tech-posts'"/>
   </div>
 </template>
 
 <script>
 import RecruitPosts from '@/components/content/RecruitPosts';
+import TechPosts from '@/components/content/TechPosts';
 import TagBar from '@/components/search/TagBar';
+
+import { mapGetters } from "vuex";
 
 export default {
   components: {
     RecruitPosts,
+    TechPosts,
     TagBar
+  },
+  computed: {
+    ...mapGetters(['selectedMenu'])
   }
 }
 </script>

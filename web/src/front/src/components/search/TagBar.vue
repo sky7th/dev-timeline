@@ -28,16 +28,16 @@ export default {
     ...mapGetters(['tags']),
   },
   methods: {
-    ...mapActions(['removeTag', 'removeAllTag', 'updatePostsByTags', 'resetOffset']),
+    ...mapActions(['removeTag', 'removeAllTag', 'updatePosts', 'resetOffset']),
     handleRemoveTag(id) {
       this.removeTag({ id: id })
       this.resetOffset()
-      this.updatePostsByTags()
+      this.updatePosts()
     },
     handleRemoveAllTag() {
       this.removeAllTag()
       this.resetOffset()
-      this.updatePostsByTags()
+      this.updatePosts()
     }
   }
 }

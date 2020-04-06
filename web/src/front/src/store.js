@@ -29,6 +29,7 @@ export default new Vuex.Store({
     tags: []
   },
   getters: {
+    selectedMenu: state => state.selectedMenu,
     posts: state => state.posts,
     checkedCompanies: state => state.checkedCompanies,
     offset: state => state.offset,
@@ -36,18 +37,6 @@ export default new Vuex.Store({
   },
   mutations: {
     updatePosts: state => {
-      axios.get('http://127.0.0.1:8080/api/v1/'+state.selectedMenu+'?'
-                + getCheckedCompaniesQuery(state.checkedCompanies))
-      .then(response => {
-        console.log(response)
-        state.posts = response.data.data.posts
-        state.offset = response.data.data.offset
-      })
-      .catch(e => {
-        console.log('error : ', e)
-      })
-    },
-    updatePostsByTags: state => {
       axios.get('http://127.0.0.1:8080/api/v1/'+state.selectedMenu+'?'
                 + getOffsetQuery(state.offset)
                 + getCheckedCompaniesQuery(state.checkedCompanies)
@@ -78,7 +67,6 @@ export default new Vuex.Store({
   },
   actions: {
     updatePosts: context => context.commit('updatePosts'),
-    updatePostsByTags: context => context.commit('updatePostsByTags'),
     updateCheckedCompanies: (context, payload) => context.commit('updateCheckedCompanies', { checkedCompanies: payload.checkedCompanies }),
     resetOffset: context => context.commit('resetOffset'),
     insertTag: (context, payload) => context.commit('insertTag', { tagName: payload.tagName }),

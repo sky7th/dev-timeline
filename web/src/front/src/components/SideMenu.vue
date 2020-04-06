@@ -8,15 +8,13 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapActions } from "vuex";
 
 export default {
-  computed: {
-    ...mapGetters(['selectedMenu'])
-  },
   methods: {
     ...mapActions(['updateSelectedMenu', 'updatePosts']),
     handleUpdateSelectedMenu(val) {
+      console.log(val)
       this.updateSelectedMenu({ selectedMenu: val })
       this.updatePosts()
     }

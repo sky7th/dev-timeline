@@ -20,18 +20,18 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['updatePostsByTags', 'resetOffset', 'insertTag']),
+    ...mapActions(['updatePosts', 'resetOffset', 'insertTag']),
     handleSearch() {
       this.insertTag({ tagName: this.searchName })
       this.resetOffset()
-      this.updatePostsByTags()
+      this.updatePosts()
       this.searchName = ''
     },
     handleSearchPressEnter({ keyCode }) {
       if (keyCode === 13) {
         this.insertTag({ tagName: this.searchName })
         this.resetOffset()
-        this.updatePostsByTags()
+        this.updatePosts()
         this.searchName = ''
       }
     }

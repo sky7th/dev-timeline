@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions } from "vuex";
 
 export default {
   data() {
@@ -26,19 +26,15 @@ export default {
       checkedCompanies: []
     }
   },
-  computed: {
-    ...mapGetters(["posts"])
-  },
   watch: {
     checkedCompanies() {
       this.updateCheckedCompanies({ checkedCompanies: this.checkedCompanies })
+      this.resetOffset()
       this.updatePosts()
-      // this.$emit('updateCompanies', this.checkedCompanies)
-      // this.$emit('updatePosts')
     }
   },
   methods: {
-    ...mapActions(['updateCheckedCompanies', 'updatePosts'])
+    ...mapActions(['updateCheckedCompanies', 'updatePosts', 'resetOffset'])
   }
 }
 </script>

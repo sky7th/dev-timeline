@@ -11,7 +11,6 @@ import org.springframework.util.StringUtils;
 
 import java.util.List;
 
-import static com.sky7th.devtimeline.core.domain.recruitpost.QRecruitPost.recruitPost;
 import static com.sky7th.devtimeline.core.domain.techpost.QTechPost.techPost;
 
 @RequiredArgsConstructor
@@ -38,7 +37,7 @@ public class TechPostWebRepositoryImpl implements TechPostWebRepositoryCustom {
         }
         BooleanBuilder builder = new BooleanBuilder();
         for (String tag : tags) {
-            builder.and(recruitPost.title.contains(tag));
+            builder.and(techPost.title.contains(tag));
         }
         return builder;
     }
@@ -47,7 +46,7 @@ public class TechPostWebRepositoryImpl implements TechPostWebRepositoryCustom {
         if (StringUtils.isEmpty(companies)) {
             return null;
         }
-        return recruitPost.companyUrl.company.companyType.in(companies);
+        return techPost.companyUrl.company.companyType.in(companies);
     }
 
 }
