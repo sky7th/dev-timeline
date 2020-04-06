@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import SearchBar from '@/components/common/SearchBar';
+import SearchBar from '@/components/search/SearchBar';
 
 export default {
   components: {
@@ -25,7 +25,7 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 50px;
+  height: 60px;
   border: 1px solid black;
   z-index: 1000;
 }

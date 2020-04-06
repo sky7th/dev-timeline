@@ -1,5 +1,6 @@
 package com.sky7th.devtimeline.web.repository.techPost;
 
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sky7th.devtimeline.core.domain.company.CompanyType;
@@ -23,7 +24,7 @@ public class TechPostWebRepositoryImpl implements TechPostWebRepositoryCustom {
         return queryFactory
                 .selectFrom(techPost)
                 .leftJoin(techPost.companyUrl).fetchJoin()
-                .where(containsTitle(postSearchForm.getTitle()),
+                .where(containsTags(postSearchForm.getTags()),
                         inCompany(postSearchForm.getCompanies()))
                 .offset(postSearchForm.getOffset())
                 .limit(postSearchForm.getLimit())
@@ -31,11 +32,15 @@ public class TechPostWebRepositoryImpl implements TechPostWebRepositoryCustom {
                 .fetch();
     }
 
-    private BooleanExpression containsTitle(String title) {
-        if (StringUtils.isEmpty(title)) {
+    private BooleanBuilder containsTags(List<String> tags) {
+        if (StringUtils.isEmpty(tags)) {
             return null;
         }
-        return techPost.title.contains(title);
+        BooleanBuilder builder = new BooleanBuilder();
+        for (String tag : tags) {
+            builder.and(recruitPost.title.contains(tag));
+        }
+        return builder;
     }
 
     private BooleanExpression inCompany(List<CompanyType> companies) {

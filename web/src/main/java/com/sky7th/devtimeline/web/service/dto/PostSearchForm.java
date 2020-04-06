@@ -18,7 +18,7 @@ public class PostSearchForm {
 
     Long offset = 0L;
     Long limit = PAGE_SIZE;
-    String title;
+    List<String> tags;
     List<String> companies;
 
     @Override
@@ -26,7 +26,7 @@ public class PostSearchForm {
         return "PostSearchForm{" +
                 "offset=" + offset +
                 ", limit=" + limit +
-                ", title='" + title + '\'' +
+                ", tags='" + tags + '\'' +
                 ", companies=" + companies +
                 '}';
     }
