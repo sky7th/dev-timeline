@@ -14,7 +14,6 @@ export default {
   methods: {
     ...mapActions(['updateSelectedMenu', 'updatePosts']),
     handleUpdateSelectedMenu(val) {
-      console.log(val)
       this.updateSelectedMenu({ selectedMenu: val })
       this.updatePosts()
     }

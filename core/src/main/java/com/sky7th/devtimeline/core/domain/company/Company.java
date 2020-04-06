@@ -17,6 +17,8 @@ public class Company extends BaseTimeEntity {
     @Column(name = "name")
     private CompanyType companyType;
 
+    private String logoUrl;
+
     @Builder
     public Company(CompanyType companyType) {
         this.companyType = companyType;

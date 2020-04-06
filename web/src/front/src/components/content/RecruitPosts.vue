@@ -5,16 +5,30 @@
       <li
         v-for="({
           id, 
+          companyLogoUrl,
           companyTypeName, 
           companyUrlTypeName, 
           title,
-          closingDate }) in posts"
+          closingDate,
+          contentUrl }) in posts"
         :key="id"
+        :class="{
+          naver: companyTypeName==='네이버',
+          kakao: companyTypeName==='카카오'
+        }"
       >
-        <div>{{ companyTypeName }}</div>
-        <div>{{ companyUrlTypeName }}</div>
-        <div>{{ title }}</div>
-        <div>{{ closingDate }}</div>
+        <a :href="contentUrl" target="_blank">
+          <div style="display: flex;">
+            <img class="logo" :src="companyLogoUrl" alt="">
+            <div>
+              <div class="company">{{ companyTypeName }}</div>
+              <div class="date">{{ closingDate }}</div>
+            </div>
+          </div>
+          <!-- <div>{{ companyUrlTypeName }}</div> -->
+          <div class="title">{{ title }}</div>
+        </a>
+        
       </li>
     </ul>
     </div>
@@ -37,5 +51,63 @@ export default {
 <style scoped>
 .recruit-posts ul {
   padding: 20px 20px;
+}
+.recruit-posts ul li {
+  padding: 20px 20px;
+  width: 300px;
+  padding: 0 25px;
+  display: inline-flex;
+  margin: 15px;
+  padding: 20px 20px 13px 20px;
+  border: 1px solid #dedede;
+  box-shadow: 0px 0px 1px 0 rgba(0, 0, 0, 0.2);
+  box-sizing: border-box;
+  cursor: pointer;
+  position: relative;
+  line-height: 1.5em;
+}
+.recruit-posts ul li:after {
+  bottom: 4px;
+  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.4);
+  right: 3px;
+  transform: skew(1.5deg, 1.5deg);
+  position: absolute;
+  z-index: -1;
+  transition: all 0.4s ease;
+  content: "";
+  height: 100%;
+  width: 100%;
+}
+.recruit-posts ul li:hover:after {
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
+}
+.logo {
+  height: 50px;
+  width: 50px;
+  border-radius: 8px;
+  margin: 0 16px 15px 0;
+}
+.company {
+  font-weight: bold;
+  margin-bottom: 3px;
+  font-size: 16px;
+  color: #3f4543;
+}
+.title {
+  font-weight: 500;
+  margin-bottom: 5px;
+  font-size: 16px;
+  color: #3f4543;
+}
+.date {
+  font-weight: bold;
+  font-size: 15px;
+  color: #3f4543;
+}
+.naver {
+  background-color: rgb(239, 255, 239);
+}
+.kakao {
+  background-color: rgb(255, 255, 215);
 }
 </style>

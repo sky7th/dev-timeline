@@ -9,6 +9,7 @@ import static com.sky7th.devtimeline.core.domain.utils.LocalDateTimeUtils.toStri
 public class TechPostViewItem {
 
     private Long id;
+    private String companyLogoUrl;
     private String companyTypeName;
     private String companyUrlTypeName;
     private String title;
@@ -20,6 +21,7 @@ public class TechPostViewItem {
 
     public TechPostViewItem(TechPost techPost) {
         this.id = techPost.getId();
+        this.companyLogoUrl = techPost.getCompanyUrl().getCompany().getLogoUrl();
         this.companyTypeName = techPost.getCompanyUrl().getCompany().getCompanyType().getName();
         this.companyUrlTypeName = techPost.getCompanyUrl().getCompanyUrlType().getName();
         this.title = techPost.getTitle();
