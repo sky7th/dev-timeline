@@ -30,4 +30,5 @@ out/
 
 ### VS Code ###
 .vscode/
-generated
+generated/
+dml.sql
