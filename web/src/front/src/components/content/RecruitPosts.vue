@@ -20,7 +20,7 @@
         <a :href="contentUrl" target="_blank">
           <div style="display: flex;">
             <img class="logo" :src="companyLogoUrl" alt="">
-            <div>
+            <div style="width: auto; flex: 1;">
               <div class="company">{{ companyTypeName }}</div>
               <div class="date">{{ closingDate }}</div>
             </div>
@@ -51,6 +51,7 @@ export default {
 <style scoped>
 .recruit-posts ul {
   padding: 20px 20px;
+  text-align: center;
 }
 .recruit-posts ul li {
   padding: 20px 20px;
@@ -81,11 +82,14 @@ export default {
 .recruit-posts ul li:hover:after {
   box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
 }
+.recruit-posts ul li a{
+  width: 100%;
+}
 .logo {
   height: 50px;
   width: 50px;
   border-radius: 8px;
-  margin: 0 16px 15px 0;
+  margin: 0 0 15px 0;
 }
 .company {
   font-weight: bold;

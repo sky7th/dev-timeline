@@ -57,13 +57,16 @@ export default {
   margin: 5px 10px;
   padding: 0 10px 0 13px;
   display: block;
-	background-color: dodgerblue;
-	height: 37px;
-	line-height: 32px;
-	color: #fff;
-	overflow: hidden;
-	border-radius: 5px;
-	box-shadow: 2px 2px 4px 0 rgba(0,0,0,.4)
+  background-color: #8a9aca;
+  height: 37px;
+  line-height: 32px;
+  color: #fff;
+  overflow: hidden;
+  border-radius: 5px;
+  box-shadow: 2px 2px 4px 0 rgba(0,0,0,.3);
+}
+.tag:hover {
+  background-color: #6a7aaa;
 }
 .btn-remove {
   margin: 0 3px 0 12px;
@@ -77,13 +80,17 @@ export default {
 .btn-all-remove {
   font-weight: bold;
   margin: 5px 10px;
-  padding: 0px 11px 3px 11px;
+  padding: 0px 13px 3px 13px;
   display: block;
-  background-color: royalblue;
+  background-color: #bebebe;
   height: 37px;
   font-size: 22px;
   color: #fff;
+  border: none;
   overflow: hidden;
   border-radius: 25px;
+}
+.btn-all-remove:hover {
+  background-color: #9e9e9e;
 }
 </style>

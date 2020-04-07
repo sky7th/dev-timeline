@@ -1,8 +1,8 @@
 <template>
   <div class="header">
-    <div class="logo-name">dev-time</div>
-    <SearchBar class="search-bar"/>
-    <div>login</div>
+    <a href="/" class="logo-name">dev-time</a>
+    <SearchBar/>
+    <button class="btn-login">로그인</button>
   </div>
 </template>
 
@@ -21,20 +21,28 @@ export default {
   position: fixed;
   top: 0;
   width: 100%;
-  background-color: whitesmoke;
+  padding: 0 40px;
+  background-color: white;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 60px;
-  border: 1px solid black;
+  height: 57px;
+  /* border: 1px solid black; */
   z-index: 1000;
 }
 .logo-name {
   font-size: 25px;
   font-weight: bold;
-  margin-left: 15px;
+  color: #4E5763;
+  cursor: pointer;
 }
-.search-bar {
-
+.btn-login {
+  color: #4E5763;
+  font-weight: 600;
+  font-size: 18px;
+  background-color: white;
+  border: none;
+  cursor: pointer;
+  height: 50px;
 }
 </style>

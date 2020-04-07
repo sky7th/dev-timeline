@@ -27,12 +27,15 @@ export default {
 
 <style scoped>
 .content {
-  height: 100%;
+  height: auto;
   width: 100%;
   position: absolute;
-  margin-left: 100px;
-  margin-top: 60px;
+  box-sizing: border-box;
+  padding-left: 72px;
+  padding-top: 57px;
+  -webkit-animation: fadeIn 0.3s ease-in-out;
   animation: fadeIn 0.3s ease-in-out;
   z-index: 900;
+  background-color: #f7f7f7;
 }
 </style>
