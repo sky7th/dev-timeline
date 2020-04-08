@@ -42,7 +42,7 @@ export default {
 <style scoped>
 .company-list {
   margin: 0px 30px;
-  padding: 23px 0 0px 0;
+  padding: 13px 0 0px 0;
   border-bottom: 2px solid #dadada;
 }
 .company-list ul {
@@ -51,7 +51,7 @@ export default {
   white-space: nowrap;
 }
 .company-list li {
-  padding: 0px 15px 5px 15px;
+  padding: 8px 15px 5px 15px;
   display: inline-block;
 }
 ::-webkit-scrollbar { width: 3.2px; } /* 스크롤 바 */
