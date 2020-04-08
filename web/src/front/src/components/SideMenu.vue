@@ -1,11 +1,11 @@
 <template>
   <div class="side-menu">
     <ul>
-      <li @click="handleUpdateSelectedMenu('recruit-posts')">
+      <li :class="{ 'selected-menu': selectedMenu=='recruit-posts' }" @click="handleUpdateSelectedMenu('recruit-posts')">
         <div class="alpha">R</div>
         <div class="description">채용</div>
       </li>
-      <li @click="handleUpdateSelectedMenu('tech-posts')">
+      <li :class="{ 'selected-menu': selectedMenu=='tech-posts' }" @click="handleUpdateSelectedMenu('tech-posts')">
         <div class="alpha">B</div>
         <div class="description">블로그</div>
       </li>
@@ -14,9 +14,12 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
+  computed: {
+    ...mapGetters(['selectedMenu'])
+  },
   methods: {
     ...mapActions(['resetAll', 'updateSelectedMenu']),
     handleUpdateSelectedMenu(val) {
@@ -56,5 +59,9 @@ li:hover {
 .description {
   font-size: 13px;
   font-weight: 600;
+}
+.selected-menu {
+  pointer-events: none;
+  background-color: #eaeaea;
 }
 </style>

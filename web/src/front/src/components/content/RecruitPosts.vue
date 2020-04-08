@@ -1,6 +1,7 @@
 <template>
   <div class="recruit-posts">
     <CompanyList/>
+    <CountBar/>
     <ul>
       <li
         v-for="({
@@ -36,13 +37,15 @@
 
 <script>
 import CompanyList from '@/components/company/CompanyList';
+import CountBar from '@/components/search/CountBar';
 import { mapGetters, mapActions } from "vuex";
 import InfiniteLoading from 'vue-infinite-loading';
 
 export default {
   components: {
     CompanyList,
-    InfiniteLoading
+    InfiniteLoading,
+    CountBar
   },
   computed: {
     ...mapGetters(['posts'])
@@ -58,7 +61,7 @@ export default {
 
 <style scoped>
 .recruit-posts ul {
-  padding: 20px 20px;
+  padding: 3px 20px;
   text-align: center;
 }
 .recruit-posts ul li {
@@ -92,7 +95,7 @@ export default {
   animation: fadeIn 2.5s ease-in-out;
 }
 .recruit-posts ul li:hover:after {
-  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.0);
 }
 .recruit-posts ul li a{
   width: 100%;

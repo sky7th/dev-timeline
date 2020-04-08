@@ -8,5 +8,7 @@ import java.util.List;
 public interface TechPostWebRepositoryCustom {
 
     List<TechPost> findBySearchForm(PostSearchForm postSearchForm);
+    long countBySearchForm(PostSearchForm postSearchForm);
+
 
 }

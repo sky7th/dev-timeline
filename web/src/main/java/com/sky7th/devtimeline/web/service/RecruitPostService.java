@@ -21,7 +21,7 @@ public class RecruitPostService {
     @Transactional(readOnly = true)
     public RecruitPostViewItems findBySearchForm(PostSearchForm postSearchForm) {
         List<RecruitPost> recruitPosts = recruitPostWebRepository.findBySearchForm(postSearchForm);
-        long recruitPostCounts = recruitPostWebRepository.count();
+        long recruitPostCounts = recruitPostWebRepository.countBySearchForm(postSearchForm);
 
         return new RecruitPostViewItems(recruitPosts, recruitPostCounts);
     }

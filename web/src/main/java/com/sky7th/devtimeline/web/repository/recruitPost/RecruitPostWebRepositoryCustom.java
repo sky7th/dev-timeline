@@ -8,5 +8,6 @@ import java.util.List;
 public interface RecruitPostWebRepositoryCustom {
 
     List<RecruitPost> findBySearchForm(PostSearchForm postSearchForm);
+    long countBySearchForm(PostSearchForm postSearchForm);
 
 }

@@ -1,6 +1,7 @@
 <template>
   <div class="tech-posts">
     <CompanyList/>
+    <CountBar/>
     <ul>
       <li
         v-for="({
@@ -39,62 +40,30 @@
         </a>
       </li>
     </ul>
-    <div class="paging_comm">
-      <div class="inner_paging">
-        <a v-for="(pageNumber, i) in getPageNumbers()" 
-          :key="i" 
-          class="page-numbers" 
-          :class="{ current: pageNumber==page }"
-          @click="handlerPageNumber(pageNumber)"
-        >{{ pageNumber + 1}}
-        </a>
-      </div>
-    </div>
+    <PagingBar v-if="postCounts > 0"/>
   </div>
 </template>
 
 <script>
 import CompanyList from '@/components/company/CompanyList';
+import CountBar from '@/components/search/CountBar';
+import PagingBar from '@/components/search/PagingBar';
 import { mapGetters, mapActions } from "vuex";
-import { POST_LIMIT } from '@/constant/Constant';
 
 export default {
-  data() {
-    return {
-      pageLimit: 2,
-      pageNumbers: [],
-      page: 0
-    }
-  },
   components: {
-    CompanyList
+    CompanyList,
+    CountBar,
+    PagingBar
   },
   created() {
     this.updatePosts()
   },
   computed: {
-    ...mapGetters(['posts'])
+    ...mapGetters(['posts', 'postCounts'])
   },
   methods: {
-    ...mapActions(['updatePosts', 'updateOffset']),
-    getPageNumbers() {
-      var pageNumbers = [];
-      for (var i = -this.pageLimit; i <= this.pageLimit; i++) {
-        if (this.page + i < 0)
-          pageNumbers.push(this.pageLimit - i)
-        else
-          pageNumbers.push(this.page + i)
-      }
-      pageNumbers.sort()
-
-      return pageNumbers;
-    },
-    handlerPageNumber(page) {
-      this.page = page
-      scroll(0, 0)
-      this.updateOffset({ offset: page * POST_LIMIT })
-      this.updatePosts()
-    }
+    ...mapActions(['updatePosts'])
   }
 }
 </script>
@@ -104,7 +73,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px 13%;
+  padding: 15px 13%;
 }
 .tech-posts ul li {
   background-color: white;
@@ -184,31 +153,5 @@ export default {
 .right .thumbnail-no div {
   text-align: center;
   font-size: 13px;
-}
-.paging_comm {
-    margin: 17px 0 80px 0;
-    font-size: 0;
-    text-align: center;
-}
-.tech-posts .paging_comm .current {
-    border-radius: 20px;
-    background-color: #03166c;
-    color: #fff;
-}
-.paging_comm .page-numbers, .paging_comm .page-numbers+.page-numbers {
-    margin-left: 8px;
-}
-.paging_comm .page-numbers {
-    display: inline-block;
-    line-height: 43px;
-    vertical-align: top;
-    overflow: hidden;
-    width: 40px;
-    height: 40px;
-    font-size: 16px;
-    font-family: 'campton', 'Noto Sans', 'Apple SD Gothic Neo', '맑은 고딕', 'Malgun Gothic', '돋움', dotum, sans-serif;
-    color: #03166C;
-    background-color: #fff;
-    transition: border-radius .3s;
 }
 </style>

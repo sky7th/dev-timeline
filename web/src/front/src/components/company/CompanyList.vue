@@ -41,7 +41,7 @@ export default {
 
 <style scoped>
 .company-list {
-  margin: 0px 30px;
+  margin: 0px 30px 13px 30px;
   padding: 13px 0 0px 0;
   border-bottom: 2px solid #dadada;
 }

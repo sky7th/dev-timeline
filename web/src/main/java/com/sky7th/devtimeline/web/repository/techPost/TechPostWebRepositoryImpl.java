@@ -32,6 +32,16 @@ public class TechPostWebRepositoryImpl implements TechPostWebRepositoryCustom {
                 .fetch();
     }
 
+    @Override
+    public long countBySearchForm(PostSearchForm postSearchForm) {
+        return queryFactory
+                .selectFrom(techPost)
+                .leftJoin(techPost.companyUrl).fetchJoin()
+                .where(containsTags(postSearchForm.getTags()),
+                        inCompany(postSearchForm.getCompanies()))
+                .fetchCount();
+    }
+
     private BooleanBuilder containsTags(List<String> tags) {
         if (StringUtils.isEmpty(tags)) {
             return null;

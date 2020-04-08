@@ -57,16 +57,16 @@ export default {
   margin: 5px 10px;
   padding: 0 10px 0 13px;
   display: block;
-  background-color: #8a9aca;
+  background-color: #2d92f1;
   height: 37px;
   line-height: 32px;
   color: #fff;
   overflow: hidden;
   border-radius: 5px;
-  box-shadow: 2px 2px 4px 0 rgba(0,0,0,.3);
+  box-shadow: 1px 1px 3px 0 rgba(0,0,0,.2);
 }
 .tag:hover {
-  background-color: #6a7aaa;
+  background-color: #0d72d1;
 }
 .btn-remove {
   margin: 0 3px 0 12px;

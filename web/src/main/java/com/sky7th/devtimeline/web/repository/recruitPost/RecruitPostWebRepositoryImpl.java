@@ -32,6 +32,16 @@ public class RecruitPostWebRepositoryImpl implements RecruitPostWebRepositoryCus
                 .fetch();
     }
 
+    @Override
+    public long countBySearchForm(PostSearchForm postSearchForm) {
+        return queryFactory
+                .selectFrom(recruitPost)
+                .leftJoin(recruitPost.companyUrl).fetchJoin()
+                .where(containsTags(postSearchForm.getTags()),
+                        inCompany(postSearchForm.getCompanies()))
+                .fetchCount();
+    }
+
     private BooleanBuilder containsTags(List<String> tags) {
         if (StringUtils.isEmpty(tags)) {
             return null;

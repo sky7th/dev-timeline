@@ -29,14 +29,16 @@ export default new Vuex.Store({
     posts: [],
     checkedCompanies: [],
     offset: 0,
-    tags: []
+    tags: [],
+    postCounts: 0
   },
   getters: {
     selectedMenu: state => state.selectedMenu,
     posts: state => state.posts,
     checkedCompanies: state => state.checkedCompanies,
     offset: state => state.offset,
-    tags: state => state.tags
+    tags: state => state.tags,
+    postCounts: state => state.postCounts
   },
   mutations: {
     updatePosts: state => {
@@ -48,6 +50,7 @@ export default new Vuex.Store({
       .then(response => {
         state.posts = response.data.data.posts
         state.offset = response.data.data.offset
+        state.postCounts = response.data.data.postCounts
       })
       .catch(e => {
         console.log('error : ', e)
@@ -62,6 +65,7 @@ export default new Vuex.Store({
       .then(({ data }) => {
         if (data.data.posts.length) {
           state.offset = data.data.offset
+          state.postCounts = data.data.postCounts
           state.posts.push(...data.data.posts)
           payload.infiniteState.loaded(); 
         } else {
@@ -89,6 +93,7 @@ export default new Vuex.Store({
       state.offset = 0;
       state.postCounts = 0;
     },
+    updatePostCounts: (state, payload) => state.postCounts = payload.postCounts
   },
   actions: {
     updatePosts: context => context.commit('updatePosts'),
@@ -101,5 +106,6 @@ export default new Vuex.Store({
     removeAllTag: context => context.commit('removeAllTag'),
     updateSelectedMenu: (context, payload) => context.commit('updateSelectedMenu', { selectedMenu: payload.selectedMenu }),
     resetAll: context => context.commit('resetAll'),
+    updatePostCounts: (context, payload) => context.commit('postCounts', { postCounts: payload.postCounts })
   }
 });
