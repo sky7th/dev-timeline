@@ -27,7 +27,8 @@ public class RecruitPostWebRepositoryImpl implements RecruitPostWebRepositoryCus
                         inCompany(postSearchForm.getCompanies()))
                 .offset(postSearchForm.getOffset())
                 .limit(postSearchForm.getLimit())
-                .orderBy(recruitPost.sortDate.desc())
+                .orderBy(recruitPost.sortDate.desc(),
+                        recruitPost.id.desc())
                 .fetch();
     }
 

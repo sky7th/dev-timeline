@@ -27,7 +27,8 @@ public class TechPostWebRepositoryImpl implements TechPostWebRepositoryCustom {
                         inCompany(postSearchForm.getCompanies()))
                 .offset(postSearchForm.getOffset())
                 .limit(postSearchForm.getLimit())
-                .orderBy(techPost.sortDate.desc())
+                .orderBy(techPost.sortDate.desc(),
+                        techPost.id.desc())
                 .fetch();
     }
 
