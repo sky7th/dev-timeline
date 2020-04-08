@@ -39,14 +39,33 @@
         </a>
       </li>
     </ul>
+    <div class="paging_comm">
+      <div class="inner_paging">
+        <a v-for="(pageNumber, i) in getPageNumbers()" 
+          :key="i" 
+          class="page-numbers" 
+          :class="{ current: pageNumber==page }"
+          @click="handlerPageNumber(pageNumber)"
+        >{{ pageNumber + 1}}
+        </a>
+      </div>
     </div>
+  </div>
 </template>
 
 <script>
 import CompanyList from '@/components/company/CompanyList';
 import { mapGetters, mapActions } from "vuex";
+import { POST_LIMIT } from '@/constant/Constant';
 
 export default {
+  data() {
+    return {
+      pageLimit: 2,
+      pageNumbers: [],
+      page: 0
+    }
+  },
   components: {
     CompanyList
   },
@@ -57,7 +76,25 @@ export default {
     ...mapGetters(['posts'])
   },
   methods: {
-    ...mapActions(['updatePosts'])
+    ...mapActions(['updatePosts', 'updateOffset']),
+    getPageNumbers() {
+      var pageNumbers = [];
+      for (var i = -this.pageLimit; i <= this.pageLimit; i++) {
+        if (this.page + i < 0)
+          pageNumbers.push(this.pageLimit - i)
+        else
+          pageNumbers.push(this.page + i)
+      }
+      pageNumbers.sort()
+
+      return pageNumbers;
+    },
+    handlerPageNumber(page) {
+      this.page = page
+      scroll(0, 0)
+      this.updateOffset({ offset: page * POST_LIMIT })
+      this.updatePosts()
+    }
   }
 }
 </script>
@@ -67,14 +104,14 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px 20px;
+  padding: 20px 13%;
 }
 .tech-posts ul li {
   background-color: white;
   padding: 10px 20px;
   margin-bottom: 15px;
   border-radius: 10px;
-  max-width: 900px;
+  width: 100%;
   min-height: 140px;
   -webkit-animation: fadeIn 0.3s ease-in-out;
   animation: fadeIn 0.3s ease-in-out;
@@ -93,6 +130,7 @@ export default {
   display: flex;
   width: 100px;
   align-items: center;
+  margin-right: 20px;
 }
 .middle {
   flex: 3;
@@ -146,5 +184,31 @@ export default {
 .right .thumbnail-no div {
   text-align: center;
   font-size: 13px;
+}
+.paging_comm {
+    margin: 17px 0 80px 0;
+    font-size: 0;
+    text-align: center;
+}
+.tech-posts .paging_comm .current {
+    border-radius: 20px;
+    background-color: #03166c;
+    color: #fff;
+}
+.paging_comm .page-numbers, .paging_comm .page-numbers+.page-numbers {
+    margin-left: 8px;
+}
+.paging_comm .page-numbers {
+    display: inline-block;
+    line-height: 43px;
+    vertical-align: top;
+    overflow: hidden;
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+    font-family: 'campton', 'Noto Sans', 'Apple SD Gothic Neo', '맑은 고딕', 'Malgun Gothic', '돋움', dotum, sans-serif;
+    color: #03166C;
+    background-color: #fff;
+    transition: border-radius .3s;
 }
 </style>
