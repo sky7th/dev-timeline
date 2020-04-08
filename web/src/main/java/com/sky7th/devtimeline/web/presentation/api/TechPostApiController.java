@@ -4,6 +4,7 @@ import com.sky7th.devtimeline.web.presentation.api.dto.WebResponseDto;
 import com.sky7th.devtimeline.web.service.TechPostService;
 import com.sky7th.devtimeline.web.service.dto.PostSearchForm;
 import com.sky7th.devtimeline.web.service.dto.TechPostViewItem;
+import com.sky7th.devtimeline.web.service.dto.TechPostViewItems;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,12 +27,13 @@ public class TechPostApiController {
     @GetMapping("/api/v1/tech-posts")
     public WebResponseDto<Object> getTechPosts(@Valid PostSearchForm searchForm) {
         Map<String, Object> templateData = new HashMap<>();
-        List<TechPostViewItem> items;
+        TechPostViewItems techPostViewItems;
 
-        items = techPostService.findBySearchForm(searchForm);
+        techPostViewItems = techPostService.findBySearchForm(searchForm);
 
-        templateData.put("posts", items);
-        templateData.put("offset", searchForm.getOffset() + items.size());
+        templateData.put("posts", techPostViewItems.getTechPostItems());
+        templateData.put("offset", searchForm.getOffset() + techPostViewItems.getTechPostItems().size());
+        templateData.put("postCounts", techPostViewItems.getTechPostCounts());
 
         return WebResponseDto.builder().status(OK).data(templateData).build();
     }

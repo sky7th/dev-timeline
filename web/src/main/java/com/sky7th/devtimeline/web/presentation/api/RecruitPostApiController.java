@@ -4,6 +4,7 @@ import com.sky7th.devtimeline.web.presentation.api.dto.WebResponseDto;
 import com.sky7th.devtimeline.web.service.RecruitPostService;
 import com.sky7th.devtimeline.web.service.dto.PostSearchForm;
 import com.sky7th.devtimeline.web.service.dto.RecruitPostViewItem;
+import com.sky7th.devtimeline.web.service.dto.RecruitPostViewItems;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,12 +27,13 @@ public class RecruitPostApiController {
     @GetMapping("/api/v1/recruit-posts")
     public WebResponseDto<Object> getRecruitPosts(@Valid PostSearchForm searchForm) {
         Map<String, Object> templateData = new HashMap<>();
-        List<RecruitPostViewItem> items;
+        RecruitPostViewItems recruitPostViewItems;
 
-        items = recruitPostService.findBySearchForm(searchForm);
+        recruitPostViewItems = recruitPostService.findBySearchForm(searchForm);
 
-        templateData.put("posts", items);
-        templateData.put("offset", searchForm.getOffset() + items.size());
+        templateData.put("posts", recruitPostViewItems.getRecruitPostItems());
+        templateData.put("offset", searchForm.getOffset() + recruitPostViewItems.getRecruitPostItems().size());
+        templateData.put("postCounts", recruitPostViewItems.getRecruitPostCounts());
 
         return WebResponseDto.builder().status(OK).data(templateData).build();
     }

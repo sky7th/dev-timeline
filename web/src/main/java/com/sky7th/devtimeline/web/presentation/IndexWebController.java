@@ -22,10 +22,10 @@ public class IndexWebController {
 
     @GetMapping("/")
     public String index(Model model, @Valid PostSearchForm searchForm) {
-        int offset = 0;
-        List<RecruitPostViewItem> items = recruitPostService.findBySearchForm(searchForm);
-        model.addAttribute("articles", items);
-        model.addAttribute("offset", offset+items.size());
+//        int offset = 0;
+//        List<RecruitPostViewItem> items = recruitPostService.findBySearchForm(searchForm);
+//        model.addAttribute("articles", items);
+//        model.addAttribute("offset", offset+items.size());
         return "index";
     }
 
