@@ -44,14 +44,20 @@
 
 <script>
 import CompanyList from '@/components/company/CompanyList';
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   components: {
     CompanyList
   },
+  created() {
+    this.updatePosts()
+  },
   computed: {
     ...mapGetters(['posts'])
+  },
+  methods: {
+    ...mapActions(['updatePosts'])
   }
 }
 </script>
@@ -69,6 +75,9 @@ export default {
   margin-bottom: 15px;
   border-radius: 10px;
   max-width: 900px;
+  min-height: 140px;
+  -webkit-animation: fadeIn 0.3s ease-in-out;
+  animation: fadeIn 0.3s ease-in-out;
 }
 .logo {
   height: 50px;
@@ -121,7 +130,8 @@ export default {
   width: 100%;
   max-height: 150px;
   border-radius: 13px;
-  min-width: 170px;
+  min-width: 288px;
+  min-height: 120px;
 }
 .right .thumbnail-no {
   display: flex;

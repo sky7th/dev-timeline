@@ -18,10 +18,10 @@ import { mapActions } from "vuex";
 
 export default {
   methods: {
-    ...mapActions(['updateSelectedMenu', 'updatePosts']),
+    ...mapActions(['resetAll', 'updateSelectedMenu']),
     handleUpdateSelectedMenu(val) {
+      this.resetAll()
       this.updateSelectedMenu({ selectedMenu: val })
-      this.updatePosts()
     }
   }
 }

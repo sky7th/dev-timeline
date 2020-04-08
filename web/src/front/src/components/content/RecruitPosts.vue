@@ -28,22 +28,30 @@
           <!-- <div>{{ companyUrlTypeName }}</div> -->
           <div class="title">{{ title }}</div>
         </a>
-        
       </li>
     </ul>
+    <infinite-loading @infinite="handlerInfinite" spinner="waveDots"></infinite-loading>
     </div>
 </template>
 
 <script>
 import CompanyList from '@/components/company/CompanyList';
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
+import InfiniteLoading from 'vue-infinite-loading';
 
 export default {
   components: {
-    CompanyList
+    CompanyList,
+    InfiniteLoading
   },
   computed: {
     ...mapGetters(['posts'])
+  },
+  methods: {
+    ...mapActions(['insertPosts']),
+    handlerInfinite($state) {
+      this.insertPosts({ infiniteState: $state })
+    }
   }
 }
 </script>
@@ -66,6 +74,8 @@ export default {
   cursor: pointer;
   position: relative;
   line-height: 1.5em;
+  -webkit-animation: fadeIn 0.3s ease-in-out;
+  animation: fadeIn 0.3s ease-in-out;
 }
 .recruit-posts ul li:after {
   bottom: 4px;
@@ -78,6 +88,8 @@ export default {
   content: "";
   height: 100%;
   width: 100%;
+  -webkit-animation: fadeIn 2.5s ease-in-out;
+  animation: fadeIn 2.5s ease-in-out;
 }
 .recruit-posts ul li:hover:after {
   box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
