@@ -54,6 +54,7 @@ project(':core') {
 		compile 'com.querydsl:querydsl-jpa'
 		compile 'com.querydsl:querydsl-apt'
 		compile 'org.springframework.boot:spring-boot-starter-data-jpa'
+		compile 'org.springframework.boot:spring-boot-starter-json'
 		compile 'com.h2database:h2'
 		compile 'mysql:mysql-connector-java'
 	}
@@ -63,6 +64,10 @@ project(':web') {
 	dependencies {
 		implementation project(':core')
 		implementation 'org.springframework.boot:spring-boot-starter-web'
+		implementation 'org.springframework.boot:spring-boot-starter-security'
+		implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+		compile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.0'
+		testImplementation 'org.springframework.security:spring-security-test'
 		testImplementation('org.springframework.boot:spring-boot-starter-test') {
 			exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 		}
