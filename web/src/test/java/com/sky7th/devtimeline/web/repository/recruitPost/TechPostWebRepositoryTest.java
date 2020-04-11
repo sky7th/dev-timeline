@@ -24,22 +24,22 @@ public class TechPostWebRepositoryTest {
         //given
 
         //when
-        List<TechPost> recruitPosts = techPostWebRepository.findAllLimitDesc(0, 10);
-
-        for (TechPost recruitPost : recruitPosts) {
-            System.out.println(
-                    recruitPost.getCompanyUrl().getCompany().getCompanyType().getName()
-                    + " "+ recruitPost.getCompanyUrl().getCompanyUrlType()
-                    + " "+ recruitPost.getTitle()
-                    + " "+ recruitPost.getAuthor()
-                    + " "+ recruitPost.getThumbnailUrl()
-                    + " "+ recruitPost.getContentUrl()
-                    + " "+ recruitPost.getDate()
-            );
-        }
-
-        //then
-        assertThat(recruitPosts.size() > 0);
+//        List<TechPost> recruitPosts = techPostWebRepository.findAllLimitDesc(0, 10);
+//
+//        for (TechPost recruitPost : recruitPosts) {
+//            System.out.println(
+//                    recruitPost.getCompanyUrl().getCompany().getCompanyType().getName()
+//                    + " "+ recruitPost.getCompanyUrl().getCompanyUrlType()
+//                    + " "+ recruitPost.getTitle()
+//                    + " "+ recruitPost.getAuthor()
+//                    + " "+ recruitPost.getThumbnailUrl()
+//                    + " "+ recruitPost.getContentUrl()
+//                    + " "+ recruitPost.getDate()
+//            );
+//        }
+//
+//        //then
+//        assertThat(recruitPosts.size() > 0);
     }
 
 

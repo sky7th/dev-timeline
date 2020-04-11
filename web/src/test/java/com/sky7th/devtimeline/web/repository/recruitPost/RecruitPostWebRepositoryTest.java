@@ -23,20 +23,20 @@ public class RecruitPostWebRepositoryTest {
         //given
 
         //when
-        List<RecruitPost> recruitPosts = recruitPostWebRepository.findAllLimitDesc(0, 10);
-
-        for (RecruitPost recruitPost : recruitPosts) {
-            System.out.println(
-                    recruitPost.getCompanyUrl().getCompany().getCompanyType().getName()
-                    + " "+ recruitPost.getCompanyUrl().getCompanyUrlType()
-                    + " "+ recruitPost.getTitle()
-                    + " "+ recruitPost.getContentUrl()
-                    + " "+ recruitPost.getClosingDate()
-            );
-        }
-
-        //then
-        assertThat(recruitPosts.size() > 0);
+//        List<RecruitPost> recruitPosts = recruitPostWebRepository.findBySearchForm();
+//
+//        for (RecruitPost recruitPost : recruitPosts) {
+//            System.out.println(
+//                    recruitPost.getCompanyUrl().getCompany().getCompanyType().getName()
+//                    + " "+ recruitPost.getCompanyUrl().getCompanyUrlType()
+//                    + " "+ recruitPost.getTitle()
+//                    + " "+ recruitPost.getContentUrl()
+//                    + " "+ recruitPost.getClosingDate()
+//            );
+//        }
+//
+//        //then
+//        assertThat(recruitPosts.size() > 0);
     }
 
 
