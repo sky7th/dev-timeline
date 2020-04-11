@@ -89,6 +89,7 @@ export default {
   border: none;
   overflow: hidden;
   border-radius: 25px;
+  cursor: pointer;
 }
 .btn-all-remove:hover {
   background-color: #9e9e9e;

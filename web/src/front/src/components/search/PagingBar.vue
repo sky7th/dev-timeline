@@ -86,5 +86,12 @@ export default {
   background-color: #fff;
   transition: border-radius .3s;
   cursor: pointer;
+  box-shadow: 0 1px 2px rgba(27,31,35,.1);
+}
+.paging-bar .page-numbers:hover {
+  color: white;
+  transition: color .3s;
+  background-color: #2d92f1;
+  transition: background-color .3s;
 }
 </style>

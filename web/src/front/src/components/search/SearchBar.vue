@@ -45,7 +45,7 @@ export default {
   width: 300px;
   border: 1.5px solid #bababa;
   border-radius: 4px 0 0 4px;
-  box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.2) inset;
+  box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.2) inset;
   padding: 0 8px;
 }
 .search-bar button {
@@ -53,12 +53,12 @@ export default {
   width: 80px;
   color: #4E5763;
   font-weight: 600;
-  margin-left: -1px;
+  margin-left: -2px;
   background-color: #f2f2f2;
-  border: none;
   font-size: 15px;
   border: 1.5px solid #bababa;
   border-radius: 0px 4px 4px 0px;
+  box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.2) inset;
 }
 .search-bar button:hover {
   background-color: #eaeaea;

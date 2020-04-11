@@ -53,6 +53,7 @@ export default {
 .company-list li {
   padding: 8px 15px 5px 15px;
   display: inline-block;
+  margin-right: 13px;
 }
 ::-webkit-scrollbar { width: 3.2px; } /* 스크롤 바 */
 ::-webkit-scrollbar-track { background-color:#f7f7f7; } /* 스크롤 바 밑의 배경 */
