@@ -31,7 +31,15 @@
         </a>
       </li>
     </ul>
-    <infinite-loading @infinite="handlerInfinite" spinner="waveDots"></infinite-loading>
+    <infinite-loading class="infinite-message" @infinite="handlerInfinite" spinner="waveDots">
+      <div slot="no-more">
+        <div>마지막 부분이에요. 위로 올라가시겠어요?</div> 
+        <br/>
+        <a href="javascript:scroll(0,0)">네</a>
+        <a href="javascript:alert('o=| O ____ O |=o')">아니요</a>
+      </div>
+      <div slot="no-results">채용정보를 가져오지 못했어요 ..ㅠ.ㅠ</div>
+    </infinite-loading>
     </div>
 </template>
 
@@ -128,5 +136,20 @@ export default {
 }
 .kakao {
   background-color: rgb(255, 255, 215);
+}
+.infinite-message {
+  font-size: 14px;
+  margin: 30px 0 80px 0;
+}
+.infinite-message div {
+
+}
+.infinite-message a {
+  cursor: pointer;
+  padding: 7px 8px;
+  margin: 13px 7px;
+}
+.infinite-message a:hover {
+  background-color: #e4e4e4;
 }
 </style>

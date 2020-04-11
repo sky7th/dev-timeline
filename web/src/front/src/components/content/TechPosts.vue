@@ -84,6 +84,10 @@ export default {
   min-height: 140px;
   -webkit-animation: fadeIn 0.3s ease-in-out;
   animation: fadeIn 0.3s ease-in-out;
+  box-shadow: 0 1px 4px rgba(27,31,35,.1);
+}
+.tech-posts ul li:hover {
+  box-shadow: 0 1px 6px rgba(27,31,35,.3);
 }
 .logo {
   height: 50px;
@@ -137,7 +141,6 @@ export default {
   width: 100%;
   max-height: 150px;
   border-radius: 13px;
-  min-width: 288px;
   min-height: 120px;
 }
 .right .thumbnail-no {
@@ -146,7 +149,6 @@ export default {
   border-radius: 13px;
   background-color: #f6f6f6;
   justify-content: center;
-  min-width: 280px;
   min-height: 121px;
   align-items: center;
 }
