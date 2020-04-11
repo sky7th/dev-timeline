@@ -3,8 +3,18 @@ import Vuex from "vuex";
 import axios from 'axios';
 
 import { POST_LIMIT } from '@/constant/Constant';
+import {setHeader} from './libs/axios.custom';
 
 Vue.use(Vuex);
+
+const debug = process.env.VUE_APP_ENV === 'development';
+
+const initUser = (store) => {
+  const { ACCESS_TOKEN } = localStorage;
+  if (ACCESS_TOKEN) {
+    store.commit('setToken', ACCESS_TOKEN);
+  }
+};
 
 var getCheckedCompaniesQuery = (companies) => {
   var companiesQuery = '';
@@ -24,7 +34,11 @@ var getOffsetQuery = (offset) => '&offset=' + offset;
 var getLimitQuery = (limit) => '&limit=' + limit;
 
 export default new Vuex.Store({
+  plugins: [initUser],
   state: {
+    authenticated: false,
+    token: null,
+    currentUser: null,
     selectedMenu: 'recruit-posts',
     posts: [],
     checkedCompanies: [],
@@ -33,6 +47,9 @@ export default new Vuex.Store({
     postCounts: 0
   },
   getters: {
+    token: state => state.token,
+    user: state => state.user,
+    authenticated: state => state.authenticated,
     selectedMenu: state => state.selectedMenu,
     posts: state => state.posts,
     checkedCompanies: state => state.checkedCompanies,
@@ -41,6 +58,16 @@ export default new Vuex.Store({
     postCounts: state => state.postCounts
   },
   mutations: {
+    setToken(state, accessToken) {
+      state.token = accessToken;
+      localStorage.ACCESS_TOKEN = accessToken;
+      setHeader(accessToken);
+    },
+
+    setUserDetail(state, payload) {
+      state.currentUser = payload;
+      state.authenticated = payload !== null;
+    },
     updatePosts: state => {
       axios.get('http://127.0.0.1:8080/api/v1/'+state.selectedMenu+'?'
                 + getOffsetQuery(state.offset)
@@ -96,6 +123,8 @@ export default new Vuex.Store({
     updatePostCounts: (state, payload) => state.postCounts = payload.postCounts
   },
   actions: {
+    setToken: (context, payload) => context.commit('setToken', payload),
+    setUserDetail: (context, payload) => context.commit('setUserDetail', payload),
     updatePosts: context => context.commit('updatePosts'),
     insertPosts: (context, payload) => context.commit('insertPosts', { infiniteState: payload.infiniteState }),
     updateCheckedCompanies: (context, payload) => context.commit('updateCheckedCompanies', { checkedCompanies: payload.checkedCompanies }),
@@ -107,5 +136,6 @@ export default new Vuex.Store({
     updateSelectedMenu: (context, payload) => context.commit('updateSelectedMenu', { selectedMenu: payload.selectedMenu }),
     resetAll: context => context.commit('resetAll'),
     updatePostCounts: (context, payload) => context.commit('postCounts', { postCounts: payload.postCounts })
-  }
+  },
+  strict: debug
 });
