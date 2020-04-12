@@ -57,8 +57,6 @@ project(':core') {
 		compile 'org.springframework.boot:spring-boot-starter-json'
 		compile 'com.h2database:h2'
 		compile 'mysql:mysql-connector-java'
-		compile 'org.springframework.boot:spring-boot-starter-data-redis'
-		compile group: 'it.ozimov', name: 'embedded-redis', version: '0.7.2'
 	}
 }
 
@@ -84,5 +82,13 @@ project(':batch') {
 		implementation group: 'org.jsoup', name: 'jsoup', version: '1.12.1'
 		implementation group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '3.141.59'
 		testImplementation 'org.springframework.batch:spring-batch-test'
+	}
+}
+
+project(':redis') {
+	dependencies {
+		compile 'org.springframework.boot:spring-boot-starter-data-redis'
+		compile group: 'it.ozimov', name: 'embedded-redis', version: '0.7.2'
+		implementation 'org.springframework.boot:spring-boot-starter-websocket'
 	}
 }

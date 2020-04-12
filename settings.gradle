@@ -9,4 +9,5 @@ rootProject.name = 'dev-timeline'
 include 'batch'
 include 'core'
 include 'web'
+include 'redis'
 

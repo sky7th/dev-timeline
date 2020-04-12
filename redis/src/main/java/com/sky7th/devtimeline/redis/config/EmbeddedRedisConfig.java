@@ -1,4 +1,4 @@
-package com.sky7th.devtimeline.web.config;
+package com.sky7th.devtimeline.redis.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -11,6 +11,7 @@ import javax.annotation.PreDestroy;
 @Profile("local")
 @Configuration
 public class EmbeddedRedisConfig {
+
     @Value("${spring.redis.port}")
     private int redisPort;
     private RedisServer redisServer;
@@ -27,4 +28,5 @@ public class EmbeddedRedisConfig {
             redisServer.stop();
         }
     }
+
 }
