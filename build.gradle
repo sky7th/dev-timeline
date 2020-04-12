@@ -57,6 +57,8 @@ project(':core') {
 		compile 'org.springframework.boot:spring-boot-starter-json'
 		compile 'com.h2database:h2'
 		compile 'mysql:mysql-connector-java'
+		compile 'org.springframework.boot:spring-boot-starter-data-redis'
+		compile group: 'it.ozimov', name: 'embedded-redis', version: '0.7.2'
 	}
 }
 
