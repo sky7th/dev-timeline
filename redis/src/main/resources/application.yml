@@ -1,0 +1,12 @@
+spring:
+  profiles:
+    active: local
+---
+spring:
+  profiles: local
+  redis:
+    host: localhost
+    port: 6379
+
+server:
+  port: 8082

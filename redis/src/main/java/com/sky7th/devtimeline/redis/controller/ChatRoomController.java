@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Controller
 @RequestMapping("/chat")
@@ -13,13 +15,19 @@ public class ChatRoomController {
 
     private final ChatRoomRepository chatRoomRepository;
 
-    @PostMapping("/room")
+    @GetMapping("/rooms")
+    @ResponseBody
+    public List<ChatRoom> room() {
+        return chatRoomRepository.findAllRoom();
+    }
+
+    @PostMapping("/rooms")
     @ResponseBody
     public ChatRoom createRoom(@RequestParam String name) {
         return chatRoomRepository.createChatRoom(name);
     }
 
-    @GetMapping("/room/{roomId}")
+    @GetMapping("/rooms/{roomId}")
     @ResponseBody
     public ChatRoom roomInfo(@PathVariable String roomId) {
         return chatRoomRepository.findRoomById(roomId);
