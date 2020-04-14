@@ -1,5 +1,6 @@
 <template>
   <div class="header">
+    <notifications group="notify" position="bottom center"/>
     <a href="/" class="logo-name">dev-time</a>
     <SearchBar/>
     <button v-if="token==null || token==='null' || token ===''" @click="login()" class="btn-login">로그인</button>
@@ -10,6 +11,7 @@
 <script>
 import SearchBar from '@/components/search/SearchBar';
 import { mapGetters, mapActions } from "vuex";
+import notification from '@/libs/notification';
 
 export default {
   components: {
@@ -24,6 +26,7 @@ export default {
       this.setToken(null)
       this.setUserDetail(null)
       this.$router.replace('/');
+      notification.success('로그아웃 처리 되었습니다.')
     },
     login() {
       this.$router.replace('/login');

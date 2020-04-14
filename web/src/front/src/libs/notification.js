@@ -1,7 +1,7 @@
 import vue from '../main';
 
 export default {
-  success(response, msg, block) {
+  success(msg, block) {
     vue.$notify({
       group: 'notify',
       type: 'success',

@@ -49,7 +49,6 @@ export default {
       this.axios.post('/auth/signup', this.user)
       .then(response => {
         notification.success(response, '회원가입을 완료했습니다.', () => {
-          console.log(response)
           this.$router.push('/login');
         });
       })

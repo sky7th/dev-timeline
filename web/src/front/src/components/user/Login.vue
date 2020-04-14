@@ -54,7 +54,7 @@ export default {
       }
       this.axios.post('/auth/login', this.user)
       .then(response => {
-        notification.success(response, '로그인 성공', () => {
+        notification.success('로그인 성공', () => {
           this.$store.commit('setToken', response.data.accessToken);
           this.$emit('getUserDetails');
           this.$router.replace('/')
