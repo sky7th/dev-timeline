@@ -6,7 +6,7 @@ spring:
   profiles: local
   redis:
     host: localhost
-    port: 6379
+    port: 6378
 
 server:
   port: 8082

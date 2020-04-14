@@ -15,4 +15,14 @@ public class ChatMessage {
     private String roomId;
     private ChatSender Sender;
     private String message;
+
+    @Override
+    public String toString() {
+        return "ChatMessage{" +
+                "type=" + type +
+                ", roomId='" + roomId + '\'' +
+                ", Sender=" + Sender +
+                ", message='" + message + '\'' +
+                '}';
+    }
 }

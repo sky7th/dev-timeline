@@ -44,18 +44,22 @@ export default new Vuex.Store({
     checkedCompanies: [],
     offset: 0,
     tags: [],
-    postCounts: 0
+    postCounts: 0,
+    chatRooms: [],
+    selectedChatRooms: []
   },
   getters: {
     token: state => state.token,
-    user: state => state.user,
+    currentUser: state => state.currentUser,
     authenticated: state => state.authenticated,
     selectedMenu: state => state.selectedMenu,
     posts: state => state.posts,
     checkedCompanies: state => state.checkedCompanies,
     offset: state => state.offset,
     tags: state => state.tags,
-    postCounts: state => state.postCounts
+    postCounts: state => state.postCounts,
+    chatRooms: state => state.chatRooms,
+    selectedChatRooms: state => state.selectedChatRooms
   },
   mutations: {
     setToken(state, accessToken) {
@@ -63,7 +67,6 @@ export default new Vuex.Store({
       localStorage.ACCESS_TOKEN = accessToken;
       setHeader(accessToken);
     },
-
     setUserDetail(state, payload) {
       state.currentUser = payload;
       state.authenticated = payload !== null;
@@ -120,7 +123,12 @@ export default new Vuex.Store({
       state.offset = 0;
       state.postCounts = 0;
     },
-    updatePostCounts: (state, payload) => state.postCounts = payload.postCounts
+    updatePostCounts: (state, payload) => state.postCounts = payload.postCounts,
+    updateChatRooms: (state, payload) => state.chatRooms = payload,
+    insertSelectedChatRooms: (state, payload) => state.selectedChatRooms.push(payload),
+    removeSelectedChatRoom: (state, payload) => {
+      state.selectedChatRooms = state.selectedChatRooms.filter(room => room.roomId !== payload);
+    }
   },
   actions: {
     setToken: (context, payload) => context.commit('setToken', payload),
@@ -135,7 +143,10 @@ export default new Vuex.Store({
     removeAllTag: context => context.commit('removeAllTag'),
     updateSelectedMenu: (context, payload) => context.commit('updateSelectedMenu', { selectedMenu: payload.selectedMenu }),
     resetAll: context => context.commit('resetAll'),
-    updatePostCounts: (context, payload) => context.commit('postCounts', { postCounts: payload.postCounts })
+    updatePostCounts: (context, payload) => context.commit('postCounts', { postCounts: payload.postCounts }),
+    updateChatRooms: (context, payload) => context.commit('updateChatRooms', payload),
+    insertSelectedChatRooms: (context, payload) => context.commit('insertSelectedChatRooms', payload),
+    removeSelectedChatRoom: (context, payload) => context.commit('removeSelectedChatRoom', payload)
   },
   strict: debug
 });

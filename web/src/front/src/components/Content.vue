@@ -3,6 +3,14 @@
     <TagBar/>
     <RecruitPosts v-if="selectedMenu==='recruit-posts'"/>
     <TechPosts v-else-if="selectedMenu==='tech-posts'"/>
+    <ChatButton v-if="isBtnVisible"/>
+    <div class="chat-bottoms-wrapper">
+      <ChatContainer 
+        :selectedChatRoom="selectedChatRoom" 
+        v-for="(selectedChatRoom) in selectedChatRooms" 
+        :key="selectedChatRoom.name"/>
+    </div>
+    
   </div>
 </template>
 
@@ -10,6 +18,8 @@
 import RecruitPosts from '@/components/content/RecruitPosts';
 import TechPosts from '@/components/content/TechPosts';
 import TagBar from '@/components/search/TagBar';
+import ChatContainer from '@/components/chat/ChatContainer';
+import ChatButton from '@/components/chat/ChatButton';
 
 import { mapGetters } from "vuex";
 
@@ -17,10 +27,19 @@ export default {
   components: {
     RecruitPosts,
     TechPosts,
-    TagBar
+    TagBar,
+    ChatContainer,
+    ChatButton
   },
   computed: {
-    ...mapGetters(['selectedMenu'])
+    ...mapGetters(['selectedMenu', 'selectedChatRooms', 'selectedChatRooms']),
+    isBtnVisible() {
+      var rooms = this.selectedChatRooms.filter(selectedChatRoom => selectedChatRoom.name === this.selectedMenu)
+      if (rooms.length === 0)
+        return true;
+      else
+        return false; 
+    }
   }
 }
 </script>
@@ -39,5 +58,15 @@ export default {
   animation: fadeIn 0.3s ease-in-out;
   z-index: 900;
   background-color: #f7f7f7;
+}
+.chat-bottoms-wrapper {
+  position: fixed;
+  bottom: 0;
+  left: 100px;
+  display: flex;
+  width: 85%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
 }
 </style>

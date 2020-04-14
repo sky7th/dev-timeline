@@ -7,12 +7,14 @@
 <script>
 import "@/assets/css/styles.css";
 import notification from './libs/notification';
+import { mapActions } from "vuex";
 
 export default {
   created(){
     this.getUserDetails();
   },
   methods: {
+    ...mapActions(['setUserDetail']),
     async getUserDetails() {
       try {
         const token = this.$store.getters.token;
@@ -21,7 +23,7 @@ export default {
 
         const response = await this.axios.get(`/user/me`);
         if (response.status === 200) {
-          this.$store.commit('setUserDetail', response.data);
+          this.setUserDetail(response.data)
         }
       } catch (err) {
         notification.error(err, "사용자 정보를 불러올 수 없습니다.",() => {
