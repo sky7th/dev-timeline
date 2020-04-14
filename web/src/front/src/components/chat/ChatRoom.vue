@@ -47,7 +47,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['currentUser'])
+    ...mapGetters(['currentUser', 'token'])
   },
   created() {
     this.room = JSON.parse(localStorage.getItem('wschat.roomId'));
@@ -64,7 +64,7 @@ export default {
         this.connected = false;
         return;
       }
-      this.ws.send(`/pub/chat/message`, {}, JSON.stringify({
+      this.ws.send(`/pub/chat/message`, { token: this.token }, JSON.stringify({
         type:'TALK', roomId: this.room.roomId, sender: this.sender, message: this.message
       }));
       this.message = '';
@@ -80,22 +80,25 @@ export default {
       this.ws = Stomp.over(this.sock);
       this.reconnect = 0;
 
-      this.ws.connect({}, () => {
+      this.ws.connect({ token: this.token }, () => {
         this.ws.subscribe(`/sub/chat/room/${this.room.roomId}`, (message) => {
           var recv = JSON.parse(message.body);
           this.recvMessage(recv);
         });
+        this.ws.send(`/pub/chat/message`, { token: this.token }, JSON.stringify({
+        type:'TALK', roomId: this.room.roomId, sender: { id: null, name: 'NOTICE', imageUrl: null }, message: this.sender.name + ' 님이 들어왔습니다.'
+      }));
       }, () => {
         this.connected = false;
         notification.warn('연결에 실패했습니다.');
 
-        if (this.reconnect++ < 5) {
-          setTimeout(() => {
-            this.sock = new SockJS(`${process.env.VUE_APP_CHAT_API}/ws-stomp`);
-            this.ws = Stomp.over(this.sock);
-            this.connect();
-          }, 10 * 1000);
-        }
+        // if (this.reconnect++ < 5) {
+        //   setTimeout(() => {
+        //     this.sock = new SockJS(`${process.env.VUE_APP_CHAT_API}/ws-stomp`);
+        //     this.ws = Stomp.over(this.sock);
+        //     this.connect();
+        //   }, 10 * 1000);
+        // }
       });
     },
     disconnect() {
@@ -113,14 +116,13 @@ export default {
     isNoticeMessage(msg) {
       return msg.sender.name === 'NOTICE'
     },
-    isSameUserBeforeMessage(msg) {
-      if (this.messages.length === 1) {
-        return false;
-      }
-      return this.messages[this.messages.length - 2].sender.id == msg.sender.id;
-    },
+    // isSameUserBeforeMessage(msg) {
+    //   if (this.messages.length === 1) {
+    //     return false;
+    //   }
+    //   return this.messages[this.messages.length - 2].sender.id == msg.sender.id;
+    // },
     isCurrentUser(msg) {
-      console.log(msg, this.currentUser.id)
       return this.currentUser.id == msg.sender.id
     }
   }

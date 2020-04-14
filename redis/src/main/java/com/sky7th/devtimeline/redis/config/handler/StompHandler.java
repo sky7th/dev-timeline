@@ -4,6 +4,7 @@ import com.sky7th.devtimeline.redis.model.ChatMessage;
 import com.sky7th.devtimeline.redis.model.ChatSender;
 import com.sky7th.devtimeline.redis.repository.ChatRoomRepository;
 import com.sky7th.devtimeline.redis.service.ChatService;
+import com.sky7th.devtimeline.redis.service.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.Message;
@@ -20,14 +21,20 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Component
 public class StompHandler implements ChannelInterceptor {
+
     private final ChatRoomRepository chatRoomRepository;
     private final ChatService chatService;
+    private final TokenProvider tokenProvider;
 
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
+
+
         if (StompCommand.CONNECT == accessor.getCommand()) {
-            log.info("CONNECT");
+            String token = accessor.getFirstNativeHeader("token");
+            log.info("CONNECT {}", token);
+            tokenProvider.validateToken(token);
 
         } else if (StompCommand.SUBSCRIBE == accessor.getCommand()) {
             String roomId = chatService.getRoomId(Optional.ofNullable((String) message.getHeaders().get("simpDestination")).orElse("InvalidRoomId"));
@@ -36,9 +43,13 @@ public class StompHandler implements ChannelInterceptor {
             chatRoomRepository.setUserEnterInfo(sessionId, roomId);
             chatRoomRepository.plusUserCount(roomId);
 
-            String name = Optional.ofNullable((Principal) message.getHeaders().get("simpUser")).map(Principal::getName).orElse("UnknownUser");
-            chatService.sendChatMessage(ChatMessage.builder().type(ChatMessage.MessageType.ENTER).roomId(roomId).sender(ChatSender.builder().name(name).build()).build());
-            log.info("SUBSCRIBED {}, {}, {}", name, sessionId, roomId);
+//            String name = "aa";
+//            chatService.sendChatMessage(ChatMessage.builder()
+//                    .type(ChatMessage.MessageType.ENTER)
+//                    .roomId(roomId)
+//                    .sender(ChatSender.builder().name(name).build())
+//                    .build());
+            log.info("SUBSCRIBED {}, {}", sessionId, roomId);
 
         } else if (StompCommand.DISCONNECT == accessor.getCommand()) {
             String sessionId = (String) message.getHeaders().get("simpSessionId");
@@ -46,8 +57,12 @@ public class StompHandler implements ChannelInterceptor {
 
             chatRoomRepository.minusUserCount(roomId);
 
-            String name = Optional.ofNullable((Principal) message.getHeaders().get("simpUser")).map(Principal::getName).orElse("UnknownUser");
-            chatService.sendChatMessage(ChatMessage.builder().type(ChatMessage.MessageType.QUIT).roomId(roomId).sender(ChatSender.builder().name(name).build()).build());
+//            String name = "aa";
+//            chatService.sendChatMessage(ChatMessage.builder()
+//                    .type(ChatMessage.MessageType.QUIT)
+//                    .roomId(roomId)
+//                    .sender(ChatSender.builder().name(name).build())
+//                    .build());
 
             chatRoomRepository.removeUserEnterInfo(sessionId);
             log.info("DISCONNECTED {}, {}", sessionId, roomId);

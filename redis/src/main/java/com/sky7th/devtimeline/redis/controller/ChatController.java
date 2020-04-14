@@ -16,7 +16,6 @@ public class ChatController {
 
     @MessageMapping("/chat/message")
     public void message(ChatMessage message) {
-        message.setSender(message.getSender());
         message.setUserCount(chatRoomRepository.getUserCount(message.getRoomId()));
         chatService.sendChatMessage(message);
     }
