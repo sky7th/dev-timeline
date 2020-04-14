@@ -128,13 +128,6 @@ export default new Vuex.Store({
     insertSelectedChatRooms: (state, payload) => state.selectedChatRooms.push(payload),
     removeSelectedChatRoom: (state, payload) => {
       state.selectedChatRooms = state.selectedChatRooms.filter(room => room.roomId !== payload);
-    },
-    updateSeletedChatRoomUserCount: (state, payload) => {
-      state.selectedChatRooms.map(room => {
-        if (room.roomId === payload.roomId) {
-          room.userCount = payload.userCount
-        }
-      })
     }
   },
   actions: {
@@ -153,8 +146,7 @@ export default new Vuex.Store({
     updatePostCounts: (context, payload) => context.commit('postCounts', { postCounts: payload.postCounts }),
     updateChatRooms: (context, payload) => context.commit('updateChatRooms', payload),
     insertSelectedChatRooms: (context, payload) => context.commit('insertSelectedChatRooms', payload),
-    removeSelectedChatRoom: (context, payload) => context.commit('removeSelectedChatRoom', payload),
-    updateSeletedChatRoomUserCount: (context, payload) => context.commit('updateSeletedChatRoomUserCount', payload)
+    removeSelectedChatRoom: (context, payload) => context.commit('removeSelectedChatRoom', payload)
   },
   strict: debug
 });

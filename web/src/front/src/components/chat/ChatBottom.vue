@@ -1,6 +1,7 @@
 <template>
   <div class="chat-bottom"  @click="handlerChangeChatOpenState()">
-    {{ convertNameSelectedChatRoom() }}
+    <span>{{ convertNameSelectedChatRoom() }}</span>
+    <span class="user-count">{{ userCount }}</span>
   </div>
 </template>
 
@@ -10,7 +11,8 @@ export default {
     selectedChatRoom: { type: Object, default: () => ({
       roomId: '',
       name: '',
-    })}
+    })},
+    userCount: { type: Number, default: 0 }
   },
   methods: {
     handlerChangeChatOpenState() {
@@ -41,5 +43,13 @@ export default {
 }
 .chat-bottom:hover {
   background-color: #eeeeee;
+}
+.user-count {
+  font-weight: bold;
+  border-radius: 5px;
+  background-color: #eaeaea;
+  padding: 2px 4px;
+  font-size: 13px;
+  margin-left: 9px;
 }
 </style>

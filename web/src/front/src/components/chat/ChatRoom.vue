@@ -1,11 +1,14 @@
 <template>
   <div class="chat-room" v-cloak>
-    <div>{{ userCount }}</div>
     <button class="btn-close" @click="disconnect">x</button>
     <ul v-if="connected" class="message-list">
-      <li class="message-item" v-for="(message, i) in messages" :key="i">
-        <div class="user-name">{{message.sender.name}}</div>
-        <div class="user-message">{{message.message}}</div>
+      <li class="message-item" :class="{ 'user-me': isCurrentUser(msg) }" v-for="(msg, i) in messages" :key="i">
+        <div
+          v-if="!isNoticeMessage(msg)" 
+          class="user-name">{{ msg.sender.name }}</div>
+        <div 
+          :class="{ 'notice-message': isNoticeMessage(msg) }" 
+          class="user-message">{{ msg.message }}</div>
       </li>
     </ul>
     <div class="no-connect-wrapper" v-else>
@@ -23,7 +26,7 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 import SockJS from 'sockjs-client';
 import Stomp from 'stomp-websocket';
 import notification from '../../libs/notification';
@@ -40,9 +43,11 @@ export default {
       message: '',
       messages: [],
       messageListElement: document.getElementsByClassName('message-list'),
-      connected: false,
-      userCount: 0
+      connected: false
     }
+  },
+  computed: {
+    ...mapGetters(['currentUser'])
   },
   created() {
     this.room = JSON.parse(localStorage.getItem('wschat.roomId'));
@@ -66,7 +71,7 @@ export default {
       this.messageListElement.scrollTop = this.messageListElement.scrollHeight;
     },
     recvMessage(recv) {
-      this.userCount = recv.userCount;
+      this.handlerUpdateUserCount(recv.userCount)
       this.messages.push({"type":recv.type, "sender":recv.sender, "message":recv.message});
     },
     connect() {
@@ -76,7 +81,6 @@ export default {
       this.reconnect = 0;
 
       this.ws.connect({}, () => {
-        console.log('connect')
         this.ws.subscribe(`/sub/chat/room/${this.room.roomId}`, (message) => {
           var recv = JSON.parse(message.body);
           this.recvMessage(recv);
@@ -102,6 +106,22 @@ export default {
     },
     reConnect() {
       this.connect();
+    },
+    handlerUpdateUserCount(userCount) {
+      this.$emit('updateUserCount', userCount)
+    },
+    isNoticeMessage(msg) {
+      return msg.sender.name === 'NOTICE'
+    },
+    isSameUserBeforeMessage(msg) {
+      if (this.messages.length === 1) {
+        return false;
+      }
+      return this.messages[this.messages.length - 2].sender.id == msg.sender.id;
+    },
+    isCurrentUser(msg) {
+      console.log(msg, this.currentUser.id)
+      return this.currentUser.id == msg.sender.id
     }
   }
 }
@@ -203,6 +223,21 @@ ul {
 }
 .re-connect:hover {
   background-color: #eaeaea;
+}
+.notice-message {
+  width: 100%;
+  max-width: none;
+  text-align: center;
+  background-color: white;
+  font-size: 12px;
+}
+.no-user-name {
+  display: none;
+}
+.user-me {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
 }
 ::-webkit-scrollbar { width: 3.2px; } /* 스크롤 바 */
 ::-webkit-scrollbar-track { background-color:#f7f7f7; } /* 스크롤 바 밑의 배경 */
