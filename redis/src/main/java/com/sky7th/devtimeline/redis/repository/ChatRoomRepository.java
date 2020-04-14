@@ -1,61 +1,65 @@
 package com.sky7th.devtimeline.redis.repository;
 
 import com.sky7th.devtimeline.redis.model.ChatRoom;
-import com.sky7th.devtimeline.redis.pubsub.RedisSubscriber;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.HashOperations;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.listener.ChannelTopic;
-import org.springframework.data.redis.listener.RedisMessageListenerContainer;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Repository;
 
-import javax.annotation.PostConstruct;
-import java.util.HashMap;
+import javax.annotation.Resource;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Repository
 public class ChatRoomRepository {
 
-    private final RedisMessageListenerContainer redisMessageListener;
-    private final RedisSubscriber redisSubscriber;
-
     private static final String CHAT_ROOMS = "CHAT_ROOM";
-    private final RedisTemplate<String, Object> redisTemplate;
-    private HashOperations<String, String, ChatRoom> opsHashChatRoom;
-    private Map<String, ChannelTopic> topics;
+    private static final String USER_COUNT = "USER_COUNT";
+    private static final String ENTER_INFO = "ENTER_INFO";
 
-    @PostConstruct
-    private void init() {
-        opsHashChatRoom = redisTemplate.opsForHash();
-        topics = new HashMap<>();
-    }
+    @Resource(name = "redisTemplate")
+    private HashOperations<String, String, ChatRoom> hashOpsChatRoom;
+    @Resource(name = "redisTemplate")
+    private HashOperations<String, String, String> hashOpsEnterInfo;
+    @Resource(name = "redisTemplate")
+    private ValueOperations<String, String> valueOps;
 
     public List<ChatRoom> findAllRoom() {
-        return opsHashChatRoom.values(CHAT_ROOMS);
+        return hashOpsChatRoom.values(CHAT_ROOMS);
     }
 
     public ChatRoom findRoomById(String id) {
-        return opsHashChatRoom.get(CHAT_ROOMS, id);
+        return hashOpsChatRoom.get(CHAT_ROOMS, id);
     }
 
     public ChatRoom createChatRoom(String name) {
         ChatRoom chatRoom = ChatRoom.create(name);
-        opsHashChatRoom.put(CHAT_ROOMS, chatRoom.getRoomId(), chatRoom);
+        hashOpsChatRoom.put(CHAT_ROOMS, chatRoom.getRoomId(), chatRoom);
         return chatRoom;
     }
 
-    public void enterChatRoom(String roomId) {
-        ChannelTopic topic = topics.get(roomId);
-        if (topic == null) {
-            topic = new ChannelTopic(roomId);
-            redisMessageListener.addMessageListener(redisSubscriber, topic);
-            topics.put(roomId, topic);
-        }
+    public void setUserEnterInfo(String sessionId, String roomId) {
+        hashOpsEnterInfo.put(ENTER_INFO, sessionId, roomId);
     }
 
-    public ChannelTopic getTopic(String roomId) {
-        return topics.get(roomId);
+    public String getUserEnterRoomId(String sessionId) {
+        return hashOpsEnterInfo.get(ENTER_INFO, sessionId);
+    }
+
+    public void removeUserEnterInfo(String sessionId) {
+        hashOpsEnterInfo.delete(ENTER_INFO, sessionId);
+    }
+
+    public long getUserCount(String roomId) {
+        return Long.parseLong(Optional.ofNullable(valueOps.get(USER_COUNT + "_" + roomId)).orElse("0"));
+    }
+
+    public long plusUserCount(String roomId) {
+        return Optional.ofNullable(valueOps.increment(USER_COUNT + "_" + roomId)).orElse(0L);
+    }
+
+    public long minusUserCount(String roomId) {
+        return Optional.ofNullable(valueOps.decrement(USER_COUNT + "_" + roomId)).filter(count -> count > 0).orElse(0L);
     }
 }

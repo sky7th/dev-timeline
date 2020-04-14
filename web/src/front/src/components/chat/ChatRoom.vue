@@ -1,5 +1,6 @@
 <template>
   <div class="chat-room" v-cloak>
+    <div>{{ userCount }}</div>
     <button class="btn-close" @click="disconnect">x</button>
     <ul v-if="connected" class="message-list">
       <li class="message-item" v-for="(message, i) in messages" :key="i">
@@ -39,7 +40,8 @@ export default {
       message: '',
       messages: [],
       messageListElement: document.getElementsByClassName('message-list'),
-      connected: false
+      connected: false,
+      userCount: 0
     }
   },
   created() {
@@ -64,7 +66,8 @@ export default {
       this.messageListElement.scrollTop = this.messageListElement.scrollHeight;
     },
     recvMessage(recv) {
-      this.messages.push({"type":recv.type, "sender":recv.type=='ENTER'?'[알림]':recv.sender, "message":recv.message})
+      this.userCount = recv.userCount;
+      this.messages.push({"type":recv.type, "sender":recv.sender, "message":recv.message});
     },
     connect() {
       this.connected = true;
@@ -73,14 +76,11 @@ export default {
       this.reconnect = 0;
 
       this.ws.connect({}, () => {
+        console.log('connect')
         this.ws.subscribe(`/sub/chat/room/${this.room.roomId}`, (message) => {
           var recv = JSON.parse(message.body);
           this.recvMessage(recv);
         });
-        this.ws.send(`/pub/chat/message`, {}, JSON.stringify({
-          type:'ENTER', roomId: this.room.roomId, sender: this.sender
-          }));
-
       }, () => {
         this.connected = false;
         notification.warn('연결에 실패했습니다.');

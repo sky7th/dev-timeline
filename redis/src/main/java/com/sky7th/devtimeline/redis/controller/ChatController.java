@@ -1,8 +1,8 @@
 package com.sky7th.devtimeline.redis.controller;
 
 import com.sky7th.devtimeline.redis.model.ChatMessage;
-import com.sky7th.devtimeline.redis.pubsub.RedisPublisher;
 import com.sky7th.devtimeline.redis.repository.ChatRoomRepository;
+import com.sky7th.devtimeline.redis.service.ChatService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.stereotype.Controller;
@@ -11,15 +11,13 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class ChatController {
 
-    private final RedisPublisher redisPublisher;
     private final ChatRoomRepository chatRoomRepository;
+    private final ChatService chatService;
 
     @MessageMapping("/chat/message")
     public void message(ChatMessage message) {
-        if (ChatMessage.MessageType.ENTER.equals(message.getType())) {
-            chatRoomRepository.enterChatRoom(message.getRoomId());
-            message.setMessage(message.getSender().getName() + "님이 입장하셨습니다.");
-        }
-        redisPublisher.publish(chatRoomRepository.getTopic(message.getRoomId()), message);
+        message.setSender(message.getSender());
+        message.setUserCount(chatRoomRepository.getUserCount(message.getRoomId()));
+        chatService.sendChatMessage(message);
     }
 }

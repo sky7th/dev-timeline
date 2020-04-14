@@ -19,6 +19,7 @@ export default {
     selectedChatRoom: { type: Object, default: () => ({
       roomId: '',
       name: '',
+      userCount: 0
     })}
   },
   components: {

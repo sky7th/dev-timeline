@@ -1,5 +1,6 @@
 package com.sky7th.devtimeline.redis.model;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,4 +12,10 @@ public class ChatSender {
     private String name;
     private String imageUrl;
 
+    @Builder
+    public ChatSender(String id, String name, String imageUrl) {
+        this.id = id;
+        this.name = name;
+        this.imageUrl = imageUrl;
+    }
 }
