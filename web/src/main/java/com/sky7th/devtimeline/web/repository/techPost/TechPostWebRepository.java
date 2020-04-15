@@ -1,7 +1,6 @@
 package com.sky7th.devtimeline.web.repository.techPost;
 
-import com.sky7th.devtimeline.core.domain.techpost.TechPost;
-import org.springframework.data.jpa.repository.JpaRepository;
+import com.sky7th.devtimeline.core.domain.techpost.TechPostRepository;
 
-public interface TechPostWebRepository extends JpaRepository<TechPost, Long>, TechPostWebRepositoryCustom {
+public interface TechPostWebRepository extends TechPostRepository, TechPostWebRepositoryCustom {
 }

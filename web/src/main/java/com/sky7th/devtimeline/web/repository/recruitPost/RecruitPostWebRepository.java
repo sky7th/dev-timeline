@@ -1,7 +1,6 @@
 package com.sky7th.devtimeline.web.repository.recruitPost;
 
-import com.sky7th.devtimeline.core.domain.recruitpost.RecruitPost;
-import org.springframework.data.jpa.repository.JpaRepository;
+import com.sky7th.devtimeline.core.domain.recruitpost.RecruitPostRepository;
 
-public interface RecruitPostWebRepository extends JpaRepository<RecruitPost, Long>, RecruitPostWebRepositoryCustom {
+public interface RecruitPostWebRepository extends RecruitPostRepository, RecruitPostWebRepositoryCustom {
 }

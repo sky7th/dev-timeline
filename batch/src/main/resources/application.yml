@@ -26,5 +26,8 @@ spring:
       ddl-auto: update
     generate-ddl: true
 
+  main:
+    allow-bean-definition-overriding: true
+
 selenium:
   web-driver-path: C:\\chromedriver\\chromedriver.exe

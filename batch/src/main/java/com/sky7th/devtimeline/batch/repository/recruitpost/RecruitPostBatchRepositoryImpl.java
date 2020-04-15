@@ -1,19 +1,19 @@
-package com.sky7th.devtimeline.core.domain.recruitpost;
+package com.sky7th.devtimeline.batch.repository.recruitpost;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sky7th.devtimeline.core.domain.company.CompanyType;
 import com.sky7th.devtimeline.core.domain.companyUrl.CompanyUrlType;
-
+import com.sky7th.devtimeline.core.domain.recruitpost.RecruitPost;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
-import static com.sky7th.devtimeline.core.domain.recruitpost.QRecruitPost.recruitPost;
-import static com.sky7th.devtimeline.core.domain.companyUrl.QCompanyUrl.companyUrl;
 import static com.sky7th.devtimeline.core.domain.company.QCompany.company;
+import static com.sky7th.devtimeline.core.domain.companyUrl.QCompanyUrl.companyUrl;
+import static com.sky7th.devtimeline.core.domain.recruitpost.QRecruitPost.recruitPost;
 
 @RequiredArgsConstructor
-public class RecruitPostRepositoryImpl implements RecruitPostRepositoryCustom {
+public class RecruitPostBatchRepositoryImpl implements RecruitPostBatchRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
 

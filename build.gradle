@@ -83,6 +83,9 @@ project(':batch') {
 		implementation group: 'org.jsoup', name: 'jsoup', version: '1.12.1'
 		implementation group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '3.141.59'
 		testImplementation 'org.springframework.batch:spring-batch-test'
+		testImplementation('org.springframework.boot:spring-boot-starter-test') {
+			exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+		}
 	}
 }
 

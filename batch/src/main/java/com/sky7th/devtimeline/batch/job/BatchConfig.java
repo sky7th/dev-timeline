@@ -1,15 +1,15 @@
 package com.sky7th.devtimeline.batch.job;
 
 import com.sky7th.devtimeline.batch.dto.CrawlingDto;
+import com.sky7th.devtimeline.batch.repository.recruitpost.RecruitPostBatchRepository;
+import com.sky7th.devtimeline.batch.repository.techpost.TechPostBatchRepository;
 import com.sky7th.devtimeline.batch.service.CrawlingService;
 import com.sky7th.devtimeline.batch.dto.CompanyDto;
 import com.sky7th.devtimeline.core.domain.company.CompanyType;
 import com.sky7th.devtimeline.core.domain.companyUrl.CompanyUrl;
 import com.sky7th.devtimeline.core.domain.companyUrl.CompanyUrlType;
 import com.sky7th.devtimeline.core.domain.recruitpost.RecruitPost;
-import com.sky7th.devtimeline.core.domain.recruitpost.RecruitPostRepository;
 import com.sky7th.devtimeline.core.domain.techpost.TechPost;
-import com.sky7th.devtimeline.core.domain.techpost.TechPostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
@@ -44,8 +44,8 @@ public class BatchConfig {
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
     private final CrawlingService crawlingService;
-    private final RecruitPostRepository recruitPostRepository;
-    private final TechPostRepository techPostRepository;
+    private final RecruitPostBatchRepository recruitPostBatchRepository;
+    private final TechPostBatchRepository techPostBatchRepository;
 
     @Bean
     public Job job() {
@@ -104,9 +104,9 @@ public class BatchConfig {
                 List<TechPost> existTechPosts = new ArrayList<>();
 
                 if (companyUrlType.equals(CompanyUrlType.RECRUIT)) {
-                    existRecruitPosts = recruitPostRepository.findByCompanyTypeAndUrlType(companyType, companyUrlType);
+                    existRecruitPosts = recruitPostBatchRepository.findByCompanyTypeAndUrlType(companyType, companyUrlType);
                 } else if (companyUrlType.equals(CompanyUrlType.TECH)) {
-                    existTechPosts = techPostRepository.findByCompanyTypeAndUrlType(companyType, companyUrlType);
+                    existTechPosts = techPostBatchRepository.findByCompanyTypeAndUrlType(companyType, companyUrlType);
                 }
 
                 for (CrawlingDto crawlingDto : crawlingResult) {
@@ -124,10 +124,10 @@ public class BatchConfig {
 
                     if (existCount == 0) {
                         if (crawlingDto.isCompanyUrlType(CompanyUrlType.RECRUIT)) {
-                            recruitPostRepository.save(crawlingDto.toRecruitPost());
+                            recruitPostBatchRepository.save(crawlingDto.toRecruitPost());
 
                         } else if (crawlingDto.isCompanyUrlType(CompanyUrlType.TECH)) {
-                            techPostRepository.save(crawlingDto.toTechPost());
+                            techPostBatchRepository.save(crawlingDto.toTechPost());
                         }
                         updateAddedPostCountMap(addedPostCountMap, crawlingDto.getCompanyUrl());
                         addedPostCount += 1;

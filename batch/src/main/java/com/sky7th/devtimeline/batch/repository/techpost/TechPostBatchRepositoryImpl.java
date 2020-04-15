@@ -1,9 +1,9 @@
-package com.sky7th.devtimeline.core.domain.techpost;
+package com.sky7th.devtimeline.batch.repository.techpost;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sky7th.devtimeline.core.domain.company.CompanyType;
 import com.sky7th.devtimeline.core.domain.companyUrl.CompanyUrlType;
-
+import com.sky7th.devtimeline.core.domain.techpost.TechPost;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
@@ -13,7 +13,7 @@ import static com.sky7th.devtimeline.core.domain.companyUrl.QCompanyUrl.companyU
 import static com.sky7th.devtimeline.core.domain.techpost.QTechPost.techPost;
 
 @RequiredArgsConstructor
-public class TechPostRepositoryImpl implements TechPostRepositoryCustom {
+public class TechPostBatchRepositoryImpl implements TechPostBatchRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
 
