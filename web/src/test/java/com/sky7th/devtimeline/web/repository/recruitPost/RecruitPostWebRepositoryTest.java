@@ -1,6 +1,7 @@
 package com.sky7th.devtimeline.web.repository.recruitPost;
 
 import com.sky7th.devtimeline.core.domain.recruitpost.RecruitPost;
+import com.sky7th.devtimeline.web.service.dto.PostSearchForm;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,22 +22,25 @@ public class RecruitPostWebRepositoryTest {
     @Test
     public void recruit_post을_desc으로_정렬하여_조회한다() {
         //given
-
+        PostSearchForm searchForm = PostSearchForm.builder()
+                .offset(0L)
+                .limit(10L)
+                .build();
         //when
-//        List<RecruitPost> recruitPosts = recruitPostWebRepository.findBySearchForm();
-//
-//        for (RecruitPost recruitPost : recruitPosts) {
-//            System.out.println(
-//                    recruitPost.getCompanyUrl().getCompany().getCompanyType().getName()
-//                    + " "+ recruitPost.getCompanyUrl().getCompanyUrlType()
-//                    + " "+ recruitPost.getTitle()
-//                    + " "+ recruitPost.getContentUrl()
-//                    + " "+ recruitPost.getClosingDate()
-//            );
-//        }
-//
-//        //then
-//        assertThat(recruitPosts.size() > 0);
+        List<RecruitPost> recruitPosts = recruitPostWebRepository.findBySearchForm(searchForm);
+
+        for (RecruitPost recruitPost : recruitPosts) {
+            System.out.println(
+                    recruitPost.getCompanyUrl().getCompany().getCompanyType().getName()
+                    + " "+ recruitPost.getCompanyUrl().getCompanyUrlType()
+                    + " "+ recruitPost.getTitle()
+                    + " "+ recruitPost.getContentUrl()
+                    + " "+ recruitPost.getClosingDate()
+            );
+        }
+
+        //then
+        assertThat(recruitPosts.size() > 0);
     }
 
 

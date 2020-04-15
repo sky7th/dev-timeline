@@ -1,6 +1,8 @@
 package com.sky7th.devtimeline.web.service.dto;
 
 import com.sky7th.devtimeline.core.domain.company.CompanyType;
+import com.sky7th.devtimeline.core.domain.linkpost.LinkType;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -20,6 +22,16 @@ public class PostSearchForm {
     Long limit = PAGE_SIZE;
     List<String> tags;
     List<String> companies;
+    List<String> linkTypes;
+
+    @Builder
+    public PostSearchForm(Long offset, Long limit, List<String> tags, List<String> companies, List<String> linkTypes) {
+        this.offset = offset;
+        this.limit = limit;
+        this.tags = tags;
+        this.companies = companies;
+        this.linkTypes = linkTypes;
+    }
 
     @Override
     public String toString() {
@@ -37,6 +49,15 @@ public class PostSearchForm {
         }
         return companies.stream()
                 .map(CompanyType::valueOf)
+                .collect(Collectors.toList());
+    }
+
+    public List<LinkType> getLinkTypes() {
+        if (StringUtils.isEmpty(linkTypes)) {
+            return null;
+        }
+        return linkTypes.stream()
+                .map(LinkType::valueOf)
                 .collect(Collectors.toList());
     }
 
