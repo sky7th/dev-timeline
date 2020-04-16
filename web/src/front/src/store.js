@@ -1,9 +1,9 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import axios from 'axios';
 
 import { POST_LIMIT } from '@/constant/Constant';
-import {setHeader} from './libs/axios.custom';
+import { setHeader } from './libs/axios.custom';
+import axios from './libs/axios.custom'
 
 Vue.use(Vuex);
 

@@ -3,7 +3,6 @@ package com.sky7th.devtimeline.web.presentation.api;
 import com.sky7th.devtimeline.web.presentation.api.dto.WebResponseDto;
 import com.sky7th.devtimeline.web.service.RecruitPostService;
 import com.sky7th.devtimeline.web.service.dto.PostSearchForm;
-import com.sky7th.devtimeline.web.service.dto.RecruitPostViewItem;
 import com.sky7th.devtimeline.web.service.dto.RecruitPostViewItems;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static com.sky7th.devtimeline.web.presentation.api.dto.WebResponseStatus.OK;

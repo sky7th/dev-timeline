@@ -4,6 +4,7 @@ import com.sky7th.devtimeline.core.domain.linkpost.LinkPost;
 import com.sky7th.devtimeline.core.domain.tag.Tag;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -11,6 +12,7 @@ import java.util.stream.Collectors;
 import static com.sky7th.devtimeline.core.domain.utils.LocalDateTimeUtils.toStringDate;
 
 @RequiredArgsConstructor
+@Setter
 @Getter
 public class LinkPostViewItem {
 

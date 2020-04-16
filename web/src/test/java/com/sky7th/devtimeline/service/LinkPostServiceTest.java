@@ -34,7 +34,10 @@ public class LinkPostServiceTest {
     @Test
     public void link_post_생성하고_수정_후_id로_조회한다() {
         //given
-        LinkPostViewItem linkPostViewItem = new LinkPostViewItem("title 1", "content 1", new ArrayList<>(), "link", null);
+        LinkPostViewItem linkPostViewItem = new LinkPostViewItem();
+        linkPostViewItem.setTitle("title 1");
+        linkPostViewItem.setTags(new ArrayList<>());
+        linkPostViewItem.setContent("content 1");
 
         UserPrincipal userPrincipal = UserPrincipal.builder().id(1L).build();
 

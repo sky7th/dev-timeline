@@ -150,7 +150,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         .permitAll()
                     .antMatchers(
                         "/api/v1/recruit-posts",
-                        "/api/v1/tech-posts")
+                        "/api/v1/tech-posts",
+                            "/api/v1/link-posts")
                         .permitAll()
                     .antMatchers("/auth/**", "/oauth2/**", "/login**")
                         .permitAll()

@@ -3,6 +3,7 @@ package com.sky7th.devtimeline.web.security.oauth2;
 import com.sky7th.devtimeline.core.domain.user.AuthProvider;
 import com.sky7th.devtimeline.core.domain.user.User;
 import com.sky7th.devtimeline.core.domain.user.UserRepository;
+import com.sky7th.devtimeline.core.domain.user.UserRole;
 import com.sky7th.devtimeline.web.exception.OAuth2AuthenticationProcessingException;
 import com.sky7th.devtimeline.web.security.UserPrincipal;
 import com.sky7th.devtimeline.web.security.oauth2.user.OAuth2UserInfo;
@@ -69,6 +70,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 .email(oAuth2UserInfo.getEmail())
                 .emailVerified(false)
                 .imageUrl(oAuth2UserInfo.getImageUrl())
+                .userRole(UserRole.USER)
                 .build();
 
         return userRepository.save(user);

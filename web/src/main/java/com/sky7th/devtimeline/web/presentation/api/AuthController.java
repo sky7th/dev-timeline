@@ -3,6 +3,7 @@ package com.sky7th.devtimeline.web.presentation.api;
 import com.sky7th.devtimeline.core.domain.user.AuthProvider;
 import com.sky7th.devtimeline.core.domain.user.User;
 import com.sky7th.devtimeline.core.domain.user.UserRepository;
+import com.sky7th.devtimeline.core.domain.user.UserRole;
 import com.sky7th.devtimeline.web.exception.BadRequestException;
 import com.sky7th.devtimeline.web.presentation.api.dto.AuthResponseDto;
 import com.sky7th.devtimeline.web.presentation.api.dto.LoginRequestDto;
@@ -61,6 +62,7 @@ public class AuthController {
                 .emailVerified(false)
                 .password(passwordEncoder.encode(signUpRequest.getPassword()))
                 .provider(AuthProvider.local)
+                .userRole(UserRole.USER)
                 .build();
 
         User result = userRepository.save(user);
