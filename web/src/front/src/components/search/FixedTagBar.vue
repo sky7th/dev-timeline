@@ -59,5 +59,6 @@ export default {
   color: #2d92f1;
   background-color: #eeeeee;
   cursor: pointer;
+  transition: background-color .2s;
 }
 </style>

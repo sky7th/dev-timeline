@@ -83,10 +83,12 @@ export default {
   border-radius: 10px;
   -webkit-animation: fadeIn 0.3s ease-in-out;
   animation: fadeIn 0.3s ease-in-out;
-  box-shadow: 0 1px 4px rgba(27,31,35,.1);
+  box-shadow: 0 1px 2px 0 rgba(9,30,66,0.25), 0 0 1px 0 rgba(9,30,66,0.31);
 }
 .link-posts > ul > li:hover {
   box-shadow: 0 1px 6px rgba(27,31,35,.3);
+  transition: background-color .2s;
+  background-color: #f4f4f4;
 }
 .author-container {
   display: flex;
