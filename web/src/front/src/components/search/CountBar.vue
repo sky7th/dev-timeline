@@ -19,6 +19,8 @@ export default {
           return ' 개의 채용정보 글이 있어요'
         case 'tech-posts':
           return ' 개의 블로그 글이 있어요'
+        case 'link-posts':
+          return ' 개의 링크 공유 글이 있어요'
         default:
           return ''
       }

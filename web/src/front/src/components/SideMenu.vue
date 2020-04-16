@@ -9,6 +9,10 @@
         <div class="alpha">B</div>
         <div class="description">블로그</div>
       </li>
+      <li :class="{ 'selected-menu': selectedMenu=='link-posts' }" @click="handleUpdateSelectedMenu('link-posts')">
+        <div class="alpha">L</div>
+        <div class="description">링크</div>
+      </li>
     </ul>
   </div>
 </template>

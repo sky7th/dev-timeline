@@ -27,7 +27,11 @@ export default {
   methods: {
     ...mapActions(['updateChatRooms', 'insertSelectedChatRooms']),
     async findRooms() {
-      const response = await this.axios.get(`${process.env.VUE_APP_CHAT_API}/chat/rooms`);
+      const response = await this.axios.get(`${process.env.VUE_APP_CHAT_API}/chat/rooms`)
+        .catch(e => {
+          if (e.message === 'Network Error')
+            notification.warn('채팅 서버가 꺼져있습니다.');
+        })
       return response.data.map(room => { return { roomId: room.roomId, name: room.name }});
     },
     findRoomByName(name) {

@@ -3,6 +3,8 @@
     <TagBar/>
     <RecruitPosts v-if="selectedMenu==='recruit-posts'"/>
     <TechPosts v-else-if="selectedMenu==='tech-posts'"/>
+    <LinkPosts v-else-if="selectedMenu==='link-posts'"/>
+
     <ChatButton v-if="isBtnVisible"/>
     <div class="chat-bottoms-wrapper">
       <ChatContainer 
@@ -17,6 +19,7 @@
 <script>
 import RecruitPosts from '@/components/content/RecruitPosts';
 import TechPosts from '@/components/content/TechPosts';
+import LinkPosts from '@/components/content/LinkPosts';
 import TagBar from '@/components/search/TagBar';
 import ChatContainer from '@/components/chat/ChatContainer';
 import ChatButton from '@/components/chat/ChatButton';
@@ -27,6 +30,7 @@ export default {
   components: {
     RecruitPosts,
     TechPosts,
+    LinkPosts,
     TagBar,
     ChatContainer,
     ChatButton

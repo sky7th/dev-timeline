@@ -1,0 +1,165 @@
+<template>
+  <div class="link-posts">
+    <div class="top"></div>
+    <CountBar style="margin-bottom: 15px;"/>
+    <ul>
+      <li
+        v-for="({
+          id, 
+          title,
+          linkUrl,
+          tags,
+          createdDate}) in posts"
+        :key="id"
+      >
+        <a :href="linkUrl" style="display: flex; width: 100%;" target="_blank">
+          <div class="middle">
+            <div class="tags">
+              <span class="tag" v-for="({ id, name }) in tags" :key="id">#{{ name }}</span>
+            </div>
+            <div class="title">{{ title }}</div>
+            <div class="middle-bottom">
+              <div class="author-container">
+                <img class="img-author" :src="currentUser.imageUrl" alt="">
+                <div class="author">{{ currentUser.name }}</div>
+              </div>
+              <div class="between">|</div>
+              <div class="date">{{ createdDate }}</div>
+            </div>
+          </div>
+        </a>
+      </li>
+    </ul>
+    <infinite-loading class="infinite-message" @infinite="handlerInfinite" spinner="waveDots">
+      <div slot="no-more">
+        <div>마지막 부분이에요. 위로 올라가시겠어요?</div> 
+        <br/>
+        <a href="javascript:scroll(0,0)">네</a>
+        <a href="javascript:alert('o=| O ____ O |=o')">아니요</a>
+      </div>
+      <div slot="no-results">링크정보를 가져오지 못했어요 ..ㅠ.ㅠ</div>
+    </infinite-loading>
+    </div>
+</template>
+
+<script>
+import CountBar from '@/components/search/CountBar';
+import { mapGetters, mapActions } from "vuex";
+import InfiniteLoading from 'vue-infinite-loading';
+
+export default {
+  components: {
+    InfiniteLoading,
+    CountBar
+  },
+  computed: {
+    ...mapGetters(['posts', 'currentUser'])
+  },
+  methods: {
+    ...mapActions(['insertPosts']),
+    handlerInfinite($state) {
+      this.insertPosts({ infiniteState: $state })
+    }
+  }
+}
+</script>
+
+<style scoped>
+.link-posts > ul {
+  text-align: center;
+  padding: 3px 20px;
+}
+.link-posts > ul > li {
+  width: 300px;
+  display: inline-flex;
+  justify-content: flex-end;
+  margin: 15px;
+  background-color: white;
+  padding: 8px 23px 10px 16px;
+  margin-bottom: 15px;
+  border-radius: 10px;
+  -webkit-animation: fadeIn 0.3s ease-in-out;
+  animation: fadeIn 0.3s ease-in-out;
+  box-shadow: 0 1px 4px rgba(27,31,35,.1);
+}
+.link-posts > ul > li:hover {
+  box-shadow: 0 1px 6px rgba(27,31,35,.3);
+}
+.author-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100px;
+  margin-right: 0px;
+}
+.img-author {
+  height: 23px;
+  width: 23px;
+}
+.author {
+  margin-left: 10px;
+  font-size: 14px;
+  color: #5a5a5a;
+}
+.middle {
+  flex: 3;
+  justify-content: center;
+  flex-direction: column;
+  display: flex;
+  width: 100%;
+}
+.title {
+  margin-bottom: 19px;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: end;
+}
+.middle-bottom {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+.between {
+  margin-right: 15px;
+  font-size: 14px;
+  color: #5a5a5a;
+}
+.date {
+  font-size: 14px;
+  color: #5a5a5a;
+}
+.infinite-message {
+  font-size: 14px;
+  margin: 130px 0 80px 0;
+}
+.infinite-message div {
+
+}
+.infinite-message a {
+  cursor: pointer;
+  padding: 7px 8px;
+  margin: 13px 7px;
+}
+.infinite-message a:hover {
+  background-color: #e4e4e4;
+}
+.tags {
+  display: flex;
+  margin-bottom: 16px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 250px;
+  height: 20px;
+}
+.tag {
+  font-size: 12px;
+  color: #6a6a6a;
+  white-space: nowrap;
+  margin-right: 10px;
+}
+.top {
+  margin-bottom: 30px;
+}
+</style>
