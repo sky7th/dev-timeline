@@ -21,6 +21,10 @@ public class User extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private UserRole userRole;
+
     @Column(nullable = false)
     private String name;
 
@@ -43,7 +47,9 @@ public class User extends BaseTimeEntity {
     private String providerId;
 
     @Builder
-    public User(String name, String email, String imageUrl, Boolean emailVerified, String password, AuthProvider provider, String providerId) {
+    public User(Long id, UserRole userRole, String name, String email, String imageUrl, Boolean emailVerified, String password, AuthProvider provider, String providerId) {
+        this.id = id;
+        this.userRole = userRole;
         this.name = name;
         this.email = email;
         this.imageUrl = imageUrl;
@@ -51,5 +57,9 @@ public class User extends BaseTimeEntity {
         this.password = password;
         this.provider = provider;
         this.providerId = providerId;
+    }
+
+    public String getRole() {
+        return this.userRole.getRole();
     }
 }

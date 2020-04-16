@@ -40,12 +40,29 @@ public class LinkPost extends BaseTimeEntity {
     private String linkUrl;
 
     @Builder
-    public LinkPost(User user, LinkType linkType, List<Tag> tags, String title, String content, String linkUrl) {
+    public LinkPost(User user, LinkType linkType, String title, String content, String linkUrl) {
         this.linkType = linkType;
         this.user = user;
-        this.tags = tags;
         this.title = title;
         this.content = content;
         this.linkUrl = linkUrl;
     }
+
+    public void addTags(Tag tag) {
+        this.tags.add(tag);
+        tag.setLinkPost(this);
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void update(String title, String content, String linkUrl) {
+        this.title = title;
+        this.content = content;
+        this.linkUrl = linkUrl;
+    }
+
+
+
 }

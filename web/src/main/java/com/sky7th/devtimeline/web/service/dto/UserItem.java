@@ -22,4 +22,17 @@ public class UserItem {
         this.createdDate = toStringDate(user.getCreatedDate(), "yyyy-MM-dd");
     }
 
+    public User toUser() {
+        return User.builder()
+                .id(this.id)
+                .name(this.name)
+                .email(this.email)
+                .imageUrl(this.imageUrl)
+                .build();
+    }
+
+    public void changeImageUrl(String imageUrl) {
+
+    }
+
 }

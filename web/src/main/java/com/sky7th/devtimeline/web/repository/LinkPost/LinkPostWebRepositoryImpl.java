@@ -23,6 +23,7 @@ public class LinkPostWebRepositoryImpl implements LinkPostWebRepositoryCustom {
         return queryFactory
                 .selectFrom(linkPost)
                 .leftJoin(linkPost.user).fetchJoin()
+                .leftJoin(linkPost.tags).fetchJoin()
                 .where(containsTags(postSearchForm.getTags()),
                         inCompany(postSearchForm.getLinkTypes()))
                 .offset(postSearchForm.getOffset())

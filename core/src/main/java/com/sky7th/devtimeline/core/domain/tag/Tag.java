@@ -28,4 +28,8 @@ public class Tag {
         this.name = name;
     }
 
+    public void setLinkPost(LinkPost linkPost) {
+        this.linkPost = linkPost;
+    }
+
 }

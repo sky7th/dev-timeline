@@ -1,30 +1,6 @@
 spring:
   profiles:
-    active: test
----
-spring:
-  profiles: test
-  datasource:
-    hikari:
-      jdbc-url: jdbc:mysql://localhost:3306/dev_timeline?serverTimezone=Asia/Seoul&createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=UTF-8&characterSetResults=UTF-8&useSSL=true
-      username: xoghk
-      password: dlxoghk
-      driver-class-name: com.mysql.cj.jdbc.Driver
-  #      auto-commit: false
-  #      connection-test-query: SELECT 1
-  #      minimum-idle: 10
-  #      maximum-pool-size: 50
-  #      transaction-isolation: TRANSACTION_READ_UNCOMMITTED
-  #      pool-name: pool-timeline
-  jpa:
-    database-platform: org.hibernate.dialect.MySQL5Dialect
-    properties.hibernate:
-      format_sql: true
-      dialect: org.hibernate.dialect.MySQL5Dialect
-    show-sql: true
-    hibernate:
-      ddl-auto: update
-    generate-ddl: true
+    active: local
 
   security:
     oauth2:
@@ -36,11 +12,6 @@ spring:
           github:
             client-id: 3a5fd8be9a929bbac08d
             client-secret: 1dd82c3ed618452083df2cce6c9fc924e878010e
-#        provider:
-#          facebook:
-#            authorization-uri: https://www.facebook.com/v3.0/dialog/oauth
-#            token-uri: https://graph.facebook.com/v3.0/oauth/access_token
-#            user-info-uri: https://graph.facebook.com/v3.0/me?fields=id,first_name,middle_name,last_name,name,email,verified,is_verified,picture.width(250).height(250)
 
 restTemplate:
   factory:
