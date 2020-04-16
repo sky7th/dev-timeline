@@ -27,7 +27,7 @@ public class LinkPostApiController {
     private final LinkPostService linkPostService;
 
     @GetMapping("/api/v1/link-posts")
-    public WebResponseDto<Object> getLinkPosts(@Valid PostSearchForm searchForm, @CurrentUser UserPrincipal userPrincipal) {
+    public WebResponseDto<Object> getLinkPosts(@Valid PostSearchForm searchForm) {
         Map<String, Object> templateData = new HashMap<>();
         LinkPostViewItems linkPostViewItems = linkPostService.findBySearchForm(searchForm);
 
@@ -36,6 +36,13 @@ public class LinkPostApiController {
         templateData.put("postCounts", linkPostViewItems.getLinkPostCounts());
 
         return WebResponseDto.builder().status(OK).data(templateData).build();
+    }
+
+    @GetMapping("/api/v1/link-posts/{id}")
+    public WebResponseDto<Object> getLinkPost(@PathVariable(name = "id") Long id) {
+        LinkPostViewItem linkPostViewItem = linkPostService.findOne(id);
+
+        return WebResponseDto.builder().status(OK).data(linkPostViewItem).build();
     }
 
     @PostMapping("/api/v1/link-posts")

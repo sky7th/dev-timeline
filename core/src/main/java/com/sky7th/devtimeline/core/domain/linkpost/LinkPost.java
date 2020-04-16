@@ -63,6 +63,4 @@ public class LinkPost extends BaseTimeEntity {
         this.linkUrl = linkUrl;
     }
 
-
-
 }

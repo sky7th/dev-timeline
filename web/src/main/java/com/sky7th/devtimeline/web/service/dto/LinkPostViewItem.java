@@ -16,6 +16,7 @@ import static com.sky7th.devtimeline.core.domain.utils.LocalDateTimeUtils.toStri
 @Getter
 public class LinkPostViewItem {
 
+    private Long id;
     private String title;
     private String content;
     private List<TagItem> tags;
@@ -23,6 +24,7 @@ public class LinkPostViewItem {
     private String createdDate;
 
     public LinkPostViewItem(LinkPost linkPost) {
+        this.id = linkPost.getId();
         this.title = linkPost.getTitle();
         this.content = linkPost.getContent();
         this.tags = linkPost.getTags().stream().map(TagItem::new).collect(Collectors.toList());
@@ -36,20 +38,10 @@ public class LinkPostViewItem {
                 .content(this.content)
                 .linkUrl(this.linkUrl)
                 .build();
-        List<Tag> tagItems = this.tags.stream().map(TagItem::toTag).collect(Collectors.toList());
-        tagItems.forEach(linkPost::addTags);
+        List<Tag> tags = this.tags.stream().map(TagItem::toTag).collect(Collectors.toList());
+        tags.forEach(linkPost::addTags);
 
         return linkPost;
     }
 
-    @Override
-    public String toString() {
-        return "LinkPostViewItem{" +
-                "title='" + title + '\'' +
-                ", content='" + content + '\'' +
-                ", tags=" + tags +
-                ", linkUrl='" + linkUrl + '\'' +
-                ", createdDate='" + createdDate + '\'' +
-                '}';
-    }
 }

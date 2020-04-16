@@ -1,22 +1,26 @@
 package com.sky7th.devtimeline.web.service;
 
 import com.sky7th.devtimeline.core.domain.linkpost.LinkPost;
+import com.sky7th.devtimeline.core.domain.tag.Tag;
 import com.sky7th.devtimeline.web.exception.UnauthorizedException;
 import com.sky7th.devtimeline.web.repository.LinkPost.LinkPostWebRepository;
 import com.sky7th.devtimeline.web.security.UserPrincipal;
 import com.sky7th.devtimeline.web.service.dto.LinkPostViewItem;
 import com.sky7th.devtimeline.web.service.dto.LinkPostViewItems;
 import com.sky7th.devtimeline.web.service.dto.PostSearchForm;
+import com.sky7th.devtimeline.web.service.dto.TagItem;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
 public class LinkPostService {
 
+    private final TagService tagService;
     private final LinkPostWebRepository linkPostWebRepository;
 
     @Transactional(readOnly = true)
@@ -48,6 +52,7 @@ public class LinkPostService {
         if (!linkPost.getUser().getId().equals(userPrincipal.getId())) {
             throw new UnauthorizedException("작성자 본인만 수정이 가능합니다.");
         }
+        tagService.updateTags(linkPost, linkPostViewItem.getTags());
         linkPost.update(linkPostViewItem.getTitle(), linkPostViewItem.getContent(), linkPostViewItem.getLinkUrl());
     }
 

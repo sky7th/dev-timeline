@@ -8,14 +8,17 @@ import lombok.RequiredArgsConstructor;
 @Getter
 public class TagItem {
 
+    private Long id;
     private String name;
 
     public TagItem(Tag tag) {
+        this.id = tag.getId();
         this.name = tag.getName();
     }
 
     public Tag toTag() {
         return Tag.builder()
+                .id(this.id)
                 .name(this.name)
                 .build();
     }

@@ -1,5 +1,6 @@
 package com.sky7th.devtimeline.core.domain.tag;
 
+import com.sky7th.devtimeline.core.domain.common.BaseTimeEntity;
 import com.sky7th.devtimeline.core.domain.linkpost.LinkPost;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,7 +11,7 @@ import javax.persistence.*;
 @Entity
 @NoArgsConstructor
 @Getter
-public class Tag {
+public class Tag extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,7 +24,8 @@ public class Tag {
     private String name;
 
     @Builder
-    public Tag(LinkPost linkPost, String name) {
+    public Tag(Long id, LinkPost linkPost, String name) {
+        this.id = id;
         this.linkPost = linkPost;
         this.name = name;
     }
