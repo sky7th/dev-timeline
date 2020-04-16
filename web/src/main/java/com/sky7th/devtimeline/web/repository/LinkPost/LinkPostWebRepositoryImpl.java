@@ -25,7 +25,7 @@ public class LinkPostWebRepositoryImpl implements LinkPostWebRepositoryCustom {
                 .leftJoin(linkPost.user).fetchJoin()
                 .leftJoin(linkPost.tags).fetchJoin()
                 .where(containsTags(postSearchForm.getTags()),
-                        inCompany(postSearchForm.getLinkTypes()))
+                        inLinkType(postSearchForm.getLinkTypes()))
                 .offset(postSearchForm.getOffset())
                 .limit(postSearchForm.getLimit())
                 .orderBy(linkPost.createdDate.desc())
@@ -51,7 +51,7 @@ public class LinkPostWebRepositoryImpl implements LinkPostWebRepositoryCustom {
         return builder;
     }
 
-    private BooleanExpression inCompany(List<LinkType> linkTypes) {
+    private BooleanExpression inLinkType(List<LinkType> linkTypes) {
         if (StringUtils.isEmpty(linkTypes)) {
             return null;
         }

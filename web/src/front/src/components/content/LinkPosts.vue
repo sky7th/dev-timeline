@@ -1,7 +1,7 @@
 <template>
   <div class="link-posts">
-    <div class="top"></div>
-    <CountBar style="margin-bottom: 15px;"/>
+    <FixedTagBar/>
+    <CountBar style="margin-bottom: 11px;"/>
     <ul>
       <li
         v-for="({
@@ -9,6 +9,7 @@
           title,
           linkUrl,
           tags,
+          user,
           createdDate}) in posts"
         :key="id"
       >
@@ -20,8 +21,8 @@
             <div class="title">{{ title }}</div>
             <div class="middle-bottom">
               <div class="author-container">
-                <img class="img-author" :src="currentUser.imageUrl" alt="">
-                <div class="author">{{ currentUser.name }}</div>
+                <img class="img-author" :src="user.imageUrl" alt="">
+                <div class="author">{{ user.name }}</div>
               </div>
               <div class="between">|</div>
               <div class="date">{{ createdDate }}</div>
@@ -44,13 +45,15 @@
 
 <script>
 import CountBar from '@/components/search/CountBar';
+import FixedTagBar from '@/components/search/FixedTagBar';
 import { mapGetters, mapActions } from "vuex";
 import InfiniteLoading from 'vue-infinite-loading';
 
 export default {
   components: {
     InfiniteLoading,
-    CountBar
+    CountBar,
+    FixedTagBar
   },
   computed: {
     ...mapGetters(['posts', 'currentUser'])
@@ -96,6 +99,7 @@ export default {
 .img-author {
   height: 23px;
   width: 23px;
+  border-radius: 5px;
 }
 .author {
   margin-left: 10px;
