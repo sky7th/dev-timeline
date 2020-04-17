@@ -4,7 +4,7 @@
     </div>
     <div class="modal" :class="{ 'close-in-delay': isClickCloseBtn }">
       <div class="close" @click="closePopupInDelay">x</div>
-      <LinkPostModal v-if="selectedMenu==='link-posts'"/>
+      <LinkPostModal v-if="selectedMenu==='link-posts'" @closePopup="closePopupInDelay"/>
     </div>
   </div>
 </template>
@@ -28,7 +28,6 @@ export default {
   methods: {
     ...mapActions(['offModalState']),
     closePopupInDelay() {
-      console.log(this.isClickCloseBtn);
       this.isClickCloseBtn = true;
       setTimeout(() => {
         this.offModalState();
@@ -41,7 +40,7 @@ export default {
 
 <style scoped>
 .modal {
-  position: absolute;
+  position: fixed;
   left: 50%;
   top: 50%;
   border-radius: 7px;
@@ -54,18 +53,18 @@ export default {
   border-radius: 3px;
   box-shadow: 0 1px 2px 0 rgba(9,30,66,0.25), 0 0 1px 0 rgba(9,30,66,0.31);
   animation: superman 0.5s ease-in-out;
+  z-index: 1000;
 }
 .close-in-delay {
   animation: superman-reverse 0.5s ease-in-out;
 }
 .modal-background {
   position: fixed;
-  top: 23px;
-  left: 40px;
   height: 100%;
   width: 100%;
-  background-color: rgba(120, 120, 120, 0.2);
+  background-color: rgba(120, 120, 120, 0.4);
   animation: fadeIn 0.3s ease-in-out;
+  z-index: 1000;
 }
 .close {
   position: absolute;
@@ -74,6 +73,7 @@ export default {
   font-size: 18px;
   font-weight: bold;
   cursor: pointer;
+  color: #7a7a7a;
 }
 ::-webkit-scrollbar { width: 3.2px; } /* 스크롤 바 */
 ::-webkit-scrollbar-track { background-color:#f7f7f7; } /* 스크롤 바 밑의 배경 */

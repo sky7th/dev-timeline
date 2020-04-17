@@ -38,25 +38,25 @@ a {
 
 @keyframes superman {
   0% {
-    top: 125%;
+    left: 140%;
   }
   70% {
-    top: 43%;
+    left: 40%;
   }
   100% {
-    top: 50%;
+    left: 50%;
   }
 }
 
 @keyframes superman-reverse {
   0% {
-    top: 50%;
+    left: 50%;
   }
   30% {
-    top: 43%;
+    left: 60%;
   }
   100% {
-    top: 125%;
+    left: -140%;
   }
 }
 

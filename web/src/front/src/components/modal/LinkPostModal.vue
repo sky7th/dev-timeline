@@ -13,23 +13,25 @@
         @keypressEnter="moveFocusToTag"/>
     </div>
     <div class="wrapper">
-      <div class="description">tags</div>
-      <ul class="tag-wrapper" @click="moveFocusToTag">
+      <div class="description">tags <span style="font-size: 12px; margin-left: 4px;">(태그 입력 후 엔터를 꾸욱)</span></div>
+      <ul class="tag-wrapper" 
+        @click="moveFocusToTag">
         <li v-for="(tag, i) in linkPost.tags" :key="i" class="tag-add">
           <span class="tag-name">{{ tag.name }}</span>
-          <span class="tag-close" @click="removeTag($event, tag.forId)">x</span>
+          <span class="tag-close" 
+            @click="removeTag($event, tag.forId)">x</span>
         </li>
         <li class="tag-input">
           <input type="text" v-model="tagName" 
             @keypress.enter="addTag"
-            @blur="addTag"
             @keydown="getLengthByLanguage">
         </li>
       </ul>
     </div>
     <div class="wrapper content">
       <div class="description">description</div>
-      <TextareaForm class="content-input" name="content" placeholder="설명을 적어주세요." v-model="linkPost.content"/>
+      <TextareaForm class="content-input" name="content" placeholder="설명을 적어주세요." 
+        v-model="linkPost.content"/>
     </div>
     <div class="bottom-wrapper">
       <BlueButton class="btn-submit" type="submit" :name="'작성'"
@@ -82,9 +84,9 @@ export default {
         })
     },
     handlerRefresh() {
-      this.offModalState();
       this.resetOffset();
       this.updatePosts();
+      this.handlerClosePopup();
     },
     addTag() {
       this.linkPost.tags.push({ id: null, forId: new Date().getTime(), name: this.tagName });
@@ -115,6 +117,9 @@ export default {
     },
     moveFocusToContent() {
       document.querySelector('.content-input').focus();
+    },
+    handlerClosePopup() {
+      this.$emit('closePopup');
     }
   }
 }

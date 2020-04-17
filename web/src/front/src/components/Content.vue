@@ -5,7 +5,7 @@
     <TechPosts v-else-if="selectedMenu==='tech-posts'"/>
     <LinkPosts v-else-if="selectedMenu==='link-posts'"/>
 
-    <SideButton v-if="isMenuPossibleWrite && currentUser!=null" @event="onModalState"/>
+    <SideButton v-if="isMenuPossibleWrite && currentUser!=null" @event="onModalState" style="bottom: 50%;"/>
     <ChatButton v-if="isBtnVisible"/>
     <div class="chat-bottoms-wrapper">
       <ChatContainer 
@@ -13,7 +13,6 @@
         v-for="(selectedChatRoom) in selectedChatRooms" 
         :key="selectedChatRoom.name"/>
     </div>
-    <Modal v-if="modalState"/>
   </div>
 </template>
 
@@ -25,7 +24,6 @@ import TagBar from '@/components/search/TagBar';
 import ChatContainer from '@/components/chat/ChatContainer';
 import ChatButton from '@/components/chat/ChatButton';
 import SideButton from '@/components/common/button/SideButton';
-import Modal from '@/components/modal/Modal'
 
 import { mapGetters, mapActions } from "vuex";
 
@@ -37,8 +35,7 @@ export default {
     TagBar,
     ChatContainer,
     ChatButton,
-    SideButton,
-    Modal
+    SideButton
   },
   computed: {
     ...mapGetters(['selectedMenu', 'selectedChatRooms', 'selectedChatRooms', 'modalState', 'currentUser']),

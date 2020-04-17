@@ -19,7 +19,6 @@ export default {
 <style scoped>
 .side-button {
   position: fixed;
-  top: 100px;
   right: 0;
   z-index: 2000;
   animation: fadeIn 0.3s ease-in-out;

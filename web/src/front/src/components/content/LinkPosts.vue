@@ -95,7 +95,7 @@ export default {
   box-shadow: 0 1px 2px 0 rgba(9,30,66,0.25), 0 0 1px 0 rgba(9,30,66,0.31);
 }
 .link-posts > ul > li:hover {
-  box-shadow: 0 1px 6px rgba(27,31,35,.3);
+  box-shadow: 0 1px 4px rgba(27,31,35,.3);
   transition: background-color .2s;
   background-color: #f4f4f4;
 }
@@ -124,10 +124,11 @@ export default {
   width: 100%;
 }
 .title {
-  margin-bottom: 19px;
+  margin-bottom: 13px;
   font-size: 18px;
   font-weight: bold;
   text-align: end;
+  line-height: 140%;
 }
 .middle-bottom {
   display: flex;
@@ -160,12 +161,11 @@ export default {
 }
 .tags {
   display: flex;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   width: 250px;
-  height: 20px;
 }
 .tag {
   font-size: 12px;
