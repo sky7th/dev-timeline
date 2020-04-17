@@ -31,7 +31,7 @@ public class ChatService {
             chatMessage.setMessage(chatMessage.getSender().getName() + "님이 입장했습니다.");
             chatMessage.setSender(noticeSender);
         } else if (ChatMessage.MessageType.QUIT.equals(chatMessage.getType())) {
-            chatMessage.setMessage(chatMessage.getSender().getName() + "님이 나갔습니다.");
+            chatMessage.setMessage(chatMessage.getSender().getName() + " 나갔습니다.");
             chatMessage.setSender(noticeSender);
         }
         redisTemplate.convertAndSend(channelTopic.getTopic(), chatMessage);

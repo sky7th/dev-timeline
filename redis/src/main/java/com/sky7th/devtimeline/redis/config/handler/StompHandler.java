@@ -57,12 +57,12 @@ public class StompHandler implements ChannelInterceptor {
 
             chatRoomRepository.minusUserCount(roomId);
 
-//            String name = "aa";
-//            chatService.sendChatMessage(ChatMessage.builder()
-//                    .type(ChatMessage.MessageType.QUIT)
-//                    .roomId(roomId)
-//                    .sender(ChatSender.builder().name(name).build())
-//                    .build());
+            String name = "한 명이";
+            chatService.sendChatMessage(ChatMessage.builder()
+                    .type(ChatMessage.MessageType.QUIT)
+                    .roomId(roomId)
+                    .sender(ChatSender.builder().name(name).build())
+                    .build());
 
             chatRoomRepository.removeUserEnterInfo(sessionId);
             log.info("DISCONNECTED {}, {}", sessionId, roomId);
