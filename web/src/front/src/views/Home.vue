@@ -12,12 +12,16 @@
 import Header from '@/components/Header';
 import Content from '@/components/Content';
 import SideMenu from '@/components/SideMenu';
+import { mapGetters } from "vuex";
 
 export default {
   components: {
     Header,
     Content,
     SideMenu
+  },
+  computed: {
+    ...mapGetters(['modalState'])
   }
 };
 </script>

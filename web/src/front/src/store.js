@@ -46,7 +46,8 @@ export default new Vuex.Store({
     tags: [],
     postCounts: 0,
     chatRooms: [],
-    selectedChatRooms: []
+    selectedChatRooms: [],
+    modalState: false
   },
   getters: {
     token: state => state.token,
@@ -59,7 +60,8 @@ export default new Vuex.Store({
     tags: state => state.tags,
     postCounts: state => state.postCounts,
     chatRooms: state => state.chatRooms,
-    selectedChatRooms: state => state.selectedChatRooms
+    selectedChatRooms: state => state.selectedChatRooms,
+    modalState: state => state.modalState
   },
   mutations: {
     setToken(state, accessToken) {
@@ -122,13 +124,16 @@ export default new Vuex.Store({
       state.tags = [];
       state.offset = 0;
       state.postCounts = 0;
+      state.modalState = false;
     },
     updatePostCounts: (state, payload) => state.postCounts = payload.postCounts,
     updateChatRooms: (state, payload) => state.chatRooms = payload,
     insertSelectedChatRooms: (state, payload) => state.selectedChatRooms.push(payload),
     removeSelectedChatRoom: (state, payload) => {
       state.selectedChatRooms = state.selectedChatRooms.filter(room => room.roomId !== payload);
-    }
+    },
+    onModalState: state => state.modalState = true,
+    offModalState: state => state.modalState = false
   },
   actions: {
     setToken: (context, payload) => context.commit('setToken', payload),
@@ -146,7 +151,9 @@ export default new Vuex.Store({
     updatePostCounts: (context, payload) => context.commit('postCounts', { postCounts: payload.postCounts }),
     updateChatRooms: (context, payload) => context.commit('updateChatRooms', payload),
     insertSelectedChatRooms: (context, payload) => context.commit('insertSelectedChatRooms', payload),
-    removeSelectedChatRoom: (context, payload) => context.commit('removeSelectedChatRoom', payload)
+    removeSelectedChatRoom: (context, payload) => context.commit('removeSelectedChatRoom', payload),
+    onModalState: context => context.commit('onModalState'),
+    offModalState: context => context.commit('offModalState')
   },
   strict: debug
 });

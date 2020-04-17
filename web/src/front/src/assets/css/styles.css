@@ -36,6 +36,18 @@ a {
   }
 }
 
+@keyframes superman {
+  0% {
+    top: 125%;
+  }
+  70% {
+    top: 43%;
+  }
+  100% {
+    top: 50%;
+  }
+}
+
 main {
   animation: fadeIn 0.3s ease-in-out;
 }
