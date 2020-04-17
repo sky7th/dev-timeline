@@ -12,8 +12,9 @@
           user,
           createdDate}) in posts"
         :key="id"
+        @click="onModalState"
       >
-        <a :href="linkUrl" style="display: flex; width: 100%;" target="_blank">
+        <a class="post-container" target="_blank">
           <div class="middle">
             <div class="tags">
               <span class="tag" v-for="({ id, name }) in tags" :key="id">#{{ name }}</span>
@@ -40,7 +41,7 @@
       </div>
       <div slot="no-results">링크정보를 가져오지 못했어요 ..ㅠ.ㅠ</div>
     </infinite-loading>
-    </div>
+  </div>
 </template>
 
 <script>
@@ -59,7 +60,7 @@ export default {
     ...mapGetters(['posts', 'currentUser'])
   },
   methods: {
-    ...mapActions(['insertPosts']),
+    ...mapActions(['insertPosts', 'onModalState']),
     handlerInfinite($state) {
       this.insertPosts({ infiniteState: $state })
     }
@@ -68,6 +69,14 @@ export default {
 </script>
 
 <style scoped>
+.link-posts {
+  animation: fadeIn 0.3s ease-in-out;
+}
+.link-posts .post-container {
+  display: flex; 
+  width: 100%;
+  cursor: pointer;
+}
 .link-posts > ul {
   text-align: center;
   padding: 3px 20px;
@@ -95,7 +104,6 @@ export default {
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  width: 100px;
   margin-right: 0px;
 }
 .img-author {
@@ -127,7 +135,7 @@ export default {
   align-items: center;
 }
 .between {
-  margin-right: 15px;
+  margin: 0 18px 0 18px;
   font-size: 14px;
   color: #5a5a5a;
 }
