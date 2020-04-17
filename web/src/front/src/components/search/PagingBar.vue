@@ -14,7 +14,7 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-import { POST_LIMIT } from '@/constant/Constant';
+import Constant from '@/constant/Constant';
 
 export default {
   data() {
@@ -31,7 +31,7 @@ export default {
     ...mapActions(['updatePosts', 'updateOffset']),
     getPageNumbers() {
       var pageNumbers = [];
-      var lastPage = Math.ceil(this.postCounts / POST_LIMIT) - 1
+      var lastPage = Math.ceil(this.postCounts / Constant.POST_LIMIT) - 1
 
       for (var i = -this.pageLimit; i <= this.pageLimit; i++) {
         if (this.page + i < 0) {
@@ -51,7 +51,7 @@ export default {
     handlerPageNumber(page) {
       this.page = page
       scroll(0, 0)
-      this.updateOffset({ offset: page * POST_LIMIT })
+      this.updateOffset({ offset: page * Constant.POST_LIMIT })
       this.updatePosts()
     }
   }

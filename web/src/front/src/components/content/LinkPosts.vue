@@ -12,7 +12,7 @@
           user,
           createdDate}) in posts"
         :key="id"
-        @click="onModalState"
+        @click="handlerOnModalState(id)"
       >
         <a class="post-container" target="_blank">
           <div class="middle">
@@ -49,6 +49,7 @@ import CountBar from '@/components/search/CountBar';
 import FixedTagBar from '@/components/search/FixedTagBar';
 import { mapGetters, mapActions } from "vuex";
 import InfiniteLoading from 'vue-infinite-loading';
+import Constant from '@/constant/Constant';
 
 export default {
   components: {
@@ -60,9 +61,14 @@ export default {
     ...mapGetters(['posts', 'currentUser'])
   },
   methods: {
-    ...mapActions(['insertPosts', 'onModalState', 'resetOffset', 'updatePosts']),
+    ...mapActions(['insertPosts', 'onModalState', 'resetOffset', 'updatePosts', 'updatePostState']),
     handlerInfinite($state) {
       this.insertPosts({ infiniteState: $state })
+    },
+    handlerOnModalState(id) {
+      localStorage.setItem('postId', id);
+      this.updatePostState(Constant.READ);
+      this.onModalState();
     }
   }
 }

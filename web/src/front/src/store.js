@@ -1,7 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
 
-import { POST_LIMIT } from '@/constant/Constant';
+import Constant from '@/constant/Constant';
 import { setHeader } from './libs/axios.custom';
 import axios from './libs/axios.custom'
 
@@ -47,7 +47,8 @@ export default new Vuex.Store({
     postCounts: 0,
     chatRooms: [],
     selectedChatRooms: [],
-    modalState: false
+    modalState: false,
+    postState: Constant.READ
   },
   getters: {
     token: state => state.token,
@@ -61,7 +62,8 @@ export default new Vuex.Store({
     postCounts: state => state.postCounts,
     chatRooms: state => state.chatRooms,
     selectedChatRooms: state => state.selectedChatRooms,
-    modalState: state => state.modalState
+    modalState: state => state.modalState,
+    postState: state => state.postState
   },
   mutations: {
     setToken(state, accessToken) {
@@ -76,7 +78,7 @@ export default new Vuex.Store({
     updatePosts: state => {
       axios.get('http://127.0.0.1:8080/api/v1/'+state.selectedMenu+'?'
                 + getOffsetQuery(state.offset)
-                + getLimitQuery(POST_LIMIT)
+                + getLimitQuery(Constant.POST_LIMIT)
                 + getCheckedCompaniesQuery(state.checkedCompanies)
                 + getTagsQuery(state.tags))
       .then(response => {
@@ -91,7 +93,7 @@ export default new Vuex.Store({
     insertPosts: (state, payload) => {
       axios.get('http://127.0.0.1:8080/api/v1/'+state.selectedMenu+'?'
                 + getOffsetQuery(state.offset)
-                + getLimitQuery(POST_LIMIT)
+                + getLimitQuery(Constant.POST_LIMIT)
                 + getCheckedCompaniesQuery(state.checkedCompanies)
                 + getTagsQuery(state.tags))
       .then(({ data }) => {
@@ -133,7 +135,11 @@ export default new Vuex.Store({
       state.selectedChatRooms = state.selectedChatRooms.filter(room => room.roomId !== payload);
     },
     onModalState: state => state.modalState = true,
-    offModalState: state => state.modalState = false
+    offModalState: state => state.modalState = false,
+    updatePostState: (state, payload) => {
+      state.postState = payload;
+      console.log(state.postState)
+    }
   },
   actions: {
     setToken: (context, payload) => context.commit('setToken', payload),
@@ -153,7 +159,8 @@ export default new Vuex.Store({
     insertSelectedChatRooms: (context, payload) => context.commit('insertSelectedChatRooms', payload),
     removeSelectedChatRoom: (context, payload) => context.commit('removeSelectedChatRoom', payload),
     onModalState: context => context.commit('onModalState'),
-    offModalState: context => context.commit('offModalState')
+    offModalState: context => context.commit('offModalState'),
+    updatePostState: (context, payload) => context.commit('updatePostState', payload)
   },
   strict: debug
 });

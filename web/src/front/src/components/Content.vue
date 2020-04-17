@@ -5,7 +5,7 @@
     <TechPosts v-else-if="selectedMenu==='tech-posts'"/>
     <LinkPosts v-else-if="selectedMenu==='link-posts'"/>
 
-    <SideButton v-if="isMenuPossibleWrite && currentUser!=null" @event="onModalState" style="bottom: 50%;"/>
+    <SideButton v-if="isMenuPossibleWrite && currentUser!=null" @event="handlerOnModalState" style="bottom: 50%;"/>
     <ChatButton v-if="isBtnVisible"/>
     <div class="chat-bottoms-wrapper">
       <ChatContainer 
@@ -24,6 +24,7 @@ import TagBar from '@/components/search/TagBar';
 import ChatContainer from '@/components/chat/ChatContainer';
 import ChatButton from '@/components/chat/ChatButton';
 import SideButton from '@/components/common/button/SideButton';
+import Constant from '@/constant/Constant'
 
 import { mapGetters, mapActions } from "vuex";
 
@@ -54,7 +55,11 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['onModalState'])
+    ...mapActions(['onModalState', 'updatePostState']),
+    handlerOnModalState() {
+      this.updatePostState(Constant.CREATE);
+      this.onModalState();
+    }
   }
 }
 </script>

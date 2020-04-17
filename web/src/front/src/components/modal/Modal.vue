@@ -4,18 +4,29 @@
     </div>
     <div class="modal" :class="{ 'close-in-delay': isClickCloseBtn }">
       <div class="close" @click="closePopupInDelay">x</div>
-      <LinkPostModal v-if="selectedMenu==='link-posts'" @closePopup="closePopupInDelay"/>
+
+      <div v-if="selectedMenu==='link-posts'" class="wrapper">
+        <LinkPostViewModal v-if="isStateRead" @closePopup="closePopupInDelay"/>
+        <LinkPostWriteModal v-else @closePopup="closePopupInDelay"/>
+      </div>
+      
     </div>
   </div>
 </template>
 
 <script>
-import LinkPostModal from '@/components/modal/LinkPostModal'
+import LinkPostWriteModal from '@/components/modal/LinkPostWriteModal'
+import LinkPostViewModal from '@/components/modal/LinkPostViewModal'
 import { mapGetters, mapActions } from "vuex";
+import Constant from '@/constant/Constant'
 
 export default {
   components: {
-    LinkPostModal
+    LinkPostWriteModal,
+    LinkPostViewModal
+  },
+  created() {
+    console.log(Constant)
   },
   data() {
     return {
@@ -23,16 +34,19 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['selectedMenu'])
+    ...mapGetters(['selectedMenu', 'postState']),
+    isStateRead() {
+      return this.postState===Constant.READ;
+    }
   },
   methods: {
-    ...mapActions(['offModalState']),
+    ...mapActions(['offModalState', 'updatePostState']),
     closePopupInDelay() {
       this.isClickCloseBtn = true;
       setTimeout(() => {
         this.offModalState();
+        this.updatePostState(Constant.READ);
       }, 500);
-      
     }
   }
 }
@@ -75,10 +89,7 @@ export default {
   cursor: pointer;
   color: #7a7a7a;
 }
-::-webkit-scrollbar { width: 3.2px; } /* 스크롤 바 */
-::-webkit-scrollbar-track { background-color:#f7f7f7; } /* 스크롤 바 밑의 배경 */
-::-webkit-scrollbar-thumb { background: #dadada; } /* 실질적 스크롤 바 */
-::-webkit-scrollbar-thumb:hover { background: #9a9a9a; } /* 실질적 스크롤 바 위에 마우스를 올려다 둘 때 */
-::-webkit-scrollbar-thumb:active { background: #6a6a6a; } /* 실질적 스크롤 바를 클릭할 때 */
-::-webkit-scrollbar-button { display: none; } /* 스크롤 바 상 하단 버튼 */
+.wrapper {
+  height: 100%;
+}
 </style>

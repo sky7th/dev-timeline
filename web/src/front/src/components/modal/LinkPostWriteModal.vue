@@ -34,9 +34,11 @@
         v-model="linkPost.content"/>
     </div>
     <div class="bottom-wrapper">
-      <BlueButton class="btn-submit" type="submit" :name="'작성'"
+      <BlueButton class="btn-submit" type="submit" 
+        :name="isStateUpdate?'수정':'쓰기'"
         @click="submit"/>
     </div>
+    <notifications group="notify" position="bottom center"/>
   </div>
 </template>
 
@@ -44,8 +46,9 @@
 import InputForm from '@/components/common/InputForm'
 import TextareaForm from '@/components/common/TextareaForm'
 import BlueButton from '@/components/common/button/BlueButton'
-import { mapActions } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 import notification from '../../libs/notification';
+import Constant from '@/constant/Constant';
 
 export default {
   data: () => ({
@@ -57,11 +60,25 @@ export default {
     },
     tagName: '',
   }),
+  created() {
+    var beforePost = localStorage.getItem('post');
+    if (beforePost != {}) {
+      console.log(beforePost)
+      this.linkPost = JSON.parse(localStorage.getItem('post'));
+      localStorage.setItem('post', {});
+    }
+  },
   components: {
     InputForm,
     TextareaForm,
     BlueButton
   },  
+  computed: {
+    ...mapGetters(['postState']),
+    isStateUpdate() {
+      return this.postState === Constant.UPDATE;
+    }
+  },
   methods: {
     ...mapActions(['offModalState', 'resetOffset', 'updatePosts']),
     submit() {
@@ -75,13 +92,23 @@ export default {
         document.querySelector('.link-input').focus();
         return;
       }
-      this.axios.post(`${process.env.VUE_APP_API}/api/v1/link-posts`, this.linkPost)
+      if (this.isStateUpdate) {
+        this.axios.put(`${process.env.VUE_APP_API}/api/v1/link-posts`, this.linkPost)
+        .then(() => {
+          notification.success('글 수정이 완료되었습니다.');
+          this.handlerRefresh();
+        }).catch(() => {
+          notification.warn('글 수정에 실패했습니다.');
+        })
+      } else {
+        this.axios.post(`${process.env.VUE_APP_API}/api/v1/link-posts`, this.linkPost)
         .then(() => {
           notification.success('좋은 링크 공유해주셔서 감사합니다 ^-^');
           this.handlerRefresh();
         }).catch(() => {
           notification.warn('글쓰기에 실패했습니다.');
         })
+      }
     },
     handlerRefresh() {
       this.resetOffset();

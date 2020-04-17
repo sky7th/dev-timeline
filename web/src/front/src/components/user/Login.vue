@@ -104,6 +104,7 @@ export default {
 .login-container {
   display: flex;
   justify-content: center;
+  animation: fadeIn 0.3s ease-in-out;
 }
 .login-content {
   display: flex;
