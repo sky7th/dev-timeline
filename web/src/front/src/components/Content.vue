@@ -5,6 +5,7 @@
     <TechPosts v-else-if="selectedMenu==='tech-posts'"/>
     <LinkPosts v-else-if="selectedMenu==='link-posts'"/>
 
+    <SideButton v-if="isMenuPossibleWrite" @event="onModalState"/>
     <ChatButton v-if="isBtnVisible"/>
     <div class="chat-bottoms-wrapper">
       <ChatContainer 
@@ -12,7 +13,7 @@
         v-for="(selectedChatRoom) in selectedChatRooms" 
         :key="selectedChatRoom.name"/>
     </div>
-    
+    <Modal v-if="modalState"/>
   </div>
 </template>
 
@@ -23,8 +24,10 @@ import LinkPosts from '@/components/content/LinkPosts';
 import TagBar from '@/components/search/TagBar';
 import ChatContainer from '@/components/chat/ChatContainer';
 import ChatButton from '@/components/chat/ChatButton';
+import SideButton from '@/components/common/button/SideButton';
+import Modal from '@/components/modal/Modal'
 
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   components: {
@@ -33,17 +36,28 @@ export default {
     LinkPosts,
     TagBar,
     ChatContainer,
-    ChatButton
+    ChatButton,
+    SideButton,
+    Modal
   },
   computed: {
-    ...mapGetters(['selectedMenu', 'selectedChatRooms', 'selectedChatRooms']),
+    ...mapGetters(['selectedMenu', 'selectedChatRooms', 'selectedChatRooms', 'modalState']),
     isBtnVisible() {
       var rooms = this.selectedChatRooms.filter(selectedChatRoom => selectedChatRoom.name === this.selectedMenu)
       if (rooms.length === 0)
         return true;
       else
         return false; 
+    },
+    isMenuPossibleWrite() {
+      if (this.selectedMenu === 'link-posts') 
+        return true;
+      else
+        return false;
     }
+  },
+  methods: {
+    ...mapActions(['onModalState'])
   }
 }
 </script>

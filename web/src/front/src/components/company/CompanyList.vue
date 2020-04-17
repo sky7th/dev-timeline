@@ -44,6 +44,7 @@ export default {
   margin: 0px 30px 13px 30px;
   padding: 13px 0 0px 0;
   border-bottom: 2px solid #dadada;
+  animation: fadeIn 0.3s ease-in-out;
 }
 .company-list ul {
   display: flex;

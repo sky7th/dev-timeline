@@ -72,6 +72,7 @@ export default {
     },
     recvMessage(recv) {
       this.handlerUpdateUserCount(recv.userCount)
+      console.log(recv)
       this.messages.push({"type":recv.type, "sender":recv.sender, "message":recv.message});
     },
     connect() {
@@ -156,6 +157,7 @@ li {
   border-radius: 5px;
   padding: 5px 6px;
   margin-left: 2px;
+  margin-bottom: 4px;
   width: fit-content;
   font-size: 14px;
   line-height: 130%;
@@ -177,6 +179,7 @@ ul {
   overflow-y: scroll;
   height: 100%;
   margin-bottom: 5px;
+  padding: 0 6px 0 1px;
 }
 .bottom {
   display: flex;

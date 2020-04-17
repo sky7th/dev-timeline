@@ -93,6 +93,7 @@ export default {
   bottom: 50px;
   right: 0;
   z-index: 2000;
+  animation: fadeIn 0.3s ease-in-out;
 }
 .chat-button button {
   border: 0px solid black;
@@ -101,6 +102,7 @@ export default {
   cursor: pointer;
   background-color: white;
   font-size: 14px;
+  font-weight: 500;
   box-shadow: 0 1px 3px 0 rgba(9,30,66,0.25), 0 0 1px 0 rgba(9,30,66,0.31);
 }
 .chat-button button:hover {
