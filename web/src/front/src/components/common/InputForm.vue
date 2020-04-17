@@ -1,5 +1,7 @@
 <template>
-  <input class="input-form" type="text" :value="value" @input="updateInput">
+  <input class="input-form" type="text" :value="value"
+    @input="updateInput" 
+    @keypress.enter="handlerPressEnter">
 </template>
 
 <script>
@@ -9,6 +11,9 @@ export default {
   methods: {
     updateInput($event) {
       this.$emit('input', $event.target.value)
+    },
+    handlerPressEnter() {
+      this.$emit('keypressEnter');
     }
   }
 }
@@ -22,7 +27,6 @@ export default {
   border: 1px solid #bababa;
   border-radius: 3px;
   box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.2) inset;
-  margin-bottom: 10px;
   padding: 0 11px;
   width: 100%;
   font-size: 15px;

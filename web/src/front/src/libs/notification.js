@@ -8,7 +8,8 @@ export default {
       duration: 3000,
       text: msg,
     });
-    block();
+    if (block != undefined)
+      block();
   },
 
   error(error, block) {
@@ -19,7 +20,8 @@ export default {
       title: error.response.state,
       text: error.response.data.message,
     });
-    block();
+    if (block != undefined)
+      block();
   },
 
   notify(msg) {

@@ -5,7 +5,7 @@
     <TechPosts v-else-if="selectedMenu==='tech-posts'"/>
     <LinkPosts v-else-if="selectedMenu==='link-posts'"/>
 
-    <SideButton v-if="isMenuPossibleWrite" @event="onModalState"/>
+    <SideButton v-if="isMenuPossibleWrite && currentUser!=null" @event="onModalState"/>
     <ChatButton v-if="isBtnVisible"/>
     <div class="chat-bottoms-wrapper">
       <ChatContainer 
@@ -41,7 +41,7 @@ export default {
     Modal
   },
   computed: {
-    ...mapGetters(['selectedMenu', 'selectedChatRooms', 'selectedChatRooms', 'modalState']),
+    ...mapGetters(['selectedMenu', 'selectedChatRooms', 'selectedChatRooms', 'modalState', 'currentUser']),
     isBtnVisible() {
       var rooms = this.selectedChatRooms.filter(selectedChatRoom => selectedChatRoom.name === this.selectedMenu)
       if (rooms.length === 0)

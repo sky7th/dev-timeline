@@ -1,5 +1,5 @@
 <template>
-  <button class="btn">
+  <button class="btn" @click="handlerClick">
     {{ name }}
   </button>
 </template>
@@ -7,7 +7,12 @@
 <script>
 
 export default {
-  props: ['value', 'name']
+  props: ['value', 'name'],
+  methods: {
+    handlerClick() {
+      this.$emit('click');
+    }
+  }
 }
 </script>
 

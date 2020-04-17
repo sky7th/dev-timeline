@@ -1,7 +1,9 @@
 <template>
-  <div class="modal-background">
-    <div class="modal">
-      <div class="close" @click="offModalState">x</div>
+  <div>
+    <div class="modal-background" @click="closePopupInDelay">
+    </div>
+    <div class="modal" :class="{ 'close-in-delay': isClickCloseBtn }">
+      <div class="close" @click="closePopupInDelay">x</div>
       <LinkPostModal v-if="selectedMenu==='link-posts'"/>
     </div>
   </div>
@@ -15,11 +17,24 @@ export default {
   components: {
     LinkPostModal
   },
+  data() {
+    return {
+      isClickCloseBtn: false
+    }
+  },
   computed: {
     ...mapGetters(['selectedMenu'])
   },
   methods: {
-    ...mapActions(['offModalState'])
+    ...mapActions(['offModalState']),
+    closePopupInDelay() {
+      console.log(this.isClickCloseBtn);
+      this.isClickCloseBtn = true;
+      setTimeout(() => {
+        this.offModalState();
+      }, 500);
+      
+    }
   }
 }
 </script>
@@ -40,13 +55,16 @@ export default {
   box-shadow: 0 1px 2px 0 rgba(9,30,66,0.25), 0 0 1px 0 rgba(9,30,66,0.31);
   animation: superman 0.5s ease-in-out;
 }
+.close-in-delay {
+  animation: superman-reverse 0.5s ease-in-out;
+}
 .modal-background {
   position: fixed;
   top: 23px;
   left: 40px;
   height: 100%;
   width: 100%;
-  background-color: rgba(150, 150, 150, 0.2);
+  background-color: rgba(120, 120, 120, 0.2);
   animation: fadeIn 0.3s ease-in-out;
 }
 .close {

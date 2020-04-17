@@ -60,7 +60,7 @@ export default {
     ...mapGetters(['posts', 'currentUser'])
   },
   methods: {
-    ...mapActions(['insertPosts', 'onModalState']),
+    ...mapActions(['insertPosts', 'onModalState', 'resetOffset', 'updatePosts']),
     handlerInfinite($state) {
       this.insertPosts({ infiniteState: $state })
     }
