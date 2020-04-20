@@ -135,6 +135,18 @@ export default {
   font-weight: bold;
   text-align: end;
   line-height: 140%;
+  
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  
+  white-space: normal;
+  word-wrap: break-word; 
+  display: -webkit-box; 
+  -webkit-line-clamp: 3; 
+  -webkit-box-orient: vertical;
+
 }
 .middle-bottom {
   display: flex;

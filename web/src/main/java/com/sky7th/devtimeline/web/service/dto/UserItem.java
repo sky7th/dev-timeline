@@ -2,9 +2,11 @@ package com.sky7th.devtimeline.web.service.dto;
 
 import com.sky7th.devtimeline.core.domain.user.User;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 import static com.sky7th.devtimeline.core.domain.utils.LocalDateTimeUtils.toStringDate;
 
+@RequiredArgsConstructor
 @Getter
 public class UserItem {
 

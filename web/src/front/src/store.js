@@ -136,10 +136,7 @@ export default new Vuex.Store({
     },
     onModalState: state => state.modalState = true,
     offModalState: state => state.modalState = false,
-    updatePostState: (state, payload) => {
-      state.postState = payload;
-      console.log(state.postState)
-    }
+    updatePostState: (state, payload) => state.postState = payload
   },
   actions: {
     setToken: (context, payload) => context.commit('setToken', payload),

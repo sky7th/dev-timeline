@@ -35,7 +35,7 @@
     </div>
     <div class="bottom-wrapper">
       <BlueButton class="btn-submit" type="submit" 
-        :name="isStateUpdate?'수정':'쓰기'"
+        :name="isStateUpdate?'수정 완료':'쓰기'"
         @click="submit"/>
     </div>
     <notifications group="notify" position="bottom center"/>
@@ -59,11 +59,12 @@ export default {
       tags: []
     },
     tagName: '',
+    postId: null
   }),
   created() {
+    this.postId = localStorage.getItem('postId');
     var beforePost = localStorage.getItem('post');
     if (beforePost != {}) {
-      console.log(beforePost)
       this.linkPost = JSON.parse(localStorage.getItem('post'));
       localStorage.setItem('post', {});
     }
@@ -93,7 +94,7 @@ export default {
         return;
       }
       if (this.isStateUpdate) {
-        this.axios.put(`${process.env.VUE_APP_API}/api/v1/link-posts`, this.linkPost)
+        this.axios.put(`${process.env.VUE_APP_API}/api/v1/link-posts/${this.postId}`, this.linkPost)
         .then(() => {
           notification.success('글 수정이 완료되었습니다.');
           this.handlerRefresh();
@@ -157,9 +158,11 @@ export default {
   display: flex;
   flex-direction: column;
   height: 100%;
+  padding: 0 8px 0 2px;
+  animation: fadeIn 0.3s ease-in-out;
 }
 .wrapper {
-  margin-bottom: 13px;
+  margin-bottom: 20px;
 }
 .description {
   margin-bottom: 3px;
@@ -174,7 +177,7 @@ export default {
   height: 34px;
 }
 .content-input {
-  height: 100%;
+  height: 250px;
 }
 .content {
   flex: 1;

@@ -72,7 +72,6 @@ export default {
     },
     recvMessage(recv) {
       this.handlerUpdateUserCount(recv.userCount)
-      console.log(recv)
       this.messages.push({"type":recv.type, "sender":recv.sender, "message":recv.message});
     },
     connect() {
