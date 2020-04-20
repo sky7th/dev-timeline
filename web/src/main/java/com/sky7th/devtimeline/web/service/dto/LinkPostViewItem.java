@@ -1,6 +1,6 @@
 package com.sky7th.devtimeline.web.service.dto;
 
-import com.sky7th.devtimeline.core.domain.linkpost.LinkPost;
+import com.sky7th.devtimeline.core.domain.post.linkpost.LinkPost;
 import com.sky7th.devtimeline.core.domain.tag.Tag;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

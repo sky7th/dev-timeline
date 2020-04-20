@@ -1,15 +1,15 @@
-package com.sky7th.devtimeline.core.domain.linkpost;
+package com.sky7th.devtimeline.core.domain.post;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum LinkType {
+public enum PostType {
 
-    BLOG("블로그"),
-    VIDEO("영상"),
-    EXTRA("나머지");
+    RECRUIT_POST("채용 게시물"),
+    TECH_POST("기술 블로그 게시물"),
+    LINK_POST("링크 게시물");
 
     private final String name;
 

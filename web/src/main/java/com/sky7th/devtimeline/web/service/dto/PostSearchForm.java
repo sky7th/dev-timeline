@@ -1,7 +1,7 @@
 package com.sky7th.devtimeline.web.service.dto;
 
 import com.sky7th.devtimeline.core.domain.company.CompanyType;
-import com.sky7th.devtimeline.core.domain.linkpost.LinkType;
+import com.sky7th.devtimeline.core.domain.post.linkpost.LinkType;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

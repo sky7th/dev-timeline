@@ -2,8 +2,8 @@ package com.sky7th.devtimeline.batch.dto;
 
 import com.sky7th.devtimeline.core.domain.companyUrl.CompanyUrl;
 import com.sky7th.devtimeline.core.domain.companyUrl.CompanyUrlType;
-import com.sky7th.devtimeline.core.domain.recruitpost.RecruitPost;
-import com.sky7th.devtimeline.core.domain.techpost.TechPost;
+import com.sky7th.devtimeline.core.domain.post.recruitpost.RecruitPost;
+import com.sky7th.devtimeline.core.domain.post.techpost.TechPost;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

@@ -4,14 +4,14 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sky7th.devtimeline.core.domain.company.CompanyType;
-import com.sky7th.devtimeline.core.domain.techpost.TechPost;
+import com.sky7th.devtimeline.core.domain.post.techpost.TechPost;
 import com.sky7th.devtimeline.web.service.dto.PostSearchForm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
 
-import static com.sky7th.devtimeline.core.domain.techpost.QTechPost.techPost;
+import static com.sky7th.devtimeline.core.domain.post.techpost.QTechPost.techPost;
 
 @RequiredArgsConstructor
 public class TechPostWebRepositoryImpl implements TechPostWebRepositoryCustom {

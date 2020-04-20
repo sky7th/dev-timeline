@@ -1,7 +1,7 @@
 package com.sky7th.devtimeline.core.domain.tag;
 
 import com.sky7th.devtimeline.core.domain.common.BaseTimeEntity;
-import com.sky7th.devtimeline.core.domain.linkpost.LinkPost;
+import com.sky7th.devtimeline.core.domain.post.linkpost.LinkPost;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

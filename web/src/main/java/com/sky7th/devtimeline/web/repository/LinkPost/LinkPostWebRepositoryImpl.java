@@ -3,15 +3,15 @@ package com.sky7th.devtimeline.web.repository.LinkPost;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.sky7th.devtimeline.core.domain.linkpost.LinkPost;
-import com.sky7th.devtimeline.core.domain.linkpost.LinkType;
+import com.sky7th.devtimeline.core.domain.post.linkpost.LinkPost;
+import com.sky7th.devtimeline.core.domain.post.linkpost.LinkType;
 import com.sky7th.devtimeline.web.service.dto.PostSearchForm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
 
-import static com.sky7th.devtimeline.core.domain.linkpost.QLinkPost.linkPost;
+import static com.sky7th.devtimeline.core.domain.post.linkpost.QLinkPost.linkPost;
 
 @RequiredArgsConstructor
 public class LinkPostWebRepositoryImpl implements LinkPostWebRepositoryCustom {

@@ -1,6 +1,6 @@
 package com.sky7th.devtimeline.web.service.dto;
 
-import com.sky7th.devtimeline.core.domain.recruitpost.RecruitPost;
+import com.sky7th.devtimeline.core.domain.post.recruitpost.RecruitPost;
 import lombok.Getter;
 
 import java.util.ArrayList;

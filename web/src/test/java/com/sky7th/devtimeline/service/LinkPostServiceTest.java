@@ -1,7 +1,7 @@
 package com.sky7th.devtimeline.service;
 
-import com.sky7th.devtimeline.core.domain.linkpost.LinkPost;
-import com.sky7th.devtimeline.core.domain.linkpost.LinkPostRepository;
+import com.sky7th.devtimeline.core.domain.post.linkpost.LinkPost;
+import com.sky7th.devtimeline.core.domain.post.linkpost.LinkPostRepository;
 import com.sky7th.devtimeline.core.domain.user.User;
 import com.sky7th.devtimeline.core.domain.user.UserRepository;
 import com.sky7th.devtimeline.core.domain.user.UserRole;

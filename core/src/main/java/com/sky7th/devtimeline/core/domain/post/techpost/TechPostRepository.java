@@ -1,4 +1,4 @@
-package com.sky7th.devtimeline.core.domain.techpost;
+package com.sky7th.devtimeline.core.domain.post.techpost;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

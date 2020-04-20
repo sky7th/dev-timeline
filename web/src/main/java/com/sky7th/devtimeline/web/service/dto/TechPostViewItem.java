@@ -1,6 +1,6 @@
 package com.sky7th.devtimeline.web.service.dto;
 
-import com.sky7th.devtimeline.core.domain.techpost.TechPost;
+import com.sky7th.devtimeline.core.domain.post.techpost.TechPost;
 import lombok.Getter;
 
 import static com.sky7th.devtimeline.core.domain.utils.LocalDateTimeUtils.toStringDate;

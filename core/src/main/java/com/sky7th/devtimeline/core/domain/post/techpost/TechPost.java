@@ -1,4 +1,4 @@
-package com.sky7th.devtimeline.core.domain.techpost;
+package com.sky7th.devtimeline.core.domain.post.techpost;
 
 import com.sky7th.devtimeline.core.domain.common.BaseTimeEntity;
 import com.sky7th.devtimeline.core.domain.companyUrl.CompanyUrl;

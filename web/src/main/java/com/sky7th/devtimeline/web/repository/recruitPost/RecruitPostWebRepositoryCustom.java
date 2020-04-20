@@ -1,6 +1,6 @@
 package com.sky7th.devtimeline.web.repository.recruitPost;
 
-import com.sky7th.devtimeline.core.domain.recruitpost.RecruitPost;
+import com.sky7th.devtimeline.core.domain.post.recruitpost.RecruitPost;
 import com.sky7th.devtimeline.web.service.dto.PostSearchForm;
 
 import java.util.List;

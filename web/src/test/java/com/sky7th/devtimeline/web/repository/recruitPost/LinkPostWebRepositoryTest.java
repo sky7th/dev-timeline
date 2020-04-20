@@ -1,6 +1,6 @@
 package com.sky7th.devtimeline.web.repository.recruitPost;
 
-import com.sky7th.devtimeline.core.domain.linkpost.LinkPost;
+import com.sky7th.devtimeline.core.domain.post.linkpost.LinkPost;
 import com.sky7th.devtimeline.core.domain.tag.Tag;
 import com.sky7th.devtimeline.core.domain.tag.TagRepository;
 import com.sky7th.devtimeline.web.repository.LinkPost.LinkPostWebRepository;

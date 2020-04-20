@@ -1,9 +1,8 @@
 package com.sky7th.devtimeline.web.service;
 
-import com.sky7th.devtimeline.core.domain.recruitpost.RecruitPost;
+import com.sky7th.devtimeline.core.domain.post.recruitpost.RecruitPost;
 import com.sky7th.devtimeline.web.repository.recruitPost.RecruitPostWebRepository;
 import com.sky7th.devtimeline.web.service.dto.PostSearchForm;
-import com.sky7th.devtimeline.web.service.dto.RecruitPostViewItem;
 import com.sky7th.devtimeline.web.service.dto.RecruitPostViewItems;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

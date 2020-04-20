@@ -1,20 +1,17 @@
 package com.sky7th.devtimeline.web.service;
 
-import com.sky7th.devtimeline.core.domain.linkpost.LinkPost;
-import com.sky7th.devtimeline.core.domain.tag.Tag;
+import com.sky7th.devtimeline.core.domain.post.linkpost.LinkPost;
 import com.sky7th.devtimeline.web.exception.UnauthorizedException;
 import com.sky7th.devtimeline.web.repository.LinkPost.LinkPostWebRepository;
 import com.sky7th.devtimeline.web.security.UserPrincipal;
 import com.sky7th.devtimeline.web.service.dto.LinkPostViewItem;
 import com.sky7th.devtimeline.web.service.dto.LinkPostViewItems;
 import com.sky7th.devtimeline.web.service.dto.PostSearchForm;
-import com.sky7th.devtimeline.web.service.dto.TagItem;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service

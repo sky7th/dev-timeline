@@ -1,6 +1,6 @@
 package com.sky7th.devtimeline.web.repository.techPost;
 
-import com.sky7th.devtimeline.core.domain.techpost.TechPost;
+import com.sky7th.devtimeline.core.domain.post.techpost.TechPost;
 import com.sky7th.devtimeline.web.service.dto.PostSearchForm;
 
 import java.util.List;

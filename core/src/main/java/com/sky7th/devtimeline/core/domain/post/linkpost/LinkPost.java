@@ -1,4 +1,4 @@
-package com.sky7th.devtimeline.core.domain.linkpost;
+package com.sky7th.devtimeline.core.domain.post.linkpost;
 
 import com.sky7th.devtimeline.core.domain.common.BaseTimeEntity;
 import com.sky7th.devtimeline.core.domain.tag.Tag;
