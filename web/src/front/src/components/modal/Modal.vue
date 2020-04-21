@@ -40,13 +40,14 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['offModalState', 'updatePostState']),
+    ...mapActions(['offModalState', 'updatePostState', 'updatePost']),
     closePopupInDelay() {
       this.isClickCloseBtn = true;
       document.getElementsByTagName('body')[0].style['overflow-y'] = 'scroll';
       setTimeout(() => {
         this.offModalState();
         this.updatePostState(Constant.READ);
+        this.updatePost({});
       }, 500);
     }
   }

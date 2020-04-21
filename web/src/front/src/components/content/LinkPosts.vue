@@ -10,7 +10,9 @@
           linkUrl,
           tags,
           user,
-          createdDate}) in posts"
+          createdDate,
+          likeCount,
+          like}) in posts"
         :key="id"
         @click="handlerOnModalState(id)"
       >
@@ -30,6 +32,15 @@
             </div>
           </div>
         </a>
+        <div class="post-container-btn">
+          <div class="like">
+            <div class="btn-like">
+              <font-awesome-icon v-if="like" :icon="['fas', 'heart']" @click="cancelLike(id)" class="btn-like-full"/>
+              <font-awesome-icon v-else :icon="['far', 'heart']" @click="doLike(id)"/>
+            </div>
+            <span class="like-count">{{ likeCount }}</span>
+          </div>
+        </div>
       </li>
     </ul>
     <infinite-loading class="infinite-message" @infinite="handlerInfinite" spinner="waveDots">
@@ -50,6 +61,12 @@ import FixedTagBar from '@/components/search/FixedTagBar';
 import { mapGetters, mapActions } from "vuex";
 import InfiniteLoading from 'vue-infinite-loading';
 import Constant from '@/constant/Constant';
+import { faHeart as fasHeart } from '@fortawesome/free-solid-svg-icons' 
+import { faHeart as farHeart } from '@fortawesome/free-regular-svg-icons' 
+import { library as faLibrary } from '@fortawesome/fontawesome-svg-core' 
+import notification from '../../libs/notification';
+
+faLibrary.add(fasHeart, farHeart) 
 
 export default {
   components: {
@@ -61,14 +78,48 @@ export default {
     ...mapGetters(['posts', 'currentUser'])
   },
   methods: {
-    ...mapActions(['insertPosts', 'onModalState', 'resetOffset', 'updatePosts', 'updatePostState']),
+    ...mapActions(['insertPosts', 'onModalState', 'resetOffset', 'updatePosts', 'updatePostState', 'updatePost']),
     handlerInfinite($state) {
       this.insertPosts({ infiniteState: $state })
     },
-    handlerOnModalState(id) {
-      localStorage.setItem('postId', id);
-      this.updatePostState(Constant.READ);
-      this.onModalState();
+    handlerOnModalState(postId) {
+      this.axios.get(`${process.env.VUE_APP_API}/api/v1/link-posts/${postId}`)
+        .then(response => {
+          var post = this.posts.find(v => v.id === postId);
+          this.updatePost(post)
+          this.post = response.data.data;
+          
+          this.updatePostState(Constant.READ);
+          this.onModalState();
+        }).catch(() => {
+          notification.warn('글을 불러오지 못했습니다.');
+        })
+    },
+    doLike(linkPostId) {
+      event.stopPropagation();
+      var data = {
+        postType: 'LINK_POST',
+        linkPost: { id: linkPostId }
+      };
+      this.axios.post(`${process.env.VUE_APP_API}/api/v1/like/link-posts`, data)
+      .then(() => {
+        var post = this.posts.filter(v => v.id === linkPostId)[0];
+        post.like = true;
+        post.likeCount += 1;
+      }).catch(() => {
+        notification.warn('문제가 생겨 좋아요를 하지 못했습니다.')
+      })
+    },
+    cancelLike(linkPostId) {
+      event.stopPropagation();
+      this.axios.delete(`${process.env.VUE_APP_API}/api/v1/like/link-posts/${linkPostId}`)
+      .then(() => {
+        var post = this.posts.filter(v => v.id === linkPostId)[0];
+        post.like = false;
+        post.likeCount -= 1;
+      }).catch(() => {
+        notification.warn('문제가 생겨 좋아요를 취소하지 못했습니다.')
+      })
     }
   }
 }
@@ -82,18 +133,23 @@ export default {
   display: flex; 
   width: 100%;
   cursor: pointer;
+  padding: 10px 23px 8px 16px;
+}
+.link-posts .post-container:hover {
+  transition: opacity .2s;
+  opacity: 0.7;
 }
 .link-posts > ul {
   text-align: center;
   padding: 3px 20px;
 }
 .link-posts > ul > li {
-  width: 300px;
+  position: relative;
+  width: 330px;
   display: inline-flex;
   justify-content: flex-end;
   margin: 15px;
   background-color: white;
-  padding: 8px 23px 10px 16px;
   margin-bottom: 15px;
   border-radius: 10px;
   -webkit-animation: fadeIn 0.3s ease-in-out;
@@ -111,16 +167,20 @@ export default {
   justify-content: center;
   align-items: center;
   margin-right: 0px;
+  max-width: 100px;
 }
 .img-author {
-  height: 23px;
-  width: 23px;
+  height: 21px;
+  width: 21px;
   border-radius: 5px;
 }
 .author {
   margin-left: 10px;
-  font-size: 14px;
+  font-size: 13px;
   color: #5a5a5a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .middle {
   flex: 3;
@@ -154,12 +214,12 @@ export default {
   align-items: center;
 }
 .between {
-  margin: 0 18px 0 18px;
-  font-size: 14px;
+  margin: 0 14px 0 14px;
+  font-size: 13px;
   color: #5a5a5a;
 }
 .date {
-  font-size: 14px;
+  font-size: 13px;
   color: #5a5a5a;
 }
 .infinite-message {
@@ -193,5 +253,31 @@ export default {
 }
 .top {
   margin-bottom: 30px;
+}
+.post-container-btn {
+  position: absolute;
+  display: flex;
+  bottom: 10px;
+  left: 15px;
+  color: #7a7a7a;
+  font-size: 14px;
+}
+.like-count {
+  margin-left: 4px;
+  font-size: 13px;
+}
+.btn-like {
+  cursor: pointer;
+  display: inline-block;
+}
+.like {
+}
+.btn-like:hover {
+  font-size: 22px;
+  bottom: 5px;
+  transition: all .1s ease-in;
+}
+.btn-like-full {
+  color: #ff5784
 }
 </style>

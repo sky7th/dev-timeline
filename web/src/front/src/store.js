@@ -41,6 +41,7 @@ export default new Vuex.Store({
     currentUser: null,
     selectedMenu: 'recruit-posts',
     posts: [],
+    post: {},
     checkedCompanies: [],
     offset: 0,
     tags: [],
@@ -56,6 +57,7 @@ export default new Vuex.Store({
     authenticated: state => state.authenticated,
     selectedMenu: state => state.selectedMenu,
     posts: state => state.posts,
+    post: state => state.post,
     checkedCompanies: state => state.checkedCompanies,
     offset: state => state.offset,
     tags: state => state.tags,
@@ -90,6 +92,7 @@ export default new Vuex.Store({
         console.log('error : ', e)
       })
     },
+    updatePost: (state, payload) => state.post = payload,
     insertPosts: (state, payload) => {
       axios.get('http://127.0.0.1:8080/api/v1/'+state.selectedMenu+'?'
                 + getOffsetQuery(state.offset)
@@ -143,6 +146,7 @@ export default new Vuex.Store({
     setUserDetail: (context, payload) => context.commit('setUserDetail', payload),
     updatePosts: context => context.commit('updatePosts'),
     insertPosts: (context, payload) => context.commit('insertPosts', { infiniteState: payload.infiniteState }),
+    updatePost: (context, payload) => context.commit('updatePost', payload),
     updateCheckedCompanies: (context, payload) => context.commit('updateCheckedCompanies', { checkedCompanies: payload.checkedCompanies }),
     resetOffset: context => context.commit('resetOffset'),
     updateOffset: (context, payload) => context.commit('updateOffset', { offset: payload.offset }),

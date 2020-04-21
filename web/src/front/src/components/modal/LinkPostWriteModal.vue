@@ -3,20 +3,20 @@
     <div class="wrapper">
       <div class="description">title</div>
       <InputForm class="title-input" name="title" placeholder="제목" 
-        v-model="linkPost.title" 
+        v-model="post.title" 
         @keypressEnter="moveFocusToLink"/>
     </div>
     <div class="wrapper">
       <div class="description">link</div>
       <InputForm class="link-input" name="linkUrl" type="text" placeholder="https://www.devtimeline.com/" 
-        v-model="linkPost.linkUrl"
+        v-model="post.linkUrl"
         @keypressEnter="moveFocusToTag"/>
     </div>
     <div class="wrapper">
       <div class="description">tags <span style="font-size: 12px; margin-left: 4px;">(태그 입력 후 엔터를 꾸욱)</span></div>
       <ul class="tag-wrapper" 
         @click="moveFocusToTag">
-        <li v-for="(tag, i) in linkPost.tags" :key="i" class="tag-add">
+        <li v-for="(tag, i) in post.tags" :key="i" class="tag-add">
           <span class="tag-name">{{ tag.name }}</span>
           <span class="tag-close" 
             @click="removeTag($event, tag.forId)">x</span>
@@ -31,7 +31,7 @@
     <div class="wrapper content">
       <div class="description">description</div>
       <TextareaForm class="content-input" name="content" placeholder="설명을 적어주세요." 
-        v-model="linkPost.content"/>
+        v-model="post.content"/>
     </div>
     <div class="bottom-wrapper">
       <BlueButton class="btn-submit" type="submit" 
@@ -61,27 +61,19 @@ export default {
     tagName: '',
     postId: null
   }),
-  created() {
-    this.postId = localStorage.getItem('postId');
-    var beforePost = localStorage.getItem('post');
-    if (beforePost != {}) {
-      this.linkPost = JSON.parse(localStorage.getItem('post'));
-      localStorage.setItem('post', {});
-    }
-  },
   components: {
     InputForm,
     TextareaForm,
     BlueButton
   },  
   computed: {
-    ...mapGetters(['postState']),
+    ...mapGetters(['postState', 'post']),
     isStateUpdate() {
       return this.postState === Constant.UPDATE;
     }
   },
   methods: {
-    ...mapActions(['offModalState', 'resetOffset', 'updatePosts']),
+    ...mapActions(['offModalState', 'resetOffset', 'updatePosts', 'updatePost']),
     submit() {
       if (this.linkPost.title == '') {
         notification.warn('제목을 입력해주세요.');

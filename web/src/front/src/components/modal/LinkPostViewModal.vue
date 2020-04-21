@@ -3,26 +3,35 @@
     <div class="post-container">
       <div class="middle">
         <div class="tags">
-          <span class="tag" v-for="({ id, name }) in linkPost.tags" :key="id">#{{ name }}</span>
+          <span class="tag" v-for="({ id, name }) in post.tags" :key="id">#{{ name }}</span>
         </div>
-        <div class="title">{{ linkPost.title }}</div>
+        <div class="title">{{ post.title }}</div>
         <div class="middle-bottom">
           <div class="author-container">
-            <img class="img-author" :src="linkPost.user.imageUrl" alt="">
-            <div class="author">{{ linkPost.user.name }}</div>
+            <img class="img-author" :src="post.user.imageUrl" alt="">
+            <div class="author">{{ post.user.name }}</div>
           </div>
           <div class="between">|</div>
-          <div class="date">{{ linkPost.createdDate }}</div>
+          <div class="date">{{ post.createdDate }}</div>
+        </div>
+      </div>
+      <div class="post-container-btn">
+        <div class="like">
+          <div class="btn-like">
+            <font-awesome-icon v-if="post.like" :icon="['fas', 'heart']" @click="cancelLike(post.id)" class="btn-like-full"/>
+            <font-awesome-icon v-else :icon="['far', 'heart']" @click="doLike(post.id)"/>
+          </div>
+          <span class="like-count">{{ post.likeCount }}</span>
         </div>
       </div>
     </div>
     <div class="wrapper link-wrapper">
       <!-- <div class="description">link</div> -->
-      <a :href="linkPost.linkUrl" class="link" target="_blank">{{ linkPost.linkUrl }}</a>
+      <a :href="post.linkUrl" class="link" target="_blank">{{ post.linkUrl }}</a>
     </div>
     <div class="wrapper content-wrapper">
       <div class="description">description</div>
-      <div class="content">{{ linkPost.content }}</div>
+      <div class="content">{{ post.content }}</div>
     </div>
     <div v-if="isPossibleUpdate" class="bottom-wrapper">
       <BlueButton class="btn-submit" type="submit" :name="'수정'"
@@ -37,6 +46,11 @@ import BlueButton from '@/components/common/button/BlueButton'
 import { mapGetters, mapActions } from "vuex";
 import notification from '../../libs/notification';
 import Constant from '@/constant/Constant';
+import { faHeart as fasHeart } from '@fortawesome/free-solid-svg-icons' 
+import { faHeart as farHeart } from '@fortawesome/free-regular-svg-icons' 
+import { library as faLibrary } from '@fortawesome/fontawesome-svg-core' 
+
+faLibrary.add(fasHeart, farHeart) 
 
 export default {
   data: () => ({
@@ -45,34 +59,55 @@ export default {
       linkUrl: '',
       content: '',
       tags: [],
+      like: false,
+      likeCount: 0,
       user: {}
     },
     isPossibleUpdate: false
   }),
   created() {
-    var postId = localStorage.getItem('postId');
-    this.axios.get(`${process.env.VUE_APP_API}/api/v1/link-posts/${postId}`)
-      .then(response => {
-        this.linkPost = response.data.data;
-        if (this.currentUser !== null && this.linkPost.user.id == this.currentUser.id)
-          this.isPossibleUpdate = true
-      }).catch(() => {
-        notification.warn('글을 불러오지 못했습니다.');
-      })
+    if (this.currentUser !== null && this.post.user.id == this.currentUser.id)
+      this.isPossibleUpdate = true
   },
   components: {
     BlueButton
   },  
   computed: {
-    ...mapGetters(['currentUser'])
+    ...mapGetters(['currentUser', 'posts', 'post'])
   },
   methods: {
-    ...mapActions(['offModalState', 'resetOffset', 'updatePosts', 'updatePostState']),
+    ...mapActions(['offModalState', 'resetOffset', 'updatePosts', 'updatePostState', 'updatePost']),
     update() {
-      localStorage.setItem('post', JSON.stringify(this.linkPost));
+      this.updatePost(this.linkPost)
       this.updatePostState(Constant.UPDATE);
+    },
+    doLike(linkPostId) {
+      event.stopPropagation();
+      var data = {
+        postType: 'LINK_POST',
+        linkPost: { id: linkPostId }
+      };
+      this.axios.post(`${process.env.VUE_APP_API}/api/v1/like/link-posts`, data)
+      .then(() => {
+        var post = this.posts.filter(v => v.id === linkPostId)[0];
+        post.like = true;
+        post.likeCount += 1;
+      }).catch(() => {
+        notification.warn('문제가 생겨 좋아요를 하지 못했습니다.')
+      })
+    },
+    cancelLike(linkPostId) {
+      event.stopPropagation();
+      this.axios.delete(`${process.env.VUE_APP_API}/api/v1/like/link-posts/${linkPostId}`)
+      .then(() => {
+        var post = this.posts.filter(v => v.id === linkPostId)[0];
+        post.like = false;
+        post.likeCount -= 1;
+      }).catch(() => {
+        notification.warn('문제가 생겨 좋아요를 취소하지 못했습니다.')
+      })
     }
-  }
+  },
 }
 </script>
 
@@ -86,6 +121,7 @@ export default {
   display: flex; 
   width: 100%;
   margin-bottom: 30px;
+  position: relative;
 }
 .post-container .middle {
   flex: 3;
@@ -188,6 +224,32 @@ export default {
 }
 .content-wrapper {
   flex: 1;
+}
+.post-container-btn {
+  position: absolute;
+  display: flex;
+  bottom: 0px;
+  left: 0px;
+  color: #7a7a7a;
+  font-size: 14px;
+}
+.like-count {
+  margin-left: 4px;
+  font-size: 13px;
+}
+.btn-like {
+  cursor: pointer;
+  display: inline-block;
+}
+.like {
+}
+.btn-like:hover {
+  font-size: 22px;
+  bottom: 5px;
+  transition: all .1s ease-in;
+}
+.btn-like-full {
+  color: #ff5784
 }
 
 </style>
