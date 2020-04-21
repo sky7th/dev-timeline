@@ -54,19 +54,19 @@ public class LinkPostWebRepositoryTest {
         linkPostWebRepository.saveAll(linkPosts);
 
         //when
-        List<LinkPost> resultLinkPosts = linkPostWebRepository.findBySearchForm(searchForm);
-
-        for (LinkPost linkPost : resultLinkPosts) {
-            System.out.println(
-                    linkPost.getId()
-                    + " "+ linkPost.getTitle()
-                    + " "+ linkPost.getContent()
-                    + " "+ linkPost.getTags()
-            );
-        }
-
-        //then
-        assertThat(resultLinkPosts.size() > 0);
+//        List<LinkPost> resultLinkPosts = linkPostWebRepository.findBySearchForm(searchForm);
+//
+//        for (LinkPost linkPost : resultLinkPosts) {
+//            System.out.println(
+//                    linkPost.getId()
+//                    + " "+ linkPost.getTitle()
+//                    + " "+ linkPost.getContent()
+//                    + " "+ linkPost.getTags()
+//            );
+//        }
+//
+//        //then
+//        assertThat(resultLinkPosts.size() > 0);
     }
 
 

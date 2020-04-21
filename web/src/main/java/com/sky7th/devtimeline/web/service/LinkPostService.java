@@ -4,6 +4,7 @@ import com.sky7th.devtimeline.core.domain.post.linkpost.LinkPost;
 import com.sky7th.devtimeline.web.exception.UnauthorizedException;
 import com.sky7th.devtimeline.web.repository.LinkPost.LinkPostWebRepository;
 import com.sky7th.devtimeline.web.security.UserPrincipal;
+import com.sky7th.devtimeline.web.service.dto.LinkPostDto;
 import com.sky7th.devtimeline.web.service.dto.LinkPostViewItem;
 import com.sky7th.devtimeline.web.service.dto.LinkPostViewItems;
 import com.sky7th.devtimeline.web.service.dto.PostSearchForm;
@@ -21,18 +22,18 @@ public class LinkPostService {
     private final LinkPostWebRepository linkPostWebRepository;
 
     @Transactional(readOnly = true)
-    public LinkPostViewItems findBySearchForm(PostSearchForm postSearchForm) {
-        List<LinkPost> recruitPosts = linkPostWebRepository.findBySearchForm(postSearchForm);
+    public LinkPostViewItems findBySearchForm(PostSearchForm postSearchForm, UserPrincipal userPrincipal) {
+        List<LinkPostDto> recruitPosts = linkPostWebRepository.findAllWithLikeCountAndIsLikeBySearchForm(postSearchForm, userPrincipal.getId());
         long recruitPostCounts = linkPostWebRepository.countBySearchForm(postSearchForm);
 
         return new LinkPostViewItems(recruitPosts, recruitPostCounts);
     }
 
     @Transactional(readOnly = true)
-    public LinkPostViewItem findOne(Long id) {
-        LinkPost linkPost = linkPostWebRepository.findById(id).orElseThrow(() -> new IllegalStateException("해당 link post는 존재하지 않습니다. id=" + id));;
+    public LinkPostViewItem findOne(Long id, UserPrincipal userPrincipal) {
+        LinkPostDto linkPostDto = linkPostWebRepository.findWithLikeCountAndIsLikeByIdAndUserId(id, userPrincipal.getId()).orElseThrow(() -> new IllegalStateException("해당 link post는 존재하지 않습니다. id=" + id));
 
-        return new LinkPostViewItem(linkPost);
+        return new LinkPostViewItem(linkPostDto);
     }
 
     @Transactional

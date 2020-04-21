@@ -23,15 +23,19 @@ public class LinkPostViewItem {
     private List<TagItem> tags;
     private String linkUrl;
     private String createdDate;
+    private Long likeCount;
+    private boolean isLike;
 
-    public LinkPostViewItem(LinkPost linkPost) {
-        this.id = linkPost.getId();
-        this.user = new UserItem(linkPost.getUser());
-        this.title = linkPost.getTitle();
-        this.content = linkPost.getContent();
-        this.tags = linkPost.getTags().stream().map(TagItem::new).collect(Collectors.toList());
-        this.linkUrl = linkPost.getLinkUrl();
-        this.createdDate = toStringDate(linkPost.getCreatedDate(), "yyyy-MM-dd");
+    public LinkPostViewItem(LinkPostDto linkPostDto) {
+        this.id = linkPostDto.getLinkPost().getId();
+        this.user = new UserItem(linkPostDto.getLinkPost().getUser());
+        this.title = linkPostDto.getLinkPost().getTitle();
+        this.content = linkPostDto.getLinkPost().getContent();
+        this.tags = linkPostDto.getLinkPost().getTags().stream().map(TagItem::new).collect(Collectors.toList());
+        this.linkUrl = linkPostDto.getLinkPost().getLinkUrl();
+        this.createdDate = toStringDate(linkPostDto.getLinkPost().getCreatedDate(), "yyyy-MM-dd");
+        this.likeCount = linkPostDto.getLikeCount();
+        this.isLike = linkPostDto.getIsLike() != null;
     }
 
     public LinkPost toLinkPost() {

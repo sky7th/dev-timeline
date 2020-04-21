@@ -9,18 +9,18 @@ import java.util.List;
 @Getter
 public class LinkPostViewItems {
 
-    private final List<LinkPost> linkPosts;
+    private final List<LinkPostDto> linkPosts;
     private final long linkPostCounts;
     private List<LinkPostViewItem> linkPostItems = new ArrayList<>();
 
-    public LinkPostViewItems(List<LinkPost> linkPosts, long linkPostCounts) {
+    public LinkPostViewItems(List<LinkPostDto> linkPosts, long linkPostCounts) {
         this.linkPosts = linkPosts;
         this.linkPostCounts = linkPostCounts;
         this.map();
     }
 
     private void map() {
-        for (LinkPost linkPost : linkPosts) {
+        for (LinkPostDto linkPost : linkPosts) {
             linkPostItems.add(new LinkPostViewItem(linkPost));
         }
     }
