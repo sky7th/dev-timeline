@@ -54,15 +54,6 @@ faLibrary.add(fasHeart, farHeart)
 
 export default {
   data: () => ({
-    linkPost: { 
-      title: '',
-      linkUrl: '',
-      content: '',
-      tags: [],
-      like: false,
-      likeCount: 0,
-      user: {}
-    },
     isPossibleUpdate: false
   }),
   created() {
@@ -78,7 +69,6 @@ export default {
   methods: {
     ...mapActions(['offModalState', 'resetOffset', 'updatePosts', 'updatePostState', 'updatePost']),
     update() {
-      this.updatePost(this.linkPost)
       this.updatePostState(Constant.UPDATE);
     },
     doLike(linkPostId) {
@@ -89,7 +79,7 @@ export default {
       };
       this.axios.post(`${process.env.VUE_APP_API}/api/v1/like/link-posts`, data)
       .then(() => {
-        var post = this.posts.filter(v => v.id === linkPostId)[0];
+        var post = this.posts.find(v => v.id === linkPostId);
         post.like = true;
         post.likeCount += 1;
       }).catch(() => {
@@ -100,7 +90,7 @@ export default {
       event.stopPropagation();
       this.axios.delete(`${process.env.VUE_APP_API}/api/v1/like/link-posts/${linkPostId}`)
       .then(() => {
-        var post = this.posts.filter(v => v.id === linkPostId)[0];
+        var post = this.posts.find(v => v.id === linkPostId);
         post.like = false;
         post.likeCount -= 1;
       }).catch(() => {

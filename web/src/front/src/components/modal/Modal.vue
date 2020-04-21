@@ -71,12 +71,12 @@ export default {
   padding: 0px 4px 15px 10px;
   border-radius: 3px;
   box-shadow: 0 1px 2px 0 rgba(9,30,66,0.25), 0 0 1px 0 rgba(9,30,66,0.31);
-  animation: superman 0.5s ease-in-out;
+  animation: superman 0.51s ease-in-out;
   z-index: 1000;
   transition: all 600ms cubic-bezier(0.36, 0, 0.07, 1);
 }
 .close-in-delay {
-  animation: superman-reverse 0.5s ease-in-out;
+  animation: superman-reverse 0.51s ease-in-out;
 }
 .modal-background {
   position: fixed;

@@ -70,12 +70,15 @@ a {
 @keyframes btn-up {
   0% {
     padding-top: 0px;
+    opacity: 1;
   }
   50% {
     padding-top: 30px;
+    opacity: 0.6;
   }
   100% {
     padding-top: 0px;
+    opacity: 1;
   }
 }
 

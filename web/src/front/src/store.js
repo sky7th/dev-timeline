@@ -92,7 +92,6 @@ export default new Vuex.Store({
         console.log('error : ', e)
       })
     },
-    updatePost: (state, payload) => state.post = payload,
     insertPosts: (state, payload) => {
       axios.get('http://127.0.0.1:8080/api/v1/'+state.selectedMenu+'?'
                 + getOffsetQuery(state.offset)
@@ -112,6 +111,7 @@ export default new Vuex.Store({
         console.log('error : ', e)
       })
     },
+    updatePost: (state, payload) => state.post = payload,
     updateCheckedCompanies: (state, payload) => state.checkedCompanies = payload.checkedCompanies,
     resetOffset: state => state.offset = 0,
     updateOffset: (state, payload) => state.offset = payload.offset,

@@ -3,23 +3,23 @@
     <div class="wrapper">
       <div class="description">title</div>
       <InputForm class="title-input" name="title" placeholder="제목" 
-        v-model="post.title" 
+        v-model="linkPost.title" 
         @keypressEnter="moveFocusToLink"/>
     </div>
     <div class="wrapper">
       <div class="description">link</div>
       <InputForm class="link-input" name="linkUrl" type="text" placeholder="https://www.devtimeline.com/" 
-        v-model="post.linkUrl"
+        v-model="linkPost.linkUrl"
         @keypressEnter="moveFocusToTag"/>
     </div>
     <div class="wrapper">
       <div class="description">tags <span style="font-size: 12px; margin-left: 4px;">(태그 입력 후 엔터를 꾸욱)</span></div>
       <ul class="tag-wrapper" 
         @click="moveFocusToTag">
-        <li v-for="(tag, i) in post.tags" :key="i" class="tag-add">
+        <li v-for="(tag, i) in linkPost.tags" :key="i" class="tag-add">
           <span class="tag-name">{{ tag.name }}</span>
           <span class="tag-close" 
-            @click="removeTag($event, tag.forId)">x</span>
+            @click="removeTag($event, tag.id, tag.forId)">x</span>
         </li>
         <li class="tag-input">
           <input type="text" v-model="tagName" 
@@ -31,7 +31,7 @@
     <div class="wrapper content">
       <div class="description">description</div>
       <TextareaForm class="content-input" name="content" placeholder="설명을 적어주세요." 
-        v-model="post.content"/>
+        v-model="linkPost.content"/>
     </div>
     <div class="bottom-wrapper">
       <BlueButton class="btn-submit" type="submit" 
@@ -58,9 +58,12 @@ export default {
       content: '',
       tags: []
     },
-    tagName: '',
-    postId: null
+    tagName: ''
   }),
+  created() {
+    if (this.postState === Constant.UPDATE)
+      this.linkPost = JSON.parse(JSON.stringify(this.post));
+  },
   components: {
     InputForm,
     TextareaForm,
@@ -86,10 +89,14 @@ export default {
         return;
       }
       if (this.isStateUpdate) {
-        this.axios.put(`${process.env.VUE_APP_API}/api/v1/link-posts/${this.postId}`, this.linkPost)
+        this.axios.put(`${process.env.VUE_APP_API}/api/v1/link-posts/${this.linkPost.id}`, this.linkPost)
         .then(() => {
           notification.success('글 수정이 완료되었습니다.');
-          this.handlerRefresh();
+          this.post.title = this.linkPost.title;
+          this.post.linkUrl = this.linkPost.linkUrl;
+          this.post.tags = this.linkPost.tags;
+          this.post.content = this.linkPost.content;
+          this.handlerClosePopup();
         }).catch(() => {
           notification.warn('글 수정에 실패했습니다.');
         })
@@ -98,6 +105,7 @@ export default {
         .then(() => {
           notification.success('좋은 링크 공유해주셔서 감사합니다 ^-^');
           this.handlerRefresh();
+          window.scrollTo(0, 0);
         }).catch(() => {
           notification.warn('글쓰기에 실패했습니다.');
         })
@@ -112,8 +120,11 @@ export default {
       this.linkPost.tags.push({ id: null, forId: new Date().getTime(), name: this.tagName });
       this.tagName = '';
     },
-    removeTag($event, forId) {
-      this.linkPost.tags = this.linkPost.tags.filter(tag => tag.forId !== forId);
+    removeTag($event, id, forId) {
+      if (id == null)
+        this.linkPost.tags = this.linkPost.tags.filter(tag => tag.forId !== forId);
+      else
+        this.linkPost.tags = this.linkPost.tags.filter(tag => tag.id !== id);
     },
     getLengthByLanguage($event) {
       var kor_cnt = 0;
