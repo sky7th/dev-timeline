@@ -45,10 +45,7 @@
     </ul>
     <infinite-loading class="infinite-message" @infinite="handlerInfinite" spinner="waveDots">
       <div slot="no-more">
-        <div>마지막 부분이에요. 위로 올라가시겠어요?</div> 
-        <br/>
-        <a href="javascript:scroll(0,0)">네</a>
-        <a href="javascript:alert('o=| O ____ O |=o')">아니요</a>
+        <ScrollUp/>
       </div>
       <div slot="no-results">링크정보를 가져오지 못했어요 ..ㅠ.ㅠ</div>
     </infinite-loading>
@@ -58,6 +55,7 @@
 <script>
 import CountBar from '@/components/search/CountBar';
 import FixedTagBar from '@/components/search/FixedTagBar';
+import ScrollUp from '@/components/common/ScrollUp'
 import { mapGetters, mapActions } from "vuex";
 import InfiniteLoading from 'vue-infinite-loading';
 import Constant from '@/constant/Constant';
@@ -72,7 +70,8 @@ export default {
   components: {
     InfiniteLoading,
     CountBar,
-    FixedTagBar
+    FixedTagBar,
+    ScrollUp
   },
   computed: {
     ...mapGetters(['posts', 'currentUser'])
@@ -224,7 +223,7 @@ export default {
 }
 .infinite-message {
   font-size: 14px;
-  margin: 130px 0 80px 0;
+  margin: 80px 0 30px 0;
 }
 .infinite-message div {
 

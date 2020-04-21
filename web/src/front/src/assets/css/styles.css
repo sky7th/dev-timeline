@@ -67,6 +67,18 @@ a {
   }
 }
 
+@keyframes btn-up {
+  0% {
+    padding-top: 0px;
+  }
+  50% {
+    padding-top: 30px;
+  }
+  100% {
+    padding-top: 0px;
+  }
+}
+
 main {
   animation: fadeIn 0.3s ease-in-out;
 }
