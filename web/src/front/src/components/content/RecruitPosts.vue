@@ -31,11 +31,13 @@
         </a>
       </li>
     </ul>
-    <infinite-loading class="infinite-message" @infinite="handlerInfinite" spinner="waveDots">
+    <infinite-loading class="infinite-message" @infinite="handlerInfinite" ref="infiniteLoading" spinner="waveDots">
       <div slot="no-more">
         <ScrollUp/>
       </div>
-      <div slot="no-results">채용정보를 가져오지 못했어요 ..ㅠ.ㅠ</div>
+      <div slot="no-results">
+        <ScrollUp/>
+      </div>
     </infinite-loading>
     </div>
 </template>
@@ -53,6 +55,13 @@ export default {
     InfiniteLoading,
     CountBar,
     ScrollUp
+  },
+  watch: {
+    posts() {
+      if (this.$refs.infiniteLoading) {
+        this.$refs.infiniteLoading.stateChanger.reset(); 
+      }
+    }
   },
   computed: {
     ...mapGetters(['posts'])

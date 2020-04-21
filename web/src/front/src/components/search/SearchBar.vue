@@ -29,10 +29,7 @@ export default {
     },
     handleSearchPressEnter({ keyCode }) {
       if (keyCode === 13) {
-        this.insertTag({ tagName: this.searchName })
-        this.resetOffset()
-        this.updatePosts()
-        this.searchName = ''
+        this.handleSearch();
       }
     }
   }

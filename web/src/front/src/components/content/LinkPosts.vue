@@ -43,11 +43,13 @@
         </div>
       </li>
     </ul>
-    <infinite-loading class="infinite-message" @infinite="handlerInfinite" spinner="waveDots">
+    <infinite-loading class="infinite-message" @infinite="handlerInfinite" ref="infiniteLoading"  spinner="waveDots">
       <div slot="no-more">
         <ScrollUp/>
       </div>
-      <div slot="no-results">링크정보를 가져오지 못했어요 ..ㅠ.ㅠ</div>
+      <div slot="no-results">
+        <ScrollUp/>
+      </div>
     </infinite-loading>
   </div>
 </template>
@@ -76,10 +78,17 @@ export default {
   computed: {
     ...mapGetters(['posts', 'currentUser'])
   },
+  watch: {
+    posts() {
+      if (this.$refs.infiniteLoading) {
+        this.$refs.infiniteLoading.stateChanger.reset(); 
+      }
+    }
+  },
   methods: {
     ...mapActions(['insertPosts', 'onModalState', 'resetOffset', 'updatePosts', 'updatePostState', 'updatePost']),
     handlerInfinite($state) {
-      this.insertPosts({ infiniteState: $state })
+      this.insertPosts({ infiniteState: $state });
     },
     handlerOnModalState(postId) {
       this.axios.get(`${process.env.VUE_APP_API}/api/v1/link-posts/${postId}`)
