@@ -1,18 +1,19 @@
-## dev-timeline
+## dev-timeline  &#128187; &#128064;
+![screenshot1](./screenshot1.gif)
+![screenshot2](./screenshot2.gif)
+
 유명 sw 기업들에서 운영하는 테크 블로그들에서는 많은 도움이 되는 양질의 글들을 접할 수 있습니다.
 
 이 양질의 글들을 하나의 플랫폼에서 볼 수 있으면 좋을 것 같다는 생각이 들어 dev-timeline 을 만들게 되었습니다.
 
-<img src="./screenshot/1.PNG" style="max-height:300px;"></img>
-
 >채용 정보 목록이나 블로그 포스트 목록에서 아이템을 클릭하면 **해당 링크로 이동**합니다.
 
 **제공하고자 하는 서비스**는 다음과 같습니다.
-- 유명 sw 기업들의 테크 블로그 포스트 모아보기
-- 유명 sw 기업들의 채용 정보 모아보기
-- 개발 관련된 좋은 글의 링크를 사용자들이 서로 공유
+- 유명 sw 기업들의 **테크 블로그 포스트 모아보기**
+- 유명 sw 기업들의 **채용 정보 모아보기**
+- 개발 관련된 좋은 글의 **링크를 사용자들이 서로 공유**
 - 위의 서비스들을 한 곳에서 모두 볼 수 있는 타임라인
-- 서비스 카테고리 별 실시간 채팅
+- 서비스 카테고리 별 **실시간 채팅**
   
 
 
@@ -131,7 +132,7 @@
 ### 크롤링
 
 
-## 화면 뷰
+<!-- ## 화면 뷰
 <img src="./screenshot/1.PNG" style="max-height:300px;"></img>
 <img src="./screenshot/2.PNG" style="max-height:300px;"></img>
 <img src="./screenshot/7.PNG" style="max-height:300px;"></img>
@@ -140,4 +141,4 @@
 <img src="./screenshot/10.PNG" style="max-height:300px;"></img>
 <img src="./screenshot/11.PNG" style="max-height:300px;"></img>
 <img src="./screenshot/13.PNG" style="max-height:300px;"></img>
-<img src="./screenshot/16.PNG" style="max-height:300px;"></img>
+<img src="./screenshot/16.PNG" style="max-height:300px;"></img> -->
