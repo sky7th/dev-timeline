@@ -21,6 +21,7 @@ spring:
     properties.hibernate:
       format_sql: true
       dialect: org.hibernate.dialect.MySQL5Dialect
+      default_batch_fetch_size: 1000
     show-sql: true
     hibernate:
       ddl-auto: update

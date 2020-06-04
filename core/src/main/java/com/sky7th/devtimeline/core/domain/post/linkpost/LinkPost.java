@@ -1,5 +1,6 @@
 package com.sky7th.devtimeline.core.domain.post.linkpost;
 
+import com.sky7th.devtimeline.core.domain.comment.Comment;
 import com.sky7th.devtimeline.core.domain.common.BaseTimeEntity;
 import com.sky7th.devtimeline.core.domain.like.PostLike;
 import com.sky7th.devtimeline.core.domain.tag.Tag;
@@ -42,6 +43,9 @@ public class LinkPost extends BaseTimeEntity {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "linkPost")
     private List<PostLike> postLikes = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "linkPost")
+    private List<Comment> comments = new ArrayList<>();
 
     @Builder
     public LinkPost(Long id, User user, LinkType linkType, String title, String content, String linkUrl) {

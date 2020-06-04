@@ -37,19 +37,27 @@ public class LinkPostWebRepositoryImpl implements LinkPostWebRepositoryCustom {
     public Optional<LinkPostDto> findWithLikeCountAndIsLikeByIdAndUserId(Long linkPostid, Long userId) {
         List<LinkPostDto> linkPosts = queryFactory
                 .select(
-                        Projections.fields(LinkPostDto.class, linkPost,
-                                ExpressionUtils.as(
-                                        JPAExpressions.select(postLike)
-                                                .from(postLike)
-                                                .where(postLike.user.id.eq(userId)
-                                                .and(postLike.linkPost.id.eq(linkPost.id))),
-                                        "isLike"),
-                                ExpressionUtils.as(
-                                        JPAExpressions.select(postLike.count())
-                                                .from(postLike)
-                                                .where(postLike.linkPost.id.eq(linkPost.id)),
-                                        "likeCount")
-                        )
+                    Projections.fields(LinkPostDto.class, linkPost,
+                        ExpressionUtils.as(
+                            JPAExpressions.select(postLike)
+                                .from(postLike)
+                                .where(postLike.user.id.eq(userId)
+                                .and(postLike.linkPost.id.eq(linkPost.id)))
+                                .exists(),
+                            "isLike"),
+                        ExpressionUtils.as(
+                            JPAExpressions.select(postLike.count())
+                                .from(postLike)
+                                .where(postLike.linkPost.id.eq(linkPost.id)),
+                            "likeCount")
+//                                ExpressionUtils.as(
+//                                        JPAExpressions.selectFrom(postLike)
+//                                                .where(postLike.linkPost.id.eq(linkPost.id))
+//                                                .offset(0)
+//                                                .limit(5)
+//                                                .orderBy(linkPost.createdDate.desc()),
+//                                        "comments")
+                    )
                 )
                 .from(linkPost)
                 .leftJoin(linkPost.user).fetchJoin()
@@ -64,19 +72,20 @@ public class LinkPostWebRepositoryImpl implements LinkPostWebRepositoryCustom {
     public List<LinkPostDto> findAllWithLikeCountAndIsLikeBySearchForm(PostSearchForm postSearchForm, Long userId) {
         return queryFactory
                 .select(
-                        Projections.fields(LinkPostDto.class, linkPost,
-                                ExpressionUtils.as(
-                                        JPAExpressions.select(postLike)
-                                                .from(postLike)
-                                                .where(postLike.user.id.eq(userId)
-                                                        .and(postLike.linkPost.id.eq(linkPost.id))),
-                                        "isLike"),
-                                ExpressionUtils.as(
-                                        JPAExpressions.select(postLike.count())
-                                                .from(postLike)
-                                                .where(postLike.linkPost.id.eq(linkPost.id)),
-                                        "likeCount")
-                        )
+                    Projections.fields(LinkPostDto.class, linkPost,
+                        ExpressionUtils.as(
+                            JPAExpressions.select(postLike)
+                                .from(postLike)
+                                .where(postLike.user.id.eq(userId)
+                                .and(postLike.linkPost.id.eq(linkPost.id)))
+                                .exists(),
+                            "isLike"),
+                        ExpressionUtils.as(
+                            JPAExpressions.select(postLike.count())
+                                .from(postLike)
+                                .where(postLike.linkPost.id.eq(linkPost.id)),
+                            "likeCount")
+                    )
                 )
                 .from(linkPost)
                 .leftJoin(linkPost.user).fetchJoin()

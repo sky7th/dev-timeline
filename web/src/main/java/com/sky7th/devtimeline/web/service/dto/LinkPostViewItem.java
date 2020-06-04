@@ -25,6 +25,7 @@ public class LinkPostViewItem {
     private String createdDate;
     private Long likeCount;
     private boolean isLike;
+    private List<CommentDto> comments;
 
     public LinkPostViewItem(LinkPostDto linkPostDto) {
         this.id = linkPostDto.getLinkPost().getId();
@@ -35,7 +36,8 @@ public class LinkPostViewItem {
         this.linkUrl = linkPostDto.getLinkPost().getLinkUrl();
         this.createdDate = toStringDate(linkPostDto.getLinkPost().getCreatedDate(), "yyyy-MM-dd");
         this.likeCount = linkPostDto.getLikeCount();
-        this.isLike = linkPostDto.getIsLike() != null;
+        this.isLike = linkPostDto.getIsLike();
+        this.comments = linkPostDto.getLinkPost().getComments().stream().map(CommentDto::new).collect(Collectors.toList());
     }
 
     public LinkPost toLinkPost() {

@@ -1,11 +1,14 @@
 package com.sky7th.devtimeline.web.service.dto;
 
+import com.sky7th.devtimeline.core.domain.comment.Comment;
 import com.sky7th.devtimeline.core.domain.like.PostLike;
 import com.sky7th.devtimeline.core.domain.post.linkpost.LinkPost;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -15,6 +18,6 @@ public class LinkPostDto {
 
     private LinkPost linkPost;
     private Long likeCount;
-    private PostLike isLike;
+    private Boolean isLike;
 
 }
