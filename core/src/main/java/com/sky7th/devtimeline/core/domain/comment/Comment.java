@@ -23,7 +23,7 @@ public class Comment extends BaseTimeEntity {
     @Column(name = "post_type")
     private PostType postType;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "link_post_id", foreignKey = @ForeignKey(name = "fk_comment_link_post"))
     private LinkPost linkPost;
 

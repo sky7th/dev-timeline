@@ -93,10 +93,7 @@ export default {
     handlerOnModalState(postId) {
       this.axios.get(`${process.env.VUE_APP_API}/api/v1/link-posts/${postId}`)
         .then(response => {
-          var post = this.posts.find(v => v.id === postId);
-          this.updatePost(post)
-          this.post = response.data.data;
-          
+          this.updatePost(response.data.data)
           this.updatePostState(Constant.READ);
           this.onModalState();
         }).catch(() => {

@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 
 import static com.sky7th.devtimeline.core.domain.like.QPostLike.postLike;
 import static com.sky7th.devtimeline.core.domain.post.linkpost.QLinkPost.linkPost;
+import static com.sky7th.devtimeline.core.domain.comment.QComment.comment;
 
 @RequiredArgsConstructor
 public class LinkPostWebRepositoryImpl implements LinkPostWebRepositoryCustom {
@@ -49,14 +50,12 @@ public class LinkPostWebRepositoryImpl implements LinkPostWebRepositoryCustom {
                             JPAExpressions.select(postLike.count())
                                 .from(postLike)
                                 .where(postLike.linkPost.id.eq(linkPost.id)),
-                            "likeCount")
-//                                ExpressionUtils.as(
-//                                        JPAExpressions.selectFrom(postLike)
-//                                                .where(postLike.linkPost.id.eq(linkPost.id))
-//                                                .offset(0)
-//                                                .limit(5)
-//                                                .orderBy(linkPost.createdDate.desc()),
-//                                        "comments")
+                            "likeCount"),
+                        ExpressionUtils.as(
+                            JPAExpressions.select(comment.count())
+                                .from(comment)
+                                .where(comment.linkPost.id.eq(linkPost.id)),
+                            "commentCount")
                     )
                 )
                 .from(linkPost)
@@ -84,7 +83,12 @@ public class LinkPostWebRepositoryImpl implements LinkPostWebRepositoryCustom {
                             JPAExpressions.select(postLike.count())
                                 .from(postLike)
                                 .where(postLike.linkPost.id.eq(linkPost.id)),
-                            "likeCount")
+                            "likeCount"),
+                        ExpressionUtils.as(
+                            JPAExpressions.select(comment.count())
+                                .from(comment)
+                                .where(comment.linkPost.id.eq(linkPost.id)),
+                            "commentCount")
                     )
                 )
                 .from(linkPost)

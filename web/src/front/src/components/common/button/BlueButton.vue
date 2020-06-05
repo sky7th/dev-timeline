@@ -19,11 +19,11 @@ export default {
 <style scoped>
 .btn {
   cursor: pointer;
-  padding: 7px 8px;
+  padding: 6px 8px;
   background-color: #fff;
   border: 1px solid #2d92f1;
   border-radius: 5px;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   color: #2d92f1;
 }

@@ -9,6 +9,8 @@ import com.sky7th.devtimeline.web.service.dto.CommentDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import static com.sky7th.devtimeline.web.presentation.api.dto.WebResponseStatus.OK;
 
 @RequiredArgsConstructor
@@ -16,10 +18,18 @@ import static com.sky7th.devtimeline.web.presentation.api.dto.WebResponseStatus.
 public class CommentController {
     private final CommentService commentService;
 
+    @GetMapping("/api/v1/link-posts/comment")
+    public WebResponseDto<Object> getComments(@RequestParam(value = "postId") Long postId,
+                                              @RequestParam(value = "lastCommentId") Long lastCommentId,
+                                              @RequestParam(value = "limit") Long limit) {
+        List<CommentDto> comments = commentService.findByOffsetAndLimit(postId, lastCommentId, limit);
+        return WebResponseDto.builder().status(OK).data(comments).build();
+    }
+
     @PostMapping("/api/v1/link-posts/comment")
     public WebResponseDto<Object> saveLike(@RequestBody CommentDto commentDto, @CurrentUser UserPrincipal userPrincipal) {
-        commentService.save(commentDto, userPrincipal);
-        return WebResponseDto.builder().status(OK).build();
+        CommentDto comment = commentService.save(commentDto, userPrincipal);
+        return WebResponseDto.builder().status(OK).data(comment).build();
     }
 
     @DeleteMapping("/api/v1/link-posts/comment/{id}")

@@ -14,7 +14,7 @@ import static com.sky7th.devtimeline.core.domain.utils.LocalDateTimeUtils.toStri
 @RequiredArgsConstructor
 @Setter
 @Getter
-public class LinkPostViewItem {
+public class LinkPostViewDetailDto {
 
     private Long id;
     private UserItem user;
@@ -26,8 +26,9 @@ public class LinkPostViewItem {
     private Long likeCount;
     private Long commentCount;
     private boolean isLike;
+    private List<CommentDto> comments;
 
-    public LinkPostViewItem(LinkPostDto linkPostDto) {
+    public LinkPostViewDetailDto(LinkPostDto linkPostDto) {
         this.id = linkPostDto.getLinkPost().getId();
         this.user = new UserItem(linkPostDto.getLinkPost().getUser());
         this.title = linkPostDto.getLinkPost().getTitle();
@@ -36,8 +37,9 @@ public class LinkPostViewItem {
         this.linkUrl = linkPostDto.getLinkPost().getLinkUrl();
         this.createdDate = toStringDate(linkPostDto.getLinkPost().getCreatedDate(), "yyyy-MM-dd");
         this.likeCount = linkPostDto.getLikeCount();
-        this.commentCount = linkPostDto.getCommentCount();
         this.isLike = linkPostDto.getIsLike();
+        this.commentCount = linkPostDto.getCommentCount();
+        this.comments = linkPostDto.getComments().stream().map(CommentDto::new).collect(Collectors.toList());
     }
 
     public LinkPost toLinkPost() {

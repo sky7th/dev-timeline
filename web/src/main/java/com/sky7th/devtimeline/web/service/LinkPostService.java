@@ -3,11 +3,9 @@ package com.sky7th.devtimeline.web.service;
 import com.sky7th.devtimeline.core.domain.post.linkpost.LinkPost;
 import com.sky7th.devtimeline.web.exception.UnauthorizedException;
 import com.sky7th.devtimeline.web.repository.LinkPost.LinkPostWebRepository;
+import com.sky7th.devtimeline.web.repository.comment.CommentWebRepository;
 import com.sky7th.devtimeline.web.security.UserPrincipal;
-import com.sky7th.devtimeline.web.service.dto.LinkPostDto;
-import com.sky7th.devtimeline.web.service.dto.LinkPostViewItem;
-import com.sky7th.devtimeline.web.service.dto.LinkPostViewItems;
-import com.sky7th.devtimeline.web.service.dto.PostSearchForm;
+import com.sky7th.devtimeline.web.service.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +18,7 @@ public class LinkPostService {
 
     private final TagService tagService;
     private final LinkPostWebRepository linkPostWebRepository;
+    private final CommentWebRepository commentWebRepository;
 
     @Transactional(readOnly = true)
     public LinkPostViewItems findBySearchForm(PostSearchForm postSearchForm, UserPrincipal userPrincipal) {
@@ -30,10 +29,11 @@ public class LinkPostService {
     }
 
     @Transactional(readOnly = true)
-    public LinkPostViewItem findOne(Long id, UserPrincipal userPrincipal) {
+    public LinkPostViewDetailDto findOne(Long id, UserPrincipal userPrincipal) {
         LinkPostDto linkPostDto = linkPostWebRepository.findWithLikeCountAndIsLikeByIdAndUserId(id, userPrincipal==null?0:userPrincipal.getId()).orElseThrow(() -> new IllegalStateException("해당 link post는 존재하지 않습니다. id=" + id));
+        linkPostDto.setComments(commentWebRepository.findFromLastCommentIdToLimit(id, null, 5L));
 
-        return new LinkPostViewItem(linkPostDto);
+        return new LinkPostViewDetailDto(linkPostDto);
     }
 
     @Transactional

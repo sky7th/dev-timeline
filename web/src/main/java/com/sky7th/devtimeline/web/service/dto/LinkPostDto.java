@@ -19,5 +19,11 @@ public class LinkPostDto {
     private LinkPost linkPost;
     private Long likeCount;
     private Boolean isLike;
+    private Long commentCount;
+    private List<Comment> comments;
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
 
 }

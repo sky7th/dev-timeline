@@ -5,6 +5,7 @@ import com.sky7th.devtimeline.web.presentation.api.dto.WebResponseDto;
 import com.sky7th.devtimeline.web.security.CurrentUser;
 import com.sky7th.devtimeline.web.security.UserPrincipal;
 import com.sky7th.devtimeline.web.service.LinkPostService;
+import com.sky7th.devtimeline.web.service.dto.LinkPostViewDetailDto;
 import com.sky7th.devtimeline.web.service.dto.LinkPostViewItem;
 import com.sky7th.devtimeline.web.service.dto.LinkPostViewItems;
 import com.sky7th.devtimeline.web.service.dto.PostSearchForm;
@@ -42,7 +43,7 @@ public class LinkPostApiController {
     @GetMapping("/api/v1/link-posts/{id}")
     public WebResponseDto<Object> getLinkPost(@PathVariable(name = "id") Long id,
                                               @CurrentUser UserPrincipal userPrincipal) {
-        LinkPostViewItem linkPostViewItem = linkPostService.findOne(id, userPrincipal);
+        LinkPostViewDetailDto linkPostViewItem = linkPostService.findOne(id, userPrincipal);
 
         return WebResponseDto.builder().status(OK).data(linkPostViewItem).build();
     }

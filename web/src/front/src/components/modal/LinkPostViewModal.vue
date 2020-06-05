@@ -31,18 +31,20 @@
     </div>
     <div class="wrapper content-wrapper">
       <div class="description">description</div>
-      <div class="content">{{ post.content }}</div>
+      <pre class="content">{{ post.content }}</pre>
     </div>
     <div v-if="isPossibleUpdate" class="bottom-wrapper">
       <BlueButton class="btn-submit" type="submit" :name="'수정'"
         @click="update"/>
     </div>
+    <CommentContainer :comments="post.comments" :postId="post.id"/>
     <notifications group="notify" position="bottom center"/>
   </div>
 </template>
 
 <script>
 import BlueButton from '@/components/common/button/BlueButton'
+import CommentContainer from '@/components/comment/CommentContainer'
 import { mapGetters, mapActions } from "vuex";
 import notification from '../../libs/notification';
 import Constant from '@/constant/Constant';
@@ -61,7 +63,8 @@ export default {
       this.isPossibleUpdate = true
   },
   components: {
-    BlueButton
+    BlueButton,
+    CommentContainer
   },  
   computed: {
     ...mapGetters(['currentUser', 'posts', 'post'])
@@ -208,6 +211,7 @@ export default {
   color: #4a4a4a;
   height: 100%;
   line-height: 1.35;
+  white-space: pre-wrap;
 }
 .bottom-wrapper {
   text-align: right;

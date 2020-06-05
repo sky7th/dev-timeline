@@ -22,6 +22,10 @@ a {
   text-decoration: none;
 }
 
+pre {
+    font-family: "Source Sans Pro", "Helvetica Neue", Arial, sans-serif !important;
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;
