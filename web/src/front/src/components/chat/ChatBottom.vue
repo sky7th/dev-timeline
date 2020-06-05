@@ -23,6 +23,8 @@ export default {
         return '채용 채팅방';
       else if (this.selectedChatRoom.name === 'tech-posts')
         return '테크 블로그 채팅방';
+      else if (this.selectedChatRoom.name === 'link-posts')
+        return '링크 공유 채팅방';
     }
   }
 }

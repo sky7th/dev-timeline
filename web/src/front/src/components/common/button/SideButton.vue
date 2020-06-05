@@ -30,7 +30,7 @@ export default {
   background-color: white;
   color: #2d92f1;
   font-weight: 500;
-  font-size: 14px;
+  font-size: 13px;
   box-shadow: 0 1px 3px 0 rgba(9,30,66,0.25), 0 0 1px 0 rgba(9,30,66,0.31);
 }
 .side-button button:hover {

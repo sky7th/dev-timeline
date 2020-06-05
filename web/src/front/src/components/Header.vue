@@ -32,6 +32,7 @@ export default {
       this.setToken(null)
       this.setUserDetail(null)
       this.$router.replace('/');
+      location.reload()
       notification.success('로그아웃 처리 되었습니다.')
     },
     login() {

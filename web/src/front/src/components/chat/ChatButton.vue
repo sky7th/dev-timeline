@@ -82,6 +82,8 @@ export default {
         return '채용';
       else if (this.selectedMenu === 'tech-posts')
         return '테크 블로그';
+      else if (this.selectedMenu === 'link-posts')
+        return '링크 공유';
     }
   }
 }
@@ -101,7 +103,7 @@ export default {
   /* border-radius: 100px; */
   cursor: pointer;
   background-color: white;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   box-shadow: 0 1px 3px 0 rgba(9,30,66,0.25), 0 0 1px 0 rgba(9,30,66,0.31);
 }
