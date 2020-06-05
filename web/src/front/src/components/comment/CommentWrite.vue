@@ -62,4 +62,7 @@ export default {
 .comment-input {
     margin: 15px 0 5px 0;
 }
+.btn-submit {
+    margin-bottom: 15px;
+}
 </style>

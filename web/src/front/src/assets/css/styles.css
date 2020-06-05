@@ -71,6 +71,24 @@ pre {
   }
 }
 
+@keyframes menu-bars {
+    0% {
+        left: -100px;
+    }
+    100% {
+        left: 0;
+    }
+}
+
+@keyframes menu-bars-reverse {
+    0% {
+        left: 0;
+    }
+    100% {
+        left: -100px;
+    }
+}
+
 @keyframes btn-up {
   0% {
     padding-top: 0px;

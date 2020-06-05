@@ -33,6 +33,13 @@ export default {
   created() {
     document.getElementsByTagName('body')[0].style['overflow-y'] = 'hidden';
   },
+  mounted() {
+    window.onkeyup = () => {
+        if (event.keyCode == 27) {
+            this.closePopupInDelay();
+        }
+    }
+  },
   computed: {
     ...mapGetters(['selectedMenu', 'postState']),
     isStateRead() {

@@ -26,13 +26,13 @@
             <div class="middle-bottom">
               <div class="author">{{ author }}</div>
               <div class="between" v-if="author">|</div>
-              <div class="date">{{ date }}</div>
+              <div class="date">{{ timeForToday(date) }}</div>
             </div>
           </div>
           <div class="right">
             <img class="thumbnail" v-if="thumbnailUrl" :src="thumbnailUrl" alt="">
             <div class="thumbnail-no" v-else>
-              <div>미리보기 이미지가 없어용.. ㅠ.ㅠ</div>
+              <div>미리보기 이미지가 <br/>없어용.. ㅠ.ㅠ</div>
             </div>
           </div>
           
@@ -49,6 +49,7 @@ import CompanyList from '@/components/company/CompanyList';
 import CountBar from '@/components/search/CountBar';
 import PagingBar from '@/components/search/PagingBar';
 import { mapGetters, mapActions } from "vuex";
+import { timeForToday } from '@/utils/time';
 
 export default {
   components: {
@@ -63,7 +64,10 @@ export default {
     ...mapGetters(['posts', 'postCounts'])
   },
   methods: {
-    ...mapActions(['updatePosts'])
+    ...mapActions(['updatePosts']),
+    timeForToday(createdDate) {
+        return timeForToday(createdDate);
+    }
   }
 }
 </script>
@@ -76,15 +80,14 @@ export default {
   padding: 15px 13%;
 }
 .tech-posts ul li {
-  background-color: white;
-  padding: 10px 20px;
-  margin-bottom: 15px;
-  border-radius: 10px;
-  width: 100%;
-  min-height: 140px;
-  -webkit-animation: fadeIn 0.3s ease-in-out;
-  animation: fadeIn 0.3s ease-in-out;
-  box-shadow: 0 1px 4px rgba(27,31,35,.1);
+    background-color: white;
+    padding: 7px 17px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    width: 100%;
+    -webkit-animation: fadeIn 0.3s ease-in-out;
+    animation: fadeIn 0.3s ease-in-out;
+    box-shadow: 0 1px 4px rgba(27,31,35,.1);
 }
 .tech-posts ul li:hover {
   box-shadow: 0 1px 6px rgba(27,31,35,.3);
@@ -96,6 +99,8 @@ export default {
 }
 .company {
   text-align: center;
+  font-size: 14px;
+  margin-top: 2px;
 }
 .left {
   justify-content: center;
@@ -114,7 +119,7 @@ export default {
 }
 .title {
   padding-bottom: 20px;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: bold;
   text-align: end;
 }
@@ -124,13 +129,13 @@ export default {
 }
 .author {
   margin-right: 15px;
-  font-size: 15px;
+  font-size: 14px;
 }
 .between {
   margin-right: 10px;
 }
 .date {
-  font-size: 15px;
+  font-size: 14px;
 }
 .right {
   display: flex;
@@ -154,6 +159,7 @@ export default {
 }
 .right .thumbnail-no div {
   text-align: center;
-  font-size: 13px;
+  font-size: 12px;
+  margin: 0 17px;
 }
 </style>

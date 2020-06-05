@@ -41,19 +41,19 @@ export default {
 <style scoped>
 .fixed-tag-bar > ul {
   font-weight: 300;
-  line-height: 2rem;
-  padding: 10px 20px;
+  line-height: 1.8rem;
+  padding: 10px 5px;
 }
 .fixed-tag-bar > ul > li {
-  display: inline-block;
-  margin-right: 0.5rem;
-  font-size: 0.9rem;
-  margin-bottom: 10px;
-  padding: 0 10px;
-  border: 1px solid #d6d6d6;
-  border-radius: 5px;
-  background-color: #ffffff;
-  font-size: 0.8rem;
+    display: inline-block;
+    margin: 0.20rem 0.25rem;
+    font-size: 0.9rem;
+    /* margin-bottom: 10px; */
+    padding: 0 10px;
+    border: 1px solid #d6d6d6;
+    border-radius: 5px;
+    background-color: #ffffff;
+    font-size: 0.75rem;
 }
 .fixed-tag-bar > ul > li:hover {
   color: #2d92f1;

@@ -24,18 +24,28 @@
           <span class="like-count">{{ post.likeCount }}</span>
         </div>
       </div>
+      <div class="post-container-btn comment-icon">
+          <div class="like">
+            <div class="btn-comment">
+              <font-awesome-icon :icon="['far', 'comment']"/>
+            </div>
+            <span class="like-count">{{ post.commentCount }}</span>
+          </div>
+        </div>
     </div>
     <div class="wrapper link-wrapper">
       <!-- <div class="description">link</div> -->
       <a :href="post.linkUrl" class="link" target="_blank">{{ post.linkUrl }}</a>
     </div>
     <div class="wrapper content-wrapper">
-      <div class="description">description</div>
+      <div class="description"></div>
       <pre class="content">{{ post.content }}</pre>
     </div>
     <div v-if="isPossibleUpdate" class="bottom-wrapper">
-      <BlueButton class="btn-submit" type="submit" :name="'수정'"
+      <BlueButton class="btn-submit" type="submit" :name="'수정'" style="margin-right: 5px;"
         @click="update"/>
+      <BlueButton class="btn-submit" type="submit" :name="'삭제'"
+        @click="remove"/>
     </div>
     <CommentContainer :comments="post.comments" :postId="post.id"/>
     <notifications group="notify" position="bottom center"/>
@@ -70,9 +80,22 @@ export default {
     ...mapGetters(['currentUser', 'posts', 'post'])
   },
   methods: {
-    ...mapActions(['offModalState', 'resetOffset', 'updatePosts', 'updatePostState', 'updatePost']),
+    ...mapActions(['offModalState', 'resetOffset', 'updatePosts', 'removePost', 'updatePostState', 'updatePost']),
     update() {
       this.updatePostState(Constant.UPDATE);
+    },
+    remove() {
+        if (!confirm('게시글을 삭제할까요?')) {
+            return;
+        }
+        this.axios.delete(`${process.env.VUE_APP_API}/api/v1/link-posts/${this.post.id}`)
+            .then(() => {
+                notification.success('게시글을 삭제했습니다.');
+                this.handlerClosePopup();
+                this.removePost(this.post.id);
+            }).catch(error => {
+                notification.warn(error.response.data.message);
+            })
     },
     doLike(linkPostId) {
       event.stopPropagation();
@@ -99,6 +122,9 @@ export default {
       }).catch(() => {
         notification.warn('문제가 생겨 좋아요를 취소하지 못했습니다.')
       })
+    },
+    handlerClosePopup() {
+      this.$emit('closePopup');
     }
   },
 }
@@ -175,9 +201,10 @@ export default {
   color: #5a5a5a;
 }
 .description {
-  margin-bottom: 6px;
+  /* margin-bottom: 6px;
   font-size: 15px;
-  color: #6a6a6a;
+  color: #6a6a6a; */
+  border-top: 1px solid #cccccc;
 }
 .wrapper {
   margin-bottom: 25px;
@@ -212,6 +239,7 @@ export default {
   height: 100%;
   line-height: 1.35;
   white-space: pre-wrap;
+  line-break: anywhere;
 }
 .bottom-wrapper {
   text-align: right;
@@ -244,6 +272,12 @@ export default {
 }
 .btn-like-full {
   color: #ff5784
+}
+.comment-icon {
+    margin-left: 40px;
+}
+.btn-comment {
+    display: inline-block;
 }
 
 </style>

@@ -12,6 +12,7 @@
           user,
           createdDate,
           likeCount,
+          commentCount,
           like}) in posts"
         :key="id"
         @click="handlerOnModalState(id)"
@@ -28,7 +29,7 @@
                 <div class="author">{{ user.name }}</div>
               </div>
               <div class="between">|</div>
-              <div class="date">{{ createdDate }}</div>
+              <div class="date">{{ timeForToday(createdDate) }}</div>
             </div>
           </div>
         </a>
@@ -39,6 +40,14 @@
               <font-awesome-icon v-else :icon="['far', 'heart']" @click="doLike(id)"/>
             </div>
             <span class="like-count">{{ likeCount }}</span>
+          </div>
+        </div>
+        <div class="post-container-btn comment-icon">
+          <div class="like">
+            <div class="btn-comment">
+              <font-awesome-icon :icon="['far', 'comment']"/>
+            </div>
+            <span class="like-count">{{ commentCount }}</span>
           </div>
         </div>
       </li>
@@ -61,12 +70,13 @@ import ScrollUp from '@/components/common/ScrollUp'
 import { mapGetters, mapActions } from "vuex";
 import InfiniteLoading from 'vue-infinite-loading';
 import Constant from '@/constant/Constant';
-import { faHeart as fasHeart } from '@fortawesome/free-solid-svg-icons' 
-import { faHeart as farHeart } from '@fortawesome/free-regular-svg-icons' 
+import { fas } from '@fortawesome/free-solid-svg-icons' 
+import { far } from '@fortawesome/free-regular-svg-icons' 
 import { library as faLibrary } from '@fortawesome/fontawesome-svg-core' 
 import notification from '../../libs/notification';
+import { timeForToday } from '@/utils/time';
 
-faLibrary.add(fasHeart, farHeart) 
+faLibrary.add(fas, far) 
 
 export default {
   components: {
@@ -125,6 +135,9 @@ export default {
       }).catch(() => {
         notification.warn('문제가 생겨 좋아요를 취소하지 못했습니다.')
       })
+    },
+    timeForToday(createdDate) {
+        return timeForToday(createdDate);
     }
   }
 }
@@ -150,7 +163,7 @@ export default {
 }
 .link-posts > ul > li {
   position: relative;
-  width: 330px;
+  width: 300px;
   display: inline-flex;
   justify-content: flex-end;
   margin: 15px;
@@ -181,7 +194,7 @@ export default {
 }
 .author {
   margin-left: 10px;
-  font-size: 13px;
+  font-size: 12px;
   color: #5a5a5a;
   white-space: nowrap;
   overflow: hidden;
@@ -196,7 +209,7 @@ export default {
 }
 .title {
   margin-bottom: 13px;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: bold;
   text-align: end;
   line-height: 140%;
@@ -224,7 +237,7 @@ export default {
   color: #5a5a5a;
 }
 .date {
-  font-size: 13px;
+  font-size: 12px;
   color: #5a5a5a;
 }
 .infinite-message {
@@ -269,7 +282,7 @@ export default {
 }
 .like-count {
   margin-left: 4px;
-  font-size: 13px;
+  font-size: 12px;
 }
 .btn-like {
   cursor: pointer;
@@ -282,7 +295,22 @@ export default {
   bottom: 5px;
   transition: all .1s ease-in;
 }
+.btn-comment {
+    display: inline-block;
+}
 .btn-like-full {
   color: #ff5784
+}
+.comment-icon {
+    margin-left: 40px;
+}
+@media screen and (max-width: 480px) {
+    .link-posts > ul {
+        padding: 3px 10px;
+    }
+    .link-posts > ul > li {
+        width: 100%;
+        margin: 0 0 15px 0;
+    }
 }
 </style>

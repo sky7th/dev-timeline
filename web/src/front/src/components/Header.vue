@@ -3,8 +3,12 @@
     <notifications group="notify" position="bottom center"/>
     <a href="/" class="logo-name">dev-time</a>
     <SearchBar/>
-    <button v-if="token==null || token==='null' || token ===''" @click="login()" class="btn-login">로그인</button>
-    <button v-else @click="logout()" class="btn-login">로그아웃</button>
+    <button v-if="token==null || token==='null' || token ===''" @click="login()" class="btn-login">
+        <font-awesome-icon :icon="['fas', 'user']" class="user-icon"/>
+    </button>
+    <button v-else @click="logout()" class="btn-login">
+        <img class="login-user-img" :src="currentUser.imageUrl" alt="">
+    </button>
   </div>
 </template>
 
@@ -18,11 +22,13 @@ export default {
     SearchBar
   },
   computed: {
-    ...mapGetters(['token'])
+    ...mapGetters(['token', 'currentUser'])
   },
   methods: {
     ...mapActions(['setToken', 'setUserDetail']),
     logout() {
+      if (!confirm('로그아웃 하시겠습니까?'))
+        return;
       this.setToken(null)
       this.setUserDetail(null)
       this.$router.replace('/');
@@ -63,5 +69,26 @@ export default {
   border: none;
   cursor: pointer;
   height: 50px;
+}
+.btn-login:focus {
+    outline: none;
+}
+.user-icon {
+    font-size: 25px;
+    margin: 0 5px 0 7px;
+}
+.login-user-img {
+    height: 29px;
+    width: 29px;
+    border-radius: 5px;
+    margin: 5px 10px 0 10px;
+}
+@media screen and (max-width: 480px) {
+    .logo-name {
+        display: none;
+    }
+    .header {
+        padding: 0 0 0 60px;
+    }
 }
 </style>

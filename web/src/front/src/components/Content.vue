@@ -89,4 +89,9 @@ export default {
   flex-direction: row;
   justify-content: flex-end;
 }
+@media screen and (max-width: 480px) {
+    .content {
+        padding-left: 0;
+    }
+}
 </style>

@@ -111,6 +111,7 @@ export default new Vuex.Store({
         console.log('error : ', e)
       })
     },
+    removePost: (state, payload) => state.posts = state.posts.filter(post => post.id !== payload),
     updatePost: (state, payload) => state.post = payload,
     updateCheckedCompanies: (state, payload) => state.checkedCompanies = payload.checkedCompanies,
     resetOffset: state => state.offset = 0,
@@ -146,6 +147,7 @@ export default new Vuex.Store({
     setUserDetail: (context, payload) => context.commit('setUserDetail', payload),
     updatePosts: context => context.commit('updatePosts'),
     insertPosts: (context, payload) => context.commit('insertPosts', { infiniteState: payload.infiniteState }),
+    removePost: (context, payload) => context.commit('removePost', payload),
     updatePost: (context, payload) => context.commit('updatePost', payload),
     updateCheckedCompanies: (context, payload) => context.commit('updateCheckedCompanies', { checkedCompanies: payload.checkedCompanies }),
     resetOffset: context => context.commit('resetOffset'),

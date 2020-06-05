@@ -1,7 +1,9 @@
 <template>
   <div class="search-bar">
     <input type="text" v-model="searchName" @keypress="handleSearchPressEnter">
-    <button @click="handleSearch">검색</button>
+    <button @click="handleSearch">
+        <font-awesome-icon :icon="['fas', 'search']" class="menu-bars"/>
+    </button>
   </div>
 </template>
 
@@ -37,9 +39,13 @@ export default {
 </script>
 
 <style scoped>
+.search-bar {
+    width: 50%;
+    display: flex;
+}
 .search-bar input {
   height: 32px;
-  width: 300px;
+  width: 100%;
   border: 1.5px solid #bababa;
   border-radius: 4px 0 0 4px;
   box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.2) inset;
@@ -59,5 +65,17 @@ export default {
 }
 .search-bar button:hover {
   background-color: #eaeaea;
+}
+@media screen and (max-width: 480px) {
+    .search-bar {
+        width: 100%;
+        display: flex;
+    }
+    .search-bar input {
+        width: 100%;
+    }
+    .search-bar button {
+        width: 60px;
+    }
 }
 </style>

@@ -6,6 +6,11 @@ import notifications from 'vue-notification';
 import axios from './libs/axios.custom'
 import constant from './constant/Constant'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { fas } from '@fortawesome/free-solid-svg-icons' 
+import { far } from '@fortawesome/free-regular-svg-icons' 
+import { library as faLibrary } from '@fortawesome/fontawesome-svg-core'
+
+faLibrary.add(fas, far) 
 
 Vue.use(constant);
 Vue.use(notifications);

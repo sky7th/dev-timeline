@@ -42,17 +42,18 @@ export default {
 <style scoped>
 .company-list {
   margin: 0px 30px 13px 30px;
-  padding: 13px 0 0px 0;
+  padding: 14px 0 0px 0;
   border-bottom: 2px solid #dadada;
   animation: fadeIn 0.3s ease-in-out;
 }
 .company-list ul {
+  height: 85px;
   display: flex;
   overflow-x: scroll;
   white-space: nowrap;
 }
 .company-list li {
-  padding: 8px 15px 5px 15px;
+  padding: 8px 7px 5px 7px;
   display: inline-block;
   margin-right: 13px;
 }
@@ -65,13 +66,14 @@ export default {
 input[type=checkbox] { display:none; }
 
 input[type=checkbox] + label { 
-  display: inline-block;
-  cursor: pointer;
-  padding-top: 51px;
-  background-size: 44px;
-  color: #4E5763;
-  font-weight: bold;
-  background-position: inherit;
+    display: inline-block;
+    cursor: pointer;
+    padding-top: 44px;
+    background-size: 38px;
+    color: #4E5763;
+    font-weight: bold;
+    background-position: inherit;
+    font-size: 14px;
 }
 .naver {
   background: url('https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQS1ZRzTCwb49Z6sdxtxLM0jJ1SoMDtlBQ_DBHlghI2o6e_9Mov&usqp=CAU') left/22px no-repeat; 

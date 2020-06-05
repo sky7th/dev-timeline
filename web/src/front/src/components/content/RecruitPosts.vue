@@ -82,11 +82,11 @@ export default {
 }
 .recruit-posts ul li {
   padding: 20px 20px;
-  width: 300px;
+  width: 260px;
   padding: 0 25px;
   display: inline-flex;
   margin: 15px;
-  padding: 20px 20px 13px 20px;
+  padding: 18px 20px 11px 20px;
   border: 1px solid #dedede;
   box-shadow: 0px 0px 1px 0 rgba(0, 0, 0, 0.2);
   box-sizing: border-box;
@@ -98,7 +98,7 @@ export default {
 }
 .recruit-posts ul li:after {
   bottom: 4px;
-  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.4);
+  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.3);
   right: 3px;
   transform: skew(1.5deg, 1.5deg);
   position: absolute;
@@ -125,18 +125,18 @@ export default {
 .company {
   font-weight: bold;
   margin-bottom: 3px;
-  font-size: 16px;
+  font-size: 15px;
   color: #3f4543;
 }
 .title {
   font-weight: 500;
   margin-bottom: 5px;
-  font-size: 16px;
+  font-size: 14px;
   color: #3f4543;
 }
 .date {
   font-weight: bold;
-  font-size: 15px;
+  font-size: 14px;
   color: #3f4543;
 }
 .naver {
@@ -146,7 +146,7 @@ export default {
   background-color: rgb(255, 255, 215);
 }
 .infinite-message {
-  font-size: 14px;
+  font-size: 13px;
   margin: 80px 0 30px 0;
 }
 .infinite-message div {

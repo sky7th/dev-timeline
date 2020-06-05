@@ -74,13 +74,13 @@ export default {
     margin-left: 8px;
 }
 .paging-bar .page-numbers {
-  display: inline-block;
-  line-height: 43px;
-  vertical-align: top;
-  overflow: hidden;
-  width: 40px;
-  height: 40px;
-  font-size: 16px;
+    display: inline-block;
+    line-height: 37px;
+    vertical-align: top;
+    overflow: hidden;
+    width: 36px;
+    height: 36px;
+    font-size: 15px;
   /* font-family: 'campton', 'Noto Sans', 'Apple SD Gothic Neo', '맑은 고딕', 'Malgun Gothic', '돋움', dotum, sans-serif; */
   color: #03166C;
   background-color: #fff;
