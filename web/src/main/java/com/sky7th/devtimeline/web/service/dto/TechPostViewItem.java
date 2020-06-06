@@ -13,6 +13,7 @@ public class TechPostViewItem {
     private String companyTypeName;
     private String companyUrlTypeName;
     private String title;
+    private String description;
     private String author;
     private String date;
     private String thumbnailUrl;
@@ -25,6 +26,7 @@ public class TechPostViewItem {
         this.companyTypeName = techPost.getCompanyUrl().getCompany().getCompanyType().getName();
         this.companyUrlTypeName = techPost.getCompanyUrl().getCompanyUrlType().getName();
         this.title = techPost.getTitle();
+        this.description = techPost.getDescription();
         this.author = techPost.getAuthor();
         this.date = techPost.getDate();
         this.thumbnailUrl = techPost.getThumbnailUrl();

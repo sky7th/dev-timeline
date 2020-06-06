@@ -24,6 +24,8 @@ public class TechPost extends BaseTimeEntity {
 
     private String title;
 
+    private String description;
+
     private String author;
 
     private String date;
@@ -35,8 +37,9 @@ public class TechPost extends BaseTimeEntity {
     private LocalDateTime sortDate;
 
     @Builder
-    public TechPost(String title, String author, String date, String thumbnailUrl, String contentUrl, LocalDateTime sortDate) {
+    public TechPost(String title, String description, String author, String date, String thumbnailUrl, String contentUrl, LocalDateTime sortDate) {
         this.title = title;
+        this.description = description;
         this.author = author;
         this.date = date;
         this.thumbnailUrl = thumbnailUrl;

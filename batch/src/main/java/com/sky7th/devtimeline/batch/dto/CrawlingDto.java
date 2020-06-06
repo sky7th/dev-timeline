@@ -21,26 +21,13 @@ public class CrawlingDto {
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     private CompanyUrl companyUrl;
-
     private String title;
-
+    private String description;
     private String author;
-
     private String closingDate;
-
     private String date;
-
     private String thumbnailUrl;
-
     private String contentUrl;
-
-    public String toString() {
-        return companyUrl.getCompany().getCompanyType().getName()
-                +","+companyUrl.getCompanyUrlType().getName()
-                +","+title
-                +","+(date==null ? "" : date)+(closingDate==null ? "" : closingDate)
-                +","+contentUrl;
-    }
 
     public RecruitPost toRecruitPost() {
         RecruitPost recruitPost = RecruitPost.builder()
@@ -59,6 +46,7 @@ public class CrawlingDto {
                 .contentUrl(this.contentUrl)
                 .author(this.author)
                 .title(this.title)
+                .description(this.description)
                 .date(this.date)
                 .thumbnailUrl(this.thumbnailUrl)
                 .sortDate(parseDateTime())
@@ -108,5 +96,14 @@ public class CrawlingDto {
         }
         return LocalDateTime.parse(resultDate, FORMATTER);
     }
+
+    public String toString() {
+        return companyUrl.getCompany().getCompanyType().getName()
+                +","+companyUrl.getCompanyUrlType().getName()
+                +","+title
+                +","+(date==null ? "" : date)+(closingDate==null ? "" : closingDate)
+                +","+contentUrl;
+    }
+
 
 }
