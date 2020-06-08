@@ -1,6 +1,7 @@
 package com.sky7th.devtimeline.web.service;
 
 import com.sky7th.devtimeline.core.domain.like.PostLike;
+import com.sky7th.devtimeline.web.exception.UnauthorizedException;
 import com.sky7th.devtimeline.web.repository.Like.PostLikeWebRepository;
 import com.sky7th.devtimeline.web.security.UserPrincipal;
 import com.sky7th.devtimeline.web.service.dto.PostLikeDto;
@@ -16,6 +17,9 @@ public class PostLikeService {
 
     @Transactional
     public void save(PostLikeDto postLikeDto, UserPrincipal userPrincipal) {
+        if (userPrincipal == null) {
+            throw new UnauthorizedException("로그인 후 이용 가능합니다.");
+        }
         PostLike like = postLikeDto.toLike();
         like.setUser(userPrincipal.toUserForId());
         likeWebRepository.save(like);

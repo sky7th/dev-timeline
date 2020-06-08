@@ -108,8 +108,8 @@ export default {
         var post = this.posts.find(v => v.id === linkPostId);
         post.like = true;
         post.likeCount += 1;
-      }).catch(() => {
-        notification.warn('문제가 생겨 좋아요를 하지 못했습니다.')
+      }).catch(error => {
+        notification.warn(error.response.data.message);
       })
     },
     cancelLike(linkPostId) {
@@ -119,8 +119,8 @@ export default {
         var post = this.posts.find(v => v.id === linkPostId);
         post.like = false;
         post.likeCount -= 1;
-      }).catch(() => {
-        notification.warn('문제가 생겨 좋아요를 취소하지 못했습니다.')
+      }).catch(error => {
+        notification.warn(error.response.data.message);
       })
     },
     handlerClosePopup() {

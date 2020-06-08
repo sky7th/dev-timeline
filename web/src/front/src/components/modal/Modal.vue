@@ -72,7 +72,7 @@ export default {
   transform: translate(-50%, -50%);
   max-height: 90%;
   width: 500px;
-  max-width: 100%;
+  max-width: 96%;
   opacity: 1;
   background-color: #fff;
   padding: 0px 4px 15px 10px;

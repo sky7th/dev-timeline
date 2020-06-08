@@ -30,7 +30,7 @@ public class CommentService {
     @Transactional
     public CommentDto save(CommentDto commentDto, UserPrincipal userPrincipal) {
         if (userPrincipal == null) {
-            throw new UnauthorizedException("로그인이 필요합니다.");
+            throw new UnauthorizedException("로그인 후 이용 가능합니다.");
         }
         User user = userRepository.findById(userPrincipal.getId()).orElse(null);
         Comment comment = commentDto.toEntity();
