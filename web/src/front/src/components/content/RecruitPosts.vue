@@ -160,4 +160,13 @@ export default {
 .infinite-message a:hover {
   background-color: #e4e4e4;
 }
+@media screen and (max-width: 380px) { 
+    .recruit-posts ul {
+        padding: 3px 0px;
+    }
+    .recruit-posts ul li {
+        width: 90%;
+        margin: 7px 5px;
+    }
+}
 </style>
