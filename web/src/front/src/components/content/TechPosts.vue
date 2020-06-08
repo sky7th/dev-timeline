@@ -29,11 +29,11 @@
               <div class="date">{{ timeForToday(date) }}</div>
             </div>
           </div>
-          <div class="right">
+          <div v-if="thumbnailUrl" class="right">
             <img class="thumbnail" v-if="thumbnailUrl" :src="thumbnailUrl" alt="">
-            <div class="thumbnail-no" v-else>
+            <!-- <div class="thumbnail-no" v-else>
               <div>미리보기 이미지가 <br/>없어용.. ㅠ.ㅠ</div>
-            </div>
+            </div> -->
           </div>
           
           <!-- <div>{{ companyUrlTypeName }}</div> -->
@@ -77,7 +77,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 15px 13%;
+  padding: 15px 10px;
 }
 .tech-posts ul li {
     background-color: white;
@@ -85,6 +85,7 @@ export default {
     margin-bottom: 15px;
     border-radius: 10px;
     width: 100%;
+    max-width: 550px;
     -webkit-animation: fadeIn 0.3s ease-in-out;
     animation: fadeIn 0.3s ease-in-out;
     box-shadow: 0 1px 4px rgba(27,31,35,.1);
@@ -99,8 +100,8 @@ export default {
 }
 .company {
   text-align: center;
-  font-size: 14px;
-  margin-top: 2px;
+  font-size: 12px;
+  margin-top: 1px;
 }
 .left {
   justify-content: center;
@@ -115,10 +116,11 @@ export default {
   justify-content: center;
   flex-direction: column;
   display: flex;
-  padding-right: 40px;
+  padding-right: 26px;
 }
 .title {
-  padding-bottom: 20px;
+  padding-top: 13px;
+  padding-bottom: 15px;
   font-size: 16px;
   font-weight: bold;
   text-align: end;
@@ -126,6 +128,7 @@ export default {
 .middle-bottom {
   display: flex;
   justify-content: flex-end;
+  padding-bottom: 8px;
 }
 .author {
   margin-right: 15px;
@@ -146,7 +149,7 @@ export default {
   width: 100%;
   max-height: 150px;
   border-radius: 13px;
-  min-height: 120px;
+  min-height: 100px;
 }
 .right .thumbnail-no {
   display: flex;
@@ -161,5 +164,25 @@ export default {
   text-align: center;
   font-size: 12px;
   margin: 0 17px;
+}
+@media screen and (max-width: 480px) {
+    .tech-posts > ul {
+        padding: 15px 10px;
+    }
+    .tech-posts > ul > li {
+        width: 100%;
+        margin: 0 0 10px 0;
+        padding: 7px 10px;
+    }
+    .left {
+        width: auto;
+        margin-left: 10px;
+    }
+    .middle {
+        padding-right: 15px;
+    }
+    .right {
+        display: none;
+    }
 }
 </style>
