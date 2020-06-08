@@ -16,7 +16,7 @@ public class Scheduler {
     private final Job job;
     private final JobLauncher jobLauncher;
 
-    @Scheduled(cron = "0 0 0/6 * * ?")
+    @Scheduled(cron = "0 0/5 0 * * ?")
     public void crawlingBatch() throws Exception {
         jobLauncher.run(job, new JobParametersBuilder()
                 .addDate("requestDate", new Date()).toJobParameters());

@@ -152,7 +152,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/api/v1/recruit-posts",
                         "/api/v1/tech-posts",
                         "/api/v1/link-posts/**",
-                        "/api/v1/like/**")
+                        "/api/v1/like/**",
+                        "/api/v1/company/**")
                         .permitAll()
                     .antMatchers("/auth/**", "/oauth2/**", "/login**")
                         .permitAll()

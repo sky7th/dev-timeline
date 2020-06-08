@@ -1,40 +1,65 @@
 <template>
   <div class="company-list">
-    <ul>        
-      <li :class="{ check: checkedCompanies.indexOf('NAVER') != -1 }">
-        <input type="checkbox" id="naver" value="NAVER" 
+    <ul>
+      <li
+        v-for="({
+          companyName, 
+          companyType,
+          logoUrl}) in companyInfos"
+        :key="companyType"
+        :class="{ check: checkedCompanies.indexOf(companyType) != -1 }"
+      >
+        <input type="checkbox" :id="companyType" :value="companyType" 
           v-model="checkedCompanies"
         >
-        <label class="naver" for="naver">네이버</label>
-      </li>
-      <li :class="{ check: checkedCompanies.indexOf('KAKAO') != -1 }">
-        <input type="checkbox" id="kakao" value="KAKAO" 
-          v-model="checkedCompanies"
-        >
-        <label class="kakao" for="kakao">카카오</label>
+        <label :style="{ background: `url(${logoUrl}) left/38px no-repeat`, 'background-position': 'center' }" :for="companyType">{{ companyName }}</label>
       </li>
     </ul>
   </div>
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapGetters, mapActions } from "vuex";
+import notification from '@/libs/notification';
 
 export default {
   data() {
     return {
+      companyInfos: [],
       checkedCompanies: []
     }
   },
+  created() {
+      this.findCompanyByUrlType();
+  },
   watch: {
     checkedCompanies() {
-      this.updateCheckedCompanies({ checkedCompanies: this.checkedCompanies })
-      this.resetOffset()
-      this.updatePosts()
+      this.updateCheckedCompanies({ checkedCompanies: this.checkedCompanies });
+      this.resetOffset();
+      this.updatePosts();
+    },
+    selectedMenu() {
+        this.findCompanyByUrlType();
     }
   },
+  computed: {
+      ...mapGetters(['selectedMenu'])
+  },
   methods: {
-    ...mapActions(['updateCheckedCompanies', 'updatePosts', 'resetOffset'])
+    ...mapActions(['updateCheckedCompanies', 'updatePosts', 'resetOffset']),
+    findCompanyByUrlType() {
+        let companyUrlType = this.getCompanyUrlTypeFromSelectedMenu(this.selectedMenu);
+        this.axios.get(`${process.env.VUE_APP_API}/api/v1/company?companyUrlType=${companyUrlType}`)
+        .then(response => {
+            this.companyInfos = response.data.data;
+            
+        }).catch(() => {
+            notification.warn('기업 리스트를 불러오지 못했습니다.');
+        });
+    },
+    getCompanyUrlTypeFromSelectedMenu(selectedMenu) {
+        return selectedMenu.split('-')[0].toUpperCase();
+    }
   }
 }
 </script>
@@ -68,7 +93,8 @@ input[type=checkbox] { display:none; }
 input[type=checkbox] + label { 
     display: inline-block;
     cursor: pointer;
-    padding-top: 44px;
+    padding-top: 64px;
+    margin-top: -20px;
     background-size: 38px;
     color: #4E5763;
     font-weight: bold;
