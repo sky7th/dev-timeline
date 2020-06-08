@@ -88,7 +88,7 @@ li:hover {
     top: -15px;
     display: block;
     position: absolute;
-    animation: menu-bars-reverse 0.4s ease-in-out;
+    transition: left .3s;
 }
 @media screen and (max-width: 480px) {
     #nav {
@@ -101,7 +101,6 @@ li:hover {
         width: 72px;
         margin-top: 16px;
         left: 0;
-        animation: menu-bars 0.4s ease-in-out;
     }
     #nav li {
         display: block;
