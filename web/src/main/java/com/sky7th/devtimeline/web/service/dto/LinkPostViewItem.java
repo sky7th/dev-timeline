@@ -34,7 +34,7 @@ public class LinkPostViewItem {
         this.content = linkPostDto.getLinkPost().getContent();
         this.tags = linkPostDto.getLinkPost().getTags().stream().map(TagItem::new).collect(Collectors.toList());
         this.linkUrl = linkPostDto.getLinkPost().getLinkUrl();
-        this.createdDate = toStringDate(linkPostDto.getLinkPost().getCreatedDate(), "yyyy-MM-dd HH:mm");
+        this.createdDate = toStringDate(linkPostDto.getLinkPost().getCreatedDate(), "yyyy-MM-dd HH:mm:ss");
         this.likeCount = linkPostDto.getLikeCount();
         this.commentCount = linkPostDto.getCommentCount();
         this.isLike = linkPostDto.getIsLike();

@@ -39,7 +39,7 @@ export default {
         })}
     },
     computed: {
-    ...mapGetters(['currentUser'])
+    ...mapGetters(['currentUser', 'post', 'posts'])
     },
     methods: {
         remove() {
@@ -50,6 +50,9 @@ export default {
                 .then(() => {
                     notification.success('댓글을 삭제했습니다.');
                     this.handlerRemoveComment(this.comment.id);
+                    let post = this.posts.find(v => v.id === this.post.id);
+                    post.commentCount -= 1;
+                    this.post.commentCount -= 1;
                     
                 }).catch(error => {
                     notification.warn(error.response.data.message);

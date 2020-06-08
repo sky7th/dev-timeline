@@ -40,7 +40,9 @@ export default {
             this.comments.unshift(comment)
         },
         removeComment(commentId) {
-            this.comments = this.comments.filter(comment => comment.id !== commentId);
+            const idx = this.comments.findIndex(comment => comment.id === commentId);            
+            if (idx > -1) 
+                this.comments.splice(idx, 1)
         },
         addComments() {
             let loadingElement = document.querySelector('.loading');

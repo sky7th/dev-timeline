@@ -107,7 +107,9 @@ export default {
       .then(() => {
         var post = this.posts.find(v => v.id === linkPostId);
         post.like = true;
+        this.post.like = true;
         post.likeCount += 1;
+        this.post.likeCount += 1;
       }).catch(error => {
         notification.warn(error.response.data.message);
       })
@@ -118,7 +120,9 @@ export default {
       .then(() => {
         var post = this.posts.find(v => v.id === linkPostId);
         post.like = false;
+        this.post.like = false;
         post.likeCount -= 1;
+        this.post.likeCount -= 1;
       }).catch(error => {
         notification.warn(error.response.data.message);
       })

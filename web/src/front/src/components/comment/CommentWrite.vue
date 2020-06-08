@@ -24,7 +24,7 @@ export default {
         BlueButton
     },
     computed: {
-    ...mapGetters(['currentUser'])
+    ...mapGetters(['currentUser', 'post', 'posts'])
     },
     methods: {
         submit() {
@@ -42,7 +42,10 @@ export default {
                 .then(response => {
                     notification.success('댓글을 작성했습니다.');
                     this.handlerAddComment(response.data.data);
-                    this.content = ''
+                    let post = this.posts.find(v => v.id === this.post.id);
+                    post.commentCount += 1;
+                    this.post.commentCount += 1;
+                    this.content = '';
 
                 }).catch(error => {
                     notification.warn(error.response.data.message);

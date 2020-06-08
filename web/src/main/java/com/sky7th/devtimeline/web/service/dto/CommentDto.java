@@ -24,7 +24,7 @@ public class CommentDto {
         this.postId = entity.getLinkPost().getId();
         this.user = new UserItem(entity.getUser());
         this.content = entity.getContent();
-        this.createdDate = toStringDate(entity.getCreatedDate(), "yyyy-MM-dd");
+        this.createdDate = toStringDate(entity.getCreatedDate(), "yyyy-MM-dd HH:mm:ss");
     }
 
     public Comment toEntity() {
