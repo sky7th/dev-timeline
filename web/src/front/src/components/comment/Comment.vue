@@ -4,7 +4,7 @@
         <div>
             <div class="header">
                 <span class="user-name">{{ comment.user.name }} </span>
-                <span>{{ comment.createdDate }}</span>
+                <span>{{ timeForToday(comment.createdDate) }}</span>
                 <span v-if="isAuthorized" >
                     <span class="between">|</span>
                     <span @click="remove" class="remove-btn">삭제</span>
@@ -18,6 +18,7 @@
 <script>
 import { mapGetters } from "vuex";
 import notification from '../../libs/notification';
+import { timeForToday } from '@/utils/time';
 
 export default {
     data: () => ({
@@ -60,6 +61,9 @@ export default {
         },
         handlerRemoveComment(commentId) {
             this.$emit('removeComment', commentId)
+        },
+        timeForToday(createdDate) {
+            return timeForToday(createdDate);
         }
     }
 }
