@@ -32,8 +32,12 @@ export default {
   methods: {
     ...mapActions(['resetAll', 'updateSelectedMenu']),
     handleUpdateSelectedMenu(val) {
-      this.resetAll()
-      this.updateSelectedMenu({ selectedMenu: val })
+      this.resetAll();
+      this.updateSelectedMenu({ selectedMenu: val });
+      this.closeMenuBars();
+    },
+    closeMenuBars() {
+        document.querySelector('#toggle').checked = false;
     }
   }
 }
@@ -95,11 +99,7 @@ li:hover {
         top: 25px;
         left: -100px;
     }
-    #toggle:checked + #nav{
-        display: block;
-        position: absolute;
-        width: 72px;
-        margin-top: 16px;
+    #toggle:checked + #nav {
         left: 0;
     }
     #nav li {
