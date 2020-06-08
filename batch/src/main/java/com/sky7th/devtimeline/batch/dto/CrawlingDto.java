@@ -1,5 +1,6 @@
 package com.sky7th.devtimeline.batch.dto;
 
+import com.sky7th.devtimeline.batch.utils.DateTimeCustomParser;
 import com.sky7th.devtimeline.core.domain.companyUrl.CompanyUrl;
 import com.sky7th.devtimeline.core.domain.companyUrl.CompanyUrlType;
 import com.sky7th.devtimeline.core.domain.post.recruitpost.RecruitPost;
@@ -9,16 +10,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class CrawlingDto {
-
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     private CompanyUrl companyUrl;
     private String title;
@@ -34,7 +30,7 @@ public class CrawlingDto {
                 .contentUrl(this.contentUrl)
                 .closingDate(this.closingDate)
                 .title(this.title)
-                .sortDate(parseClosingTime())
+                .sortDate(DateTimeCustomParser.parseClosingTime(closingDate))
                 .build();
         recruitPost.setCompanyUrl(this.companyUrl);
 
@@ -49,7 +45,7 @@ public class CrawlingDto {
                 .description(this.description)
                 .date(this.date)
                 .thumbnailUrl(this.thumbnailUrl)
-                .sortDate(parseDateTime())
+                .sortDate(DateTimeCustomParser.parseDateTime(this.date))
                 .build();
         techPost.setCompanyUrl(this.companyUrl);
 
@@ -60,42 +56,7 @@ public class CrawlingDto {
         return this.companyUrl.getCompanyUrlType().equals(companyUrlType);
     }
 
-    private LocalDateTime parseClosingTime() {
-        String resultDate = "";
 
-        if (closingDate.equals("") || closingDate.matches("^[가-힣\\s]*$")) {
-            return null;
-
-        } else if (closingDate.contains("까지")) {
-            String[] dates = closingDate.replaceAll("[년일월]", "").split(" ");
-            resultDate = dates[0] + "-" + get2Digit(dates[1]) + "-" + get2Digit(dates[2]) + " 00:00:00";
-        } else {
-            String startDate = closingDate.split("~")[0];
-            String[] dates = startDate.split("[.]");
-            resultDate = dates[0] + "-" + get2Digit(dates[1]) + "-" + get2Digit(dates[2]) + " 00:00:00";
-        }
-        return LocalDateTime.parse(resultDate, FORMATTER);
-    }
-
-    private String get2Digit(String date) {
-        if (date.length()==1)
-            return "0"+date;
-        else
-            return date;
-    }
-
-    private LocalDateTime parseDateTime() {
-        String resultDate = "";
-
-        if (date.equals("")) {
-            return LocalDateTime.now();
-
-        } else {
-            String[] dates = date.split("[.]");
-            resultDate = dates[0] + "-" + get2Digit(dates[1]) + "-" + get2Digit(dates[2]) + " 00:00:00";
-        }
-        return LocalDateTime.parse(resultDate, FORMATTER);
-    }
 
     public String toString() {
         return companyUrl.getCompany().getCompanyType().getName()

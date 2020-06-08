@@ -56,11 +56,11 @@ public class WoowabrosTechCrawlingService implements CompanyCrawlingService {
         String[] headers = header.split(",");
         SimpleDateFormat fm = new SimpleDateFormat("MMM d, yyyy", Locale.ENGLISH);
         Date d = fm.parse(headers[0] + ", " + headers[1].trim());
-        SimpleDateFormat fm2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat fm2 = new SimpleDateFormat("yyyy.MM.dd");
         String date = fm2.format(d);
         String name = headers[2];
         String title = element.findElement(By.cssSelector("a > .post-link")).getText();
-//        WebElement descriptionElement = element.findElement(By.cssSelector(".post-description"));
+//        WebElement descriptionElement = element.findElement(By.cssSelector("a > .post-description"));
 //        String description = descriptionElement==null ? "" : descriptionElement.getText();
         String contentUrl = element.findElement(By.cssSelector("a")).getAttribute("href");
 
