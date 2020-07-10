@@ -39,7 +39,9 @@ class NaverTechCrawlingServiceTest {
 
         // when
         List<CrawlingDto> crawlings = naverTechCrawlingService.crawling(companyDto);
-
+        crawlings.forEach(c -> {
+            System.out.println(c.getTitle() + " / " + c.getThumbnailUrl());
+        });
         // then
         assertTrue(crawlings.size() > 0);
     }

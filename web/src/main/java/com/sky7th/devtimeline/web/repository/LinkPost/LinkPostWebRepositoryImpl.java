@@ -4,26 +4,16 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.SimpleExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.sky7th.devtimeline.core.domain.like.PostLike;
-import com.sky7th.devtimeline.core.domain.post.linkpost.LinkPost;
 import com.sky7th.devtimeline.core.domain.post.linkpost.LinkType;
-import com.sky7th.devtimeline.core.domain.post.linkpost.QLinkPost;
-import com.sky7th.devtimeline.web.service.dto.LinkPostDto;
+import com.sky7th.devtimeline.web.service.dto.LinkPostItem;
 import com.sky7th.devtimeline.web.service.dto.PostSearchForm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.util.StringUtils;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 import static com.sky7th.devtimeline.core.domain.like.QPostLike.postLike;
 import static com.sky7th.devtimeline.core.domain.post.linkpost.QLinkPost.linkPost;
@@ -35,32 +25,31 @@ public class LinkPostWebRepositoryImpl implements LinkPostWebRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Optional<LinkPostDto> findWithLikeCountAndIsLikeByIdAndUserId(Long linkPostid, Long userId) {
-        List<LinkPostDto> linkPosts = queryFactory
+    public Optional<LinkPostItem> findWithLikeCountAndIsLikeByIdAndUserId(Long linkPostid, Long userId) {
+        List<LinkPostItem> linkPosts = queryFactory
                 .select(
-                    Projections.fields(LinkPostDto.class, linkPost,
+                    Projections.fields(LinkPostItem.class, linkPost,
                         ExpressionUtils.as(
                             JPAExpressions.select(postLike)
                                 .from(postLike)
                                 .where(postLike.user.id.eq(userId)
-                                .and(postLike.linkPost.id.eq(linkPost.id)))
+                                .and(postLike.post.id.eq(linkPost.post.id)))
                                 .exists(),
                             "isLike"),
                         ExpressionUtils.as(
                             JPAExpressions.select(postLike.count())
                                 .from(postLike)
-                                .where(postLike.linkPost.id.eq(linkPost.id)),
+                                .where(postLike.post.id.eq(linkPost.post.id)),
                             "likeCount"),
                         ExpressionUtils.as(
                             JPAExpressions.select(comment.count())
                                 .from(comment)
-                                .where(comment.linkPost.id.eq(linkPost.id)),
+                                .where(comment.post.id.eq(linkPost.post.id)),
                             "commentCount")
                     )
                 )
                 .from(linkPost)
                 .leftJoin(linkPost.user).fetchJoin()
-                .leftJoin(linkPost.tags).fetchJoin()
                 .where(linkPost.id.eq(linkPostid))
                 .fetch();
 
@@ -68,26 +57,26 @@ public class LinkPostWebRepositoryImpl implements LinkPostWebRepositoryCustom {
     }
 
     @Override
-    public List<LinkPostDto> findAllWithLikeCountAndIsLikeBySearchForm(PostSearchForm postSearchForm, Long userId) {
+    public List<LinkPostItem> findAllWithLikeCountAndIsLikeBySearchForm(PostSearchForm postSearchForm, Long userId) {
         return queryFactory
                 .select(
-                    Projections.fields(LinkPostDto.class, linkPost,
+                    Projections.fields(LinkPostItem.class, linkPost,
                         ExpressionUtils.as(
                             JPAExpressions.select(postLike)
                                 .from(postLike)
                                 .where(postLike.user.id.eq(userId)
-                                .and(postLike.linkPost.id.eq(linkPost.id)))
+                                .and(postLike.post.id.eq(linkPost.post.id)))
                                 .exists(),
                             "isLike"),
                         ExpressionUtils.as(
                             JPAExpressions.select(postLike.count())
                                 .from(postLike)
-                                .where(postLike.linkPost.id.eq(linkPost.id)),
+                                .where(postLike.post.id.eq(linkPost.post.id)),
                             "likeCount"),
                         ExpressionUtils.as(
                             JPAExpressions.select(comment.count())
                                 .from(comment)
-                                .where(comment.linkPost.id.eq(linkPost.id)),
+                                .where(comment.post.id.eq(linkPost.post.id)),
                             "commentCount")
                     )
                 )

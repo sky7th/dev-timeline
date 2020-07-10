@@ -1,17 +1,13 @@
 package com.sky7th.devtimeline.core.domain.post.linkpost;
 
-import com.sky7th.devtimeline.core.domain.comment.Comment;
 import com.sky7th.devtimeline.core.domain.common.BaseTimeEntity;
-import com.sky7th.devtimeline.core.domain.like.PostLike;
-import com.sky7th.devtimeline.core.domain.tag.Tag;
+import com.sky7th.devtimeline.core.domain.post.Post;
 import com.sky7th.devtimeline.core.domain.user.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -22,16 +18,13 @@ public class LinkPost extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "link_type")
-    private LinkType linkType;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "post_crawl_id", foreignKey = @ForeignKey(name = "fk_link_post_post"))
+    private Post post;
 
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "linkPost")
-    private List<Tag> tags = new ArrayList<>();
 
     @Column(length = 500, nullable = false)
     private String title;
@@ -41,25 +34,18 @@ public class LinkPost extends BaseTimeEntity {
 
     private String linkUrl;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "linkPost")
-    private List<PostLike> postLikes = new ArrayList<>();
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "linkPost")
-    private List<Comment> comments = new ArrayList<>();
+    @Enumerated(EnumType.STRING)
+    @Column(name = "link_type")
+    private LinkType linkType;
 
     @Builder
-    public LinkPost(Long id, User user, LinkType linkType, String title, String content, String linkUrl) {
+    public LinkPost(Long id, Post post, User user, String title, String content, String linkUrl) {
         this.id = id;
-        this.linkType = linkType;
+        this.post = post;
         this.user = user;
         this.title = title;
         this.content = content;
         this.linkUrl = linkUrl;
-    }
-
-    public void addTags(Tag tag) {
-        this.tags.add(tag);
-        tag.setLinkPost(this);
     }
 
     public void setUser(User user) {

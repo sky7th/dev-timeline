@@ -14,7 +14,5 @@ import lombok.NoArgsConstructor;
 public class CompanyDto {
 
     private Company company;
-
     private CompanyUrl companyUrl;
-
 }

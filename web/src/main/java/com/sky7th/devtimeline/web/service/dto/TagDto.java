@@ -6,12 +6,12 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Getter
-public class TagItem {
+public class TagDto {
 
     private Long id;
     private String name;
 
-    public TagItem(Tag tag) {
+    public TagDto(Tag tag) {
         this.id = tag.getId();
         this.name = tag.getName();
     }

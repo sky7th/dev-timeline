@@ -5,9 +5,9 @@ import com.sky7th.devtimeline.web.presentation.api.dto.WebResponseDto;
 import com.sky7th.devtimeline.web.security.CurrentUser;
 import com.sky7th.devtimeline.web.security.UserPrincipal;
 import com.sky7th.devtimeline.web.service.LinkPostService;
-import com.sky7th.devtimeline.web.service.dto.LinkPostViewDetailDto;
-import com.sky7th.devtimeline.web.service.dto.LinkPostViewItem;
-import com.sky7th.devtimeline.web.service.dto.LinkPostViewItems;
+import com.sky7th.devtimeline.web.service.dto.LinkPostDetailDto;
+import com.sky7th.devtimeline.web.service.dto.LinkPostDto;
+import com.sky7th.devtimeline.web.service.dto.LinkPostView;
 import com.sky7th.devtimeline.web.service.dto.PostSearchForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.sky7th.devtimeline.web.presentation.api.dto.WebResponseStatus.FORBIDDEN;
@@ -31,11 +32,10 @@ public class LinkPostApiController {
     public WebResponseDto<Object> getLinkPosts(@Valid PostSearchForm searchForm,
                                                @CurrentUser UserPrincipal userPrincipal) {
         Map<String, Object> templateData = new HashMap<>();
-        LinkPostViewItems linkPostViewItems = linkPostService.findBySearchForm(searchForm, userPrincipal);
-
-        templateData.put("posts", linkPostViewItems.getLinkPostItems());
-        templateData.put("offset", searchForm.getOffset() + linkPostViewItems.getLinkPostItems().size());
-        templateData.put("postCounts", linkPostViewItems.getLinkPostCounts());
+        LinkPostView linkPostView = linkPostService.findBySearchForm(searchForm, userPrincipal);
+        templateData.put("posts", linkPostView.getLinkPostDtos());
+        templateData.put("offset", searchForm.getOffset() + linkPostView.getLinkPostDtos().size());
+        templateData.put("postCounts", linkPostView.getLinkPostCounts());
 
         return WebResponseDto.builder().status(OK).data(templateData).build();
     }
@@ -43,23 +43,23 @@ public class LinkPostApiController {
     @GetMapping("/api/v1/link-posts/{id}")
     public WebResponseDto<Object> getLinkPost(@PathVariable(name = "id") Long id,
                                               @CurrentUser UserPrincipal userPrincipal) {
-        LinkPostViewDetailDto linkPostViewItem = linkPostService.findOne(id, userPrincipal);
+        LinkPostDetailDto linkPostViewItem = linkPostService.findOne(id, userPrincipal);
 
         return WebResponseDto.builder().status(OK).data(linkPostViewItem).build();
     }
 
     @PostMapping("/api/v1/link-posts")
-    public WebResponseDto<Object> saveLinkPost(@RequestBody LinkPostViewItem linkPostViewItem, @CurrentUser UserPrincipal userPrincipal) {
-        linkPostService.save(linkPostViewItem, userPrincipal);
+    public WebResponseDto<Object> saveLinkPost(@RequestBody LinkPostDto linkPostDto, @CurrentUser UserPrincipal userPrincipal) {
+        linkPostService.save(linkPostDto, userPrincipal);
         return WebResponseDto.builder().status(OK).build();
     }
 
     @PutMapping("/api/v1/link-posts/{id}")
     public WebResponseDto<Object> updateLinkPost(@PathVariable(value = "id") Long id,
-                                                 @RequestBody LinkPostViewItem linkPostViewItem,
+                                                 @RequestBody LinkPostDto linkPostDto,
                                                  @CurrentUser UserPrincipal userPrincipal) {
         try {
-            linkPostService.update(id, linkPostViewItem, userPrincipal);
+            linkPostService.update(id, linkPostDto, userPrincipal);
         } catch (UnauthorizedException e) {
             return WebResponseDto.builder().status(FORBIDDEN).build();
         }

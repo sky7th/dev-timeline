@@ -6,7 +6,7 @@ import lombok.Getter;
 import static com.sky7th.devtimeline.core.domain.utils.LocalDateTimeUtils.toStringDate;
 
 @Getter
-public class RecruitPostViewItem {
+public class RecruitPostDto {
 
     private Long id;
     private String companyLogoUrl;
@@ -17,7 +17,7 @@ public class RecruitPostViewItem {
     private String contentUrl;
     private String sortDate;
 
-    public RecruitPostViewItem(RecruitPost recruitPost) {
+    public RecruitPostDto(RecruitPost recruitPost) {
         this.id = recruitPost.getId();
         this.companyLogoUrl = recruitPost.getCompanyUrl().getCompany().getLogoUrl();
         this.companyTypeName = recruitPost.getCompanyUrl().getCompany().getCompanyType().getName();

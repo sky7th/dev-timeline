@@ -8,7 +8,7 @@ import static com.sky7th.devtimeline.core.domain.utils.LocalDateTimeUtils.toStri
 
 @RequiredArgsConstructor
 @Getter
-public class UserItem {
+public class UserDto {
 
     private Long id;
     private String name;
@@ -16,7 +16,7 @@ public class UserItem {
     private String imageUrl;
     private String createdDate;
 
-    public UserItem(User user) {
+    public UserDto(User user) {
         this.id = user.getId();
         this.name = user.getName();
         this.email = user.getEmail();

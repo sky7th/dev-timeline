@@ -1,7 +1,9 @@
 package com.sky7th.devtimeline.core.domain.tag;
 
 import com.sky7th.devtimeline.core.domain.common.BaseTimeEntity;
+import com.sky7th.devtimeline.core.domain.post.Post;
 import com.sky7th.devtimeline.core.domain.post.linkpost.LinkPost;
+import com.sky7th.devtimeline.core.domain.user.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,20 +20,24 @@ public class Tag extends BaseTimeEntity {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "link_post_id", foreignKey = @ForeignKey(name = "fk_tag_link_post"))
-    private LinkPost linkPost;
+    @JoinColumn(name = "post_id", foreignKey = @ForeignKey(name = "fk_tag_post"))
+    private Post post;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_tag_user"))
+    private User user;
 
     private String name;
 
     @Builder
-    public Tag(Long id, LinkPost linkPost, String name) {
+    public Tag(Long id, Post post, String name) {
         this.id = id;
-        this.linkPost = linkPost;
+        this.post = post;
         this.name = name;
     }
 
-    public void setLinkPost(LinkPost linkPost) {
-        this.linkPost = linkPost;
+    public void setLinkPost(Post post) {
+        this.post = post;
     }
 
 }

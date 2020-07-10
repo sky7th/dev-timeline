@@ -9,7 +9,8 @@ public enum CompanyType {
 
     NAVER("네이버"),
     KAKAO("카카오"),
-    WOOWABROS("우아한형제들");
+    WOOWABROS("우아한형제들"),
+    LINE("라인");
 
     private final String name;
 

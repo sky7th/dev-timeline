@@ -37,7 +37,9 @@ class NaverRecruitCrawlingServiceTest {
 
         // when
         List<CrawlingDto> crawlings = naverRecruitCrawlingService.crawling(companyDto);
-
+        crawlings.forEach(c -> {
+            System.out.println(c.getTitle() + " / " + c.getCrawlId());
+        });
         // then
         assertTrue(crawlings.size() > 0);
     }

@@ -3,6 +3,8 @@ package com.sky7th.devtimeline.batch.service.crawling;
 import com.sky7th.devtimeline.batch.dto.CompanyDto;
 import com.sky7th.devtimeline.batch.dto.CrawlingDto;
 import com.sky7th.devtimeline.batch.utils.CrawlingUtils;
+import com.sky7th.devtimeline.core.domain.company.CompanyType;
+import com.sky7th.devtimeline.core.domain.companyUrl.CompanyUrlType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
@@ -12,6 +14,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -81,8 +85,12 @@ public class NaverTechCrawlingService implements CompanyCrawlingService {
         String date = dateElement==null ? "" : dateElement.getText();
         String thumbnailUrl = thumnailUrlElement==null ? "" : thumnailUrlElement.getAttribute("src");
         String contentUrl = element.findElement(By.cssSelector("h2 > a")).getAttribute("href");
+        Pattern p = Pattern.compile("(?<=helloworld/).+", Pattern.CASE_INSENSITIVE);
+        Matcher m = p.matcher(contentUrl);
+        String key = m.find() ? m.group() : "";
 
         return CrawlingDto.builder()
+                .crawlId(CompanyType.NAVER.toString()+"-"+ CompanyUrlType.TECH.toString()+"-"+key)
                 .companyUrl(this.companyDto.getCompanyUrl())
                 .title(title)
                 .author("")

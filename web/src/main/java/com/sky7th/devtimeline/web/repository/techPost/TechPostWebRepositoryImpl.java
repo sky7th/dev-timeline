@@ -11,6 +11,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.List;
 
+import static com.sky7th.devtimeline.core.domain.post.QPost.post;
 import static com.sky7th.devtimeline.core.domain.post.techpost.QTechPost.techPost;
 
 @RequiredArgsConstructor
@@ -22,6 +23,7 @@ public class TechPostWebRepositoryImpl implements TechPostWebRepositoryCustom {
     public List<TechPost> findBySearchForm(PostSearchForm postSearchForm) {
         return queryFactory
                 .selectFrom(techPost)
+                .leftJoin(post).on(post.crawlId.eq(techPost.postCrawlId))
                 .leftJoin(techPost.companyUrl).fetchJoin()
                 .where(containsTags(postSearchForm.getTags()),
                         inCompany(postSearchForm.getCompanies()))

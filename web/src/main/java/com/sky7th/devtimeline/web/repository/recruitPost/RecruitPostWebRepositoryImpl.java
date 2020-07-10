@@ -12,6 +12,7 @@ import org.springframework.util.StringUtils;
 import java.util.List;
 
 import static com.sky7th.devtimeline.core.domain.post.recruitpost.QRecruitPost.recruitPost;
+import static com.sky7th.devtimeline.core.domain.post.QPost.post;
 
 @RequiredArgsConstructor
 public class RecruitPostWebRepositoryImpl implements RecruitPostWebRepositoryCustom {
@@ -22,6 +23,7 @@ public class RecruitPostWebRepositoryImpl implements RecruitPostWebRepositoryCus
     public List<RecruitPost> findBySearchForm(PostSearchForm postSearchForm) {
         return queryFactory
                 .selectFrom(recruitPost)
+                .leftJoin(post).on(post.crawlId.eq(recruitPost.postCrawlId))
                 .leftJoin(recruitPost.companyUrl).fetchJoin()
                 .where(containsTags(postSearchForm.getTags()),
                         inCompany(postSearchForm.getCompanies()))

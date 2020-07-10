@@ -7,9 +7,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum LinkType {
 
-    BLOG("블로그"),
-    VIDEO("영상"),
-    EXTRA("나머지");
+    TISTORY("tistory"),
+    YOUTUBE("youtube"),
+    BRUNCH("brunch");
 
     private final String name;
 

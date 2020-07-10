@@ -1,8 +1,7 @@
 package com.sky7th.devtimeline.web.service.dto;
 
 import com.sky7th.devtimeline.core.domain.comment.Comment;
-import com.sky7th.devtimeline.core.domain.post.PostType;
-import com.sky7th.devtimeline.core.domain.post.linkpost.LinkPost;
+import com.sky7th.devtimeline.core.domain.post.Post;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -12,25 +11,22 @@ import static com.sky7th.devtimeline.core.domain.utils.LocalDateTimeUtils.toStri
 @Getter
 public class CommentDto {
     private Long id;
-    private PostType postType;
     private Long postId;
-    private UserItem user;
+    private UserDto user;
     private String content;
     private String createdDate;
 
     public CommentDto(Comment entity) {
         this.id = entity.getId();
-        this.postType = entity.getPostType();
-        this.postId = entity.getLinkPost().getId();
-        this.user = new UserItem(entity.getUser());
+        this.postId = entity.getPost().getId();
+        this.user = new UserDto(entity.getUser());
         this.content = entity.getContent();
         this.createdDate = toStringDate(entity.getCreatedDate(), "yyyy-MM-dd HH:mm:ss");
     }
 
     public Comment toEntity() {
         return Comment.builder()
-                .postType(this.postType)
-                .linkPost(LinkPost.builder()
+                .post(Post.builder()
                         .id(this.postId)
                         .build())
                 .content(this.content)

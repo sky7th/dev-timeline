@@ -17,7 +17,7 @@ public class CommentWebRepositoryImpl implements CommentWebRepositoryCustom {
     @Override
     public List<Comment> findFromLastCommentIdToLimit(Long postId, Long lastCommentId, Long limit) {
         return queryFactory.selectFrom(comment)
-                .where(comment.linkPost.id.eq(postId))
+                .where(comment.post.id.eq(postId))
                 .where(lessThanCommentId(lastCommentId))
                 .offset(0)
                 .limit(limit)

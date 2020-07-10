@@ -3,6 +3,8 @@ package com.sky7th.devtimeline.batch.service.crawling;
 import com.sky7th.devtimeline.batch.dto.CompanyDto;
 import com.sky7th.devtimeline.batch.dto.CrawlingDto;
 import com.sky7th.devtimeline.batch.utils.CrawlingUtils;
+import com.sky7th.devtimeline.core.domain.company.CompanyType;
+import com.sky7th.devtimeline.core.domain.companyUrl.CompanyUrlType;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -11,10 +13,10 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.springframework.stereotype.Service;
 
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -63,8 +65,12 @@ public class WoowabrosTechCrawlingService implements CompanyCrawlingService {
 //        WebElement descriptionElement = element.findElement(By.cssSelector("a > .post-description"));
 //        String description = descriptionElement==null ? "" : descriptionElement.getText();
         String contentUrl = element.findElement(By.cssSelector("a")).getAttribute("href");
+        Pattern p = Pattern.compile("(?<=io/).+(?=\\.)", Pattern.CASE_INSENSITIVE);
+        Matcher m = p.matcher(contentUrl);
+        String key = m.find() ? m.group() : "";
 
         return CrawlingDto.builder()
+                .crawlId(CompanyType.WOOWABROS.toString()+"-"+ CompanyUrlType.TECH.toString()+"-"+key)
                 .companyUrl(this.companyDto.getCompanyUrl())
                 .title(title)
 //                .description(description)

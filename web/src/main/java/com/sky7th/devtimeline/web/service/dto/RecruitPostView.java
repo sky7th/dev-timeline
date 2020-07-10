@@ -7,13 +7,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-public class RecruitPostViewItems {
+public class RecruitPostView {
 
     private final List<RecruitPost> recruitPosts;
     private final long recruitPostCounts;
-    private List<RecruitPostViewItem> recruitPostItems = new ArrayList<>();
+    private List<RecruitPostDto> recruitPostDtos = new ArrayList<>();
 
-    public RecruitPostViewItems(List<RecruitPost> recruitPosts, long recruitPostCounts) {
+    public RecruitPostView(List<RecruitPost> recruitPosts, long recruitPostCounts) {
         this.recruitPosts = recruitPosts;
         this.recruitPostCounts = recruitPostCounts;
         this.map();
@@ -21,7 +21,7 @@ public class RecruitPostViewItems {
 
     private void map() {
         for (RecruitPost recruitPost : recruitPosts) {
-            recruitPostItems.add(new RecruitPostViewItem(recruitPost));
+            recruitPostDtos.add(new RecruitPostDto(recruitPost));
         }
     }
 }

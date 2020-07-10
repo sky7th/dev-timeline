@@ -3,6 +3,8 @@ package com.sky7th.devtimeline.batch.service.crawling;
 import com.sky7th.devtimeline.batch.dto.CompanyDto;
 import com.sky7th.devtimeline.batch.dto.CrawlingDto;
 import com.sky7th.devtimeline.batch.utils.CrawlingUtils;
+import com.sky7th.devtimeline.core.domain.company.CompanyType;
+import com.sky7th.devtimeline.core.domain.companyUrl.CompanyUrlType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
@@ -12,6 +14,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -67,8 +71,12 @@ public class KakaoTechCrawlingService implements CompanyCrawlingService {
         String contentUrl = element.findElement(By.className("link_post")).getAttribute("href");
         String[] dates = contentUrl.split("[/]");
         String date = dates[3]+"."+dates[4]+"."+dates[5];
+        Pattern p = Pattern.compile("(?<=com/).+/.+/.+/.+(?=/)");
+        Matcher matcher = p.matcher(contentUrl);
+        String key = matcher.find() ? matcher.group() : "";
 
         return CrawlingDto.builder()
+                .crawlId(CompanyType.KAKAO.toString()+"-"+ CompanyUrlType.TECH.toString()+"-"+key)
                 .companyUrl(this.companyDto.getCompanyUrl())
                 .title(title)
                 .author(author)

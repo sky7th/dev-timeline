@@ -1,8 +1,7 @@
 package com.sky7th.devtimeline.core.domain.comment;
 
 import com.sky7th.devtimeline.core.domain.common.BaseTimeEntity;
-import com.sky7th.devtimeline.core.domain.post.PostType;
-import com.sky7th.devtimeline.core.domain.post.linkpost.LinkPost;
+import com.sky7th.devtimeline.core.domain.post.Post;
 import com.sky7th.devtimeline.core.domain.user.User;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,13 +18,9 @@ public class Comment extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "post_type")
-    private PostType postType;
-
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "link_post_id", foreignKey = @ForeignKey(name = "fk_comment_link_post"))
-    private LinkPost linkPost;
+    @JoinColumn(name = "post_id", foreignKey = @ForeignKey(name = "fk_comment_post"))
+    private Post post;
 
     @OneToOne
     @JoinColumn(name = "user_id")
@@ -35,9 +30,8 @@ public class Comment extends BaseTimeEntity {
     private String content;
 
     @Builder
-    public Comment(PostType postType, LinkPost linkPost, User user, String content) {
-        this.postType = postType;
-        this.linkPost = linkPost;
+    public Comment(Post post, User user, String content) {
+        this.post = post;
         this.user = user;
         this.content = content;
     }

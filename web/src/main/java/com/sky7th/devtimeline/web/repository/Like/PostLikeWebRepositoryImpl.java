@@ -13,7 +13,7 @@ public class PostLikeWebRepositoryImpl implements PostLikeWebRepositoryCustom {
     @Override
     public void deleteByLinkPostAndUser(Long linkPostId, Long userId) {
         queryFactory.delete(postLike)
-                .where(postLike.linkPost.id.eq(linkPostId)
+                .where(postLike.post.id.eq(linkPostId)
                         .and(postLike.user.id.eq(userId)))
                 .execute();
     }

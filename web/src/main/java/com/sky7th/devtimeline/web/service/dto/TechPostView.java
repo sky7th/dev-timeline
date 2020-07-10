@@ -7,13 +7,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-public class TechPostViewItems {
+public class TechPostView {
 
     private final List<TechPost> techPosts;
     private final long techPostCounts;
-    private List<TechPostViewItem> techPostItems = new ArrayList<>();
+    private List<TechPostDto> techPostDtos = new ArrayList<>();
 
-    public TechPostViewItems(List<TechPost> techPosts, long techPostCounts) {
+    public TechPostView(List<TechPost> techPosts, long techPostCounts) {
         this.techPosts = techPosts;
         this.techPostCounts = techPostCounts;
         this.map();
@@ -21,7 +21,7 @@ public class TechPostViewItems {
 
     private void map() {
         for (TechPost techPost : techPosts) {
-            techPostItems.add(new TechPostViewItem(techPost));
+            techPostDtos.add(new TechPostDto(techPost));
         }
     }
     

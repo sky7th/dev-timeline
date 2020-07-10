@@ -3,7 +3,6 @@ package com.sky7th.devtimeline.service;
 import com.sky7th.devtimeline.batch.config.SeleniumConfig;
 import com.sky7th.devtimeline.batch.dto.CompanyDto;
 import com.sky7th.devtimeline.batch.dto.CrawlingDto;
-import com.sky7th.devtimeline.batch.service.crawling.NaverTechCrawlingService;
 import com.sky7th.devtimeline.batch.service.crawling.WoowabrosTechCrawlingService;
 import com.sky7th.devtimeline.core.domain.company.Company;
 import com.sky7th.devtimeline.core.domain.company.CompanyType;
@@ -40,7 +39,9 @@ class WoowabrosTechCrawlingServiceTest {
 
         // when
         List<CrawlingDto> crawlings = woowabrosTechCrawlingService.crawling(companyDto);
-
+        crawlings.forEach(c -> {
+            System.out.println(c.getTitle() + " / " + c.getCrawlId());
+        });
         // then
         assertTrue(crawlings.size() > 0);
     }

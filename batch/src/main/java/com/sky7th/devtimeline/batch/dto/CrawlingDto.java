@@ -16,6 +16,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CrawlingDto {
 
+    private String crawlId;
     private CompanyUrl companyUrl;
     private String title;
     private String description;
@@ -26,19 +27,20 @@ public class CrawlingDto {
     private String contentUrl;
 
     public RecruitPost toRecruitPost() {
-        RecruitPost recruitPost = RecruitPost.builder()
+        return RecruitPost.builder()
+                .postCrawlId(this.crawlId)
+                .companyUrl(this.companyUrl)
                 .contentUrl(this.contentUrl)
                 .closingDate(this.closingDate)
                 .title(this.title)
                 .sortDate(DateTimeCustomParser.parseClosingTime(closingDate))
                 .build();
-        recruitPost.setCompanyUrl(this.companyUrl);
-
-        return recruitPost;
     }
 
     public TechPost toTechPost() {
-        TechPost techPost = TechPost.builder()
+        return TechPost.builder()
+                .postCrawlId(this.crawlId)
+                .companyUrl(this.companyUrl)
                 .contentUrl(this.contentUrl)
                 .author(this.author)
                 .title(this.title)
@@ -47,9 +49,6 @@ public class CrawlingDto {
                 .thumbnailUrl(this.thumbnailUrl)
                 .sortDate(DateTimeCustomParser.parseDateTime(this.date))
                 .build();
-        techPost.setCompanyUrl(this.companyUrl);
-
-        return techPost;
     }
 
     public boolean isCompanyUrlType(CompanyUrlType companyUrlType) {
@@ -65,6 +64,4 @@ public class CrawlingDto {
                 +","+(date==null ? "" : date)+(closingDate==null ? "" : closingDate)
                 +","+contentUrl;
     }
-
-
 }

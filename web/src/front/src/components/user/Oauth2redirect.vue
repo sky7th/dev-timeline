@@ -5,6 +5,8 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
+
 export default {
   name: "oauth2redirect",
   created() {
@@ -15,8 +17,12 @@ export default {
       this.$router.replace('/')
     }
     else {
+      this.setToken(null)
       this.$router.replace("/")
     }
+  },
+  methods: {
+    ...mapActions(['setToken'])
   }
 }
 </script>

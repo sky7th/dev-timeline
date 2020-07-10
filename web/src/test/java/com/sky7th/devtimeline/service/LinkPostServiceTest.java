@@ -7,7 +7,7 @@ import com.sky7th.devtimeline.core.domain.user.UserRepository;
 import com.sky7th.devtimeline.core.domain.user.UserRole;
 import com.sky7th.devtimeline.web.security.UserPrincipal;
 import com.sky7th.devtimeline.web.service.LinkPostService;
-import com.sky7th.devtimeline.web.service.dto.LinkPostViewItem;
+import com.sky7th.devtimeline.web.service.dto.LinkPostDto;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,22 +34,22 @@ public class LinkPostServiceTest {
     @Test
     public void link_post_생성하고_수정_후_id로_조회한다() {
         //given
-        LinkPostViewItem linkPostViewItem = new LinkPostViewItem();
-        linkPostViewItem.setTitle("title 1");
-        linkPostViewItem.setTags(new ArrayList<>());
-        linkPostViewItem.setContent("content 1");
+        LinkPostDto linkPostDto = new LinkPostDto();
+        linkPostDto.setTitle("title 1");
+        linkPostDto.setTags(new ArrayList<>());
+        linkPostDto.setContent("content 1");
 
         UserPrincipal userPrincipal = UserPrincipal.builder().id(1L).build();
 
         //when
         userRepository.save(User.builder().email("123@test.com").name("test 1").emailVerified(false).userRole(UserRole.USER).build());
-        linkPostService.save(linkPostViewItem, userPrincipal);
+        linkPostService.save(linkPostDto, userPrincipal);
 //        LinkPostViewItem item = linkPostService.findOne(1L);
         LinkPost item1 = linkPostRepository.findById(1L).orElse(null);
 
-        linkPostViewItem.setTitle("title 2");
-        linkPostViewItem.setContent("content 2");
-        linkPostService.update(1L, linkPostViewItem, userPrincipal);
+        linkPostDto.setTitle("title 2");
+        linkPostDto.setContent("content 2");
+        linkPostService.update(1L, linkPostDto, userPrincipal);
         LinkPost item2 = linkPostRepository.findById(1L).orElse(null);
 
         //then

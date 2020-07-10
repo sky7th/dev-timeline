@@ -1,15 +1,15 @@
 package com.sky7th.devtimeline.batch.job;
 
 import com.sky7th.devtimeline.batch.dto.CrawlingDto;
-import com.sky7th.devtimeline.batch.repository.recruitpost.RecruitPostBatchRepository;
-import com.sky7th.devtimeline.batch.repository.techpost.TechPostBatchRepository;
 import com.sky7th.devtimeline.batch.service.CrawlingService;
 import com.sky7th.devtimeline.batch.dto.CompanyDto;
-import com.sky7th.devtimeline.core.domain.company.CompanyType;
 import com.sky7th.devtimeline.core.domain.companyUrl.CompanyUrl;
 import com.sky7th.devtimeline.core.domain.companyUrl.CompanyUrlType;
-import com.sky7th.devtimeline.core.domain.post.recruitpost.RecruitPost;
-import com.sky7th.devtimeline.core.domain.post.techpost.TechPost;
+import com.sky7th.devtimeline.core.domain.post.Post;
+import com.sky7th.devtimeline.core.domain.post.PostRepository;
+import com.sky7th.devtimeline.core.domain.post.PostType;
+import com.sky7th.devtimeline.core.domain.post.recruitpost.RecruitPostRepository;
+import com.sky7th.devtimeline.core.domain.post.techpost.TechPostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
@@ -26,10 +26,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManagerFactory;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -44,8 +41,10 @@ public class BatchConfig {
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
     private final CrawlingService crawlingService;
-    private final RecruitPostBatchRepository recruitPostBatchRepository;
-    private final TechPostBatchRepository techPostBatchRepository;
+
+    private final TechPostRepository techPostRepository;
+    private final RecruitPostRepository recruitPostRepository;
+    private final PostRepository postRepository;
 
     @Bean
     public Job job() {
@@ -86,52 +85,44 @@ public class BatchConfig {
     @Transactional
     public ItemWriter<List<CrawlingDto>> writer() {
         return crawlingResults -> {
-
             if (isEmpty(crawlingResults)) {
                 log.info(">>>>>>>> writer 종료 (크롤링 도중 문제가 생김)");
                 return;
             }
+            techPostRepository.deleteAll();
+            recruitPostRepository.deleteAll();
+
+            Set<String> postKeySet = new HashSet<>();
+            List<Post> posts = postRepository.findAll();
+            posts.forEach(post -> postKeySet.add(post.getCrawlId()));
 
             Map<String, Integer> addedPostCountMap = new HashMap<>();
             int addedPostCount = 0;
 
             for (List<CrawlingDto> crawlingResult : crawlingResults) {
-                CompanyUrl companyUrl = crawlingResult.get(0).getCompanyUrl();
-                CompanyUrlType companyUrlType = companyUrl.getCompanyUrlType();
-                CompanyType companyType = companyUrl.getCompany().getCompanyType();
-
-                List<RecruitPost> existRecruitPosts = new ArrayList<>();
-                List<TechPost> existTechPosts = new ArrayList<>();
-
-                if (companyUrlType.equals(CompanyUrlType.RECRUIT)) {
-                    existRecruitPosts = recruitPostBatchRepository.findByCompanyTypeAndUrlType(companyType, companyUrlType);
-                } else if (companyUrlType.equals(CompanyUrlType.TECH)) {
-                    existTechPosts = techPostBatchRepository.findByCompanyTypeAndUrlType(companyType, companyUrlType);
-                }
-
                 for (CrawlingDto crawlingDto : crawlingResult) {
-                    long existCount = 0;
+                    if (!postKeySet.contains(crawlingDto.getCrawlId())) {
+                        Post post = Post.builder()
+                                .crawlId(crawlingDto.getCrawlId())
+                                .likeCount(0)
+                                .commentCount(0)
+                                .build();
+                        if (crawlingDto.isCompanyUrlType(CompanyUrlType.RECRUIT)) {
+                            post.setPostType(PostType.RECRUIT_POST);
+                        } else if (crawlingDto.isCompanyUrlType(CompanyUrlType.TECH)) {
+                            post.setPostType(PostType.TECH_POST);
+                        }
+                        postRepository.save(post);
+                    }
 
                     if (crawlingDto.isCompanyUrlType(CompanyUrlType.RECRUIT)) {
-                        existCount = existRecruitPosts.stream()
-                                .filter(existRecruitPost -> existRecruitPost.isEqual(crawlingDto.toString()))
-                                .count();
+                        recruitPostRepository.save(crawlingDto.toRecruitPost());
+
                     } else if (crawlingDto.isCompanyUrlType(CompanyUrlType.TECH)) {
-                        existCount = existTechPosts.stream()
-                                .filter(existTechPost -> existTechPost.isEqual(crawlingDto.toString()))
-                                .count();
+                        techPostRepository.save(crawlingDto.toTechPost());
                     }
-
-                    if (existCount == 0) {
-                        if (crawlingDto.isCompanyUrlType(CompanyUrlType.RECRUIT)) {
-                            recruitPostBatchRepository.save(crawlingDto.toRecruitPost());
-
-                        } else if (crawlingDto.isCompanyUrlType(CompanyUrlType.TECH)) {
-                            techPostBatchRepository.save(crawlingDto.toTechPost());
-                        }
-                        updateAddedPostCountMap(addedPostCountMap, crawlingDto.getCompanyUrl());
-                        addedPostCount += 1;
-                    }
+                    updateAddedPostCountMap(addedPostCountMap, crawlingDto.getCompanyUrl());
+                    addedPostCount += 1;
                 }
             }
 

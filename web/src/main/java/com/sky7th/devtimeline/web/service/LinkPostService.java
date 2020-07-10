@@ -21,37 +21,37 @@ public class LinkPostService {
     private final CommentWebRepository commentWebRepository;
 
     @Transactional(readOnly = true)
-    public LinkPostViewItems findBySearchForm(PostSearchForm postSearchForm, UserPrincipal userPrincipal) {
-        List<LinkPostDto> recruitPosts = linkPostWebRepository.findAllWithLikeCountAndIsLikeBySearchForm(postSearchForm, userPrincipal==null?0:userPrincipal.getId());
+    public LinkPostView findBySearchForm(PostSearchForm postSearchForm, UserPrincipal userPrincipal) {
+        List<LinkPostItem> recruitPosts = linkPostWebRepository.findAllWithLikeCountAndIsLikeBySearchForm(postSearchForm, userPrincipal==null?0:userPrincipal.getId());
         long recruitPostCounts = linkPostWebRepository.countBySearchForm(postSearchForm);
 
-        return new LinkPostViewItems(recruitPosts, recruitPostCounts);
+        return new LinkPostView(recruitPosts, recruitPostCounts);
     }
 
     @Transactional(readOnly = true)
-    public LinkPostViewDetailDto findOne(Long id, UserPrincipal userPrincipal) {
-        LinkPostDto linkPostDto = linkPostWebRepository.findWithLikeCountAndIsLikeByIdAndUserId(id, userPrincipal==null?0:userPrincipal.getId()).orElseThrow(() -> new IllegalStateException("해당 link post는 존재하지 않습니다. id=" + id));
-        linkPostDto.setComments(commentWebRepository.findFromLastCommentIdToLimit(id, null, 5L));
+    public LinkPostDetailDto findOne(Long id, UserPrincipal userPrincipal) {
+        LinkPostItem linkPostItem = linkPostWebRepository.findWithLikeCountAndIsLikeByIdAndUserId(id, userPrincipal==null?0:userPrincipal.getId()).orElseThrow(() -> new IllegalStateException("해당 link post는 존재하지 않습니다. id=" + id));
+        linkPostItem.setComments(commentWebRepository.findFromLastCommentIdToLimit(id, null, 5L));
 
-        return new LinkPostViewDetailDto(linkPostDto);
+        return new LinkPostDetailDto(linkPostItem);
     }
 
     @Transactional
-    public void save(LinkPostViewItem linkPostViewItem, UserPrincipal userPrincipal) {
-        LinkPost linkPost = linkPostViewItem.toLinkPost();
+    public void save(LinkPostDto linkPostDto, UserPrincipal userPrincipal) {
+        LinkPost linkPost = linkPostDto.toLinkPost();
         linkPost.setUser(userPrincipal.toUserForId());
         linkPostWebRepository.save(linkPost);
     }
 
     @Transactional
-    public void update(Long id, LinkPostViewItem linkPostViewItem, UserPrincipal userPrincipal) throws UnauthorizedException {
+    public void update(Long id, LinkPostDto linkPostDto, UserPrincipal userPrincipal) throws UnauthorizedException {
         LinkPost linkPost = linkPostWebRepository.findById(id).orElseThrow(() -> new IllegalStateException("해당 link post는 존재하지 않습니다. id=" + id));
 
         if (!linkPost.getUser().getId().equals(userPrincipal.getId())) {
             throw new UnauthorizedException("작성자 본인만 수정이 가능합니다.");
         }
-        tagService.updateTags(linkPost, linkPostViewItem.getTags());
-        linkPost.update(linkPostViewItem.getTitle(), linkPostViewItem.getContent(), linkPostViewItem.getLinkUrl());
+        tagService.updateTags(linkPost.getPost(), linkPostDto.getTags());
+        linkPost.update(linkPostDto.getTitle(), linkPostDto.getContent(), linkPostDto.getLinkUrl());
     }
 
     @Transactional

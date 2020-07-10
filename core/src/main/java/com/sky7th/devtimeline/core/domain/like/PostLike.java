@@ -1,6 +1,7 @@
 package com.sky7th.devtimeline.core.domain.like;
 
 import com.sky7th.devtimeline.core.domain.common.BaseTimeEntity;
+import com.sky7th.devtimeline.core.domain.post.Post;
 import com.sky7th.devtimeline.core.domain.post.PostType;
 import com.sky7th.devtimeline.core.domain.post.linkpost.LinkPost;
 import com.sky7th.devtimeline.core.domain.user.User;
@@ -15,7 +16,7 @@ import javax.persistence.*;
 @Getter
 @Table(uniqueConstraints={
         @UniqueConstraint(
-                columnNames={"link_post_id", "user_id"}
+                columnNames={"post_id", "user_id"}
         )
 })
 public class PostLike extends BaseTimeEntity {
@@ -24,22 +25,17 @@ public class PostLike extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "post_type")
-    private PostType postType;
-
     @ManyToOne
-    @JoinColumn(name = "link_post_id", foreignKey = @ForeignKey(name = "fk_like_link_post"))
-    private LinkPost linkPost;
+    @JoinColumn(name = "post_id", foreignKey = @ForeignKey(name = "fk_like_post"))
+    private Post post;
 
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
 
     @Builder
-    public PostLike(PostType postType, LinkPost linkPost, User user) {
-        this.postType = postType;
-        this.linkPost = linkPost;
+    public PostLike(PostType postType, Post post, User user) {
+        this.post = post;
         this.user = user;
     }
 

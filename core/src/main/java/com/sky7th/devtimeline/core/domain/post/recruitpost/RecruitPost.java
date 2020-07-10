@@ -2,6 +2,7 @@ package com.sky7th.devtimeline.core.domain.post.recruitpost;
 
 import com.sky7th.devtimeline.core.domain.common.BaseTimeEntity;
 import com.sky7th.devtimeline.core.domain.companyUrl.CompanyUrl;
+import com.sky7th.devtimeline.core.domain.post.Post;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,20 +19,24 @@ public class RecruitPost extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+//    @OneToOne(cascade = CascadeType.ALL)
+//    @JoinColumn(name = "post_crawl_id", foreignKey = @ForeignKey(name = "fk_recruit_post_post"))
+//    private Post post;
+    private String postCrawlId;
+
     @ManyToOne
     @JoinColumn(name="company_url_id", foreignKey = @ForeignKey(name = "fk_recruit_post_company_url"))
     private CompanyUrl companyUrl;
 
     private String title;
-
     private String closingDate;
-
     private String contentUrl;
-
     private LocalDateTime sortDate;
 
     @Builder
-    public RecruitPost(String title, String closingDate, String contentUrl, LocalDateTime sortDate) {
+    public RecruitPost(String postCrawlId, CompanyUrl companyUrl, String title, String closingDate, String contentUrl, LocalDateTime sortDate) {
+        this.postCrawlId = postCrawlId;
+        this.companyUrl = companyUrl;
         this.title = title;
         this.closingDate = closingDate;
         this.contentUrl = contentUrl;
