@@ -78,12 +78,15 @@ export default new Vuex.Store({
       state.authenticated = payload !== null;
     },
     updatePosts: state => {
+      let updatingMenu = state.selectedMenu;
       axios.get('http://127.0.0.1:8080/api/v1/'+state.selectedMenu+'?'
                 + getOffsetQuery(state.offset)
                 + getLimitQuery(Constant.POST_LIMIT)
                 + getCheckedCompaniesQuery(state.checkedCompanies)
                 + getTagsQuery(state.tags))
       .then(response => {
+        if (state.selectedMenu !== updatingMenu)
+          return;
         state.posts = response.data.data.posts
         state.offset = response.data.data.offset
         state.postCounts = response.data.data.postCounts
@@ -93,12 +96,15 @@ export default new Vuex.Store({
       })
     },
     insertPosts: (state, payload) => {
+      let updatingMenu = state.selectedMenu;
       axios.get('http://127.0.0.1:8080/api/v1/'+state.selectedMenu+'?'
                 + getOffsetQuery(state.offset)
                 + getLimitQuery(Constant.POST_LIMIT)
                 + getCheckedCompaniesQuery(state.checkedCompanies)
                 + getTagsQuery(state.tags))
       .then(({ data }) => {
+        if (state.selectedMenu !== updatingMenu)
+          return;
         if (data.data.posts.length) {
           state.offset = data.data.offset
           state.postCounts = data.data.postCounts
