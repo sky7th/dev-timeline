@@ -49,7 +49,8 @@ export default new Vuex.Store({
     chatRooms: [],
     selectedChatRooms: [],
     modalState: false,
-    postState: Constant.READ
+    postState: Constant.READ,
+    isLoadingContent: false
   },
   getters: {
     token: state => state.token,
@@ -65,7 +66,8 @@ export default new Vuex.Store({
     chatRooms: state => state.chatRooms,
     selectedChatRooms: state => state.selectedChatRooms,
     modalState: state => state.modalState,
-    postState: state => state.postState
+    postState: state => state.postState,
+    isLoadingContent: state => state.isLoadingContent
   },
   mutations: {
     setToken(state, accessToken) {
@@ -79,6 +81,7 @@ export default new Vuex.Store({
     },
     updatePosts: state => {
       let updatingMenu = state.selectedMenu;
+      state.isLoadingContent = true;
       axios.get('http://127.0.0.1:8080/api/v1/'+state.selectedMenu+'?'
                 + getOffsetQuery(state.offset)
                 + getLimitQuery(Constant.POST_LIMIT)
@@ -94,9 +97,13 @@ export default new Vuex.Store({
       .catch(e => {
         console.log('error : ', e)
       })
+      .finally(() => {
+        state.isLoadingContent = false;
+      })
     },
     insertPosts: (state, payload) => {
       let updatingMenu = state.selectedMenu;
+      // state.isLoadingContent = true;
       axios.get('http://127.0.0.1:8080/api/v1/'+state.selectedMenu+'?'
                 + getOffsetQuery(state.offset)
                 + getLimitQuery(Constant.POST_LIMIT)
@@ -116,6 +123,9 @@ export default new Vuex.Store({
       }).catch(e => {
         console.log('error : ', e)
       })
+      // .finally(() => {
+      //   state.isLoadingContent = false;
+      // })
     },
     removePost: (state, payload) => state.posts = state.posts.filter(post => post.id !== payload),
     updatePost: (state, payload) => state.post = payload,
@@ -146,7 +156,8 @@ export default new Vuex.Store({
     },
     onModalState: state => state.modalState = true,
     offModalState: state => state.modalState = false,
-    updatePostState: (state, payload) => state.postState = payload
+    updatePostState: (state, payload) => state.postState = payload,
+    updateIsLoadingContent: (state, payload) => state.isLoadingContent = payload
   },
   actions: {
     setToken: (context, payload) => context.commit('setToken', payload),
@@ -169,7 +180,8 @@ export default new Vuex.Store({
     removeSelectedChatRoom: (context, payload) => context.commit('removeSelectedChatRoom', payload),
     onModalState: context => context.commit('onModalState'),
     offModalState: context => context.commit('offModalState'),
-    updatePostState: (context, payload) => context.commit('updatePostState', payload)
+    updatePostState: (context, payload) => context.commit('updatePostState', payload),
+    updateIsLoadingContent: (context, payload) => context.commit('updateIsLoadingContent', payload),
   },
   strict: debug
 });

@@ -78,6 +78,7 @@ export default {
   height: 23px;
   width: 23px;
   border-radius: 5px;
+  border: 0.5px solid;
 }
 .comment-wrapper .header {
     font-size: 14px;

@@ -13,6 +13,7 @@
         v-for="(selectedChatRoom) in selectedChatRooms" 
         :key="selectedChatRoom.name"/>
     </div>
+    <LoadingContent v-if="isLoadingContent"/>
   </div>
 </template>
 
@@ -25,6 +26,7 @@ import ChatContainer from '@/components/chat/ChatContainer';
 import ChatButton from '@/components/chat/ChatButton';
 import SideButton from '@/components/common/button/SideButton';
 import Constant from '@/constant/Constant'
+import LoadingContent from '@/components/content/LoadingContent'
 
 import { mapGetters, mapActions } from "vuex";
 
@@ -36,10 +38,11 @@ export default {
     TagBar,
     ChatContainer,
     ChatButton,
-    SideButton
+    SideButton,
+    LoadingContent
   },
   computed: {
-    ...mapGetters(['selectedMenu', 'selectedChatRooms', 'selectedChatRooms', 'modalState', 'currentUser']),
+    ...mapGetters(['selectedMenu', 'selectedChatRooms', 'selectedChatRooms', 'modalState', 'currentUser', 'isLoadingContent']),
     isBtnVisible() {
       var rooms = this.selectedChatRooms.filter(selectedChatRoom => selectedChatRoom.name === this.selectedMenu)
       if (rooms.length === 0)
