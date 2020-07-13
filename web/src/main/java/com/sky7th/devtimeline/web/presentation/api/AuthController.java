@@ -30,6 +30,8 @@ import static com.sky7th.devtimeline.web.presentation.api.dto.WebResponseStatus.
 @RequestMapping("/auth")
 public class AuthController {
 
+    private static String DEFAULT_USER_IMAGE_URL = "https://image.flaticon.com/icons/svg/1987/1987936.svg";
+
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -63,6 +65,7 @@ public class AuthController {
                 .password(passwordEncoder.encode(signUpRequest.getPassword()))
                 .provider(AuthProvider.local)
                 .userRole(UserRole.USER)
+                .imageUrl(DEFAULT_USER_IMAGE_URL)
                 .build();
 
         User result = userRepository.save(user);

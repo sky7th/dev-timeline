@@ -7,7 +7,8 @@
         <font-awesome-icon :icon="['fas', 'user']" class="user-icon"/>
     </button>
     <button v-else @click="logout()" class="btn-login">
-        <img class="login-user-img" :src="currentUser.imageUrl" alt="">
+        <img v-if="currentUser" class="login-user-img" :src="currentUser.imageUrl" alt=""> 
+        <img v-else class="login-user-img" alt="">
     </button>
   </div>
 </template>
@@ -82,6 +83,7 @@ export default {
     height: 29px;
     width: 29px;
     border-radius: 5px;
+    border: 1px solid;
     margin: 5px 10px 0 10px;
 }
 @media screen and (max-width: 480px) {
