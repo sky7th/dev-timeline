@@ -15,15 +15,7 @@
           <div class="date">{{ post.createdDate }}</div>
         </div>
       </div>
-      <div class="post-container-btn">
-        <div class="like">
-          <div class="btn-like">
-            <font-awesome-icon v-if="post.like" :icon="['fas', 'heart']" @click="cancelLike(post.id)" class="btn-like-full"/>
-            <font-awesome-icon v-else :icon="['far', 'heart']" @click="doLike(post.id)"/>
-          </div>
-          <span class="like-count">{{ post.likeCount }}</span>
-        </div>
-      </div>
+      <Like :isLike="post.like" :postId="post.id" :likeCount="post.likeCount" class="like-wrapper"/>
       <div class="post-container-btn comment-icon">
           <div class="like">
             <div class="btn-comment">
@@ -55,6 +47,7 @@
 <script>
 import BlueButton from '@/components/common/button/BlueButton'
 import CommentContainer from '@/components/comment/CommentContainer'
+import Like from '@/components/like/Like'
 import { mapGetters, mapActions } from "vuex";
 import notification from '../../libs/notification';
 import Constant from '@/constant/Constant';
@@ -74,7 +67,8 @@ export default {
   },
   components: {
     BlueButton,
-    CommentContainer
+    CommentContainer,
+    Like
   },  
   computed: {
     ...mapGetters(['currentUser', 'posts', 'post'])
@@ -96,36 +90,6 @@ export default {
             }).catch(error => {
                 notification.warn(error.response.data.message);
             })
-    },
-    doLike(linkPostId) {
-      event.stopPropagation();
-      var data = {
-        postType: 'LINK_POST',
-        linkPost: { id: linkPostId }
-      };
-      this.axios.post(`${process.env.VUE_APP_API}/api/v1/like/link-posts`, data)
-      .then(() => {
-        var post = this.posts.find(v => v.id === linkPostId);
-        post.like = true;
-        this.post.like = true;
-        post.likeCount += 1;
-        this.post.likeCount += 1;
-      }).catch(error => {
-        notification.warn(error.response.data.message);
-      })
-    },
-    cancelLike(linkPostId) {
-      event.stopPropagation();
-      this.axios.delete(`${process.env.VUE_APP_API}/api/v1/like/link-posts/${linkPostId}`)
-      .then(() => {
-        var post = this.posts.find(v => v.id === linkPostId);
-        post.like = false;
-        this.post.like = false;
-        post.likeCount -= 1;
-        this.post.likeCount -= 1;
-      }).catch(error => {
-        notification.warn(error.response.data.message);
-      })
     },
     handlerClosePopup() {
       this.$emit('closePopup');

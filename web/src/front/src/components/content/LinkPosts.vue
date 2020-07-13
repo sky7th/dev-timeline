@@ -33,15 +33,7 @@
             </div>
           </div>
         </a>
-        <div class="post-container-btn">
-          <div class="like">
-            <div class="btn-like">
-              <font-awesome-icon v-if="like" :icon="['fas', 'heart']" @click="cancelLike(id)" class="btn-like-full"/>
-              <font-awesome-icon v-else :icon="['far', 'heart']" @click="doLike(id)"/>
-            </div>
-            <span class="like-count">{{ likeCount }}</span>
-          </div>
-        </div>
+        <Like :isLike="like" :postId="id" :likeCount="likeCount" class="like-wrapper"/>
         <div class="post-container-btn comment-icon">
           <div class="like">
             <div class="btn-comment">
@@ -67,6 +59,7 @@
 import CountBar from '@/components/search/CountBar';
 import FixedTagBar from '@/components/search/FixedTagBar';
 import ScrollUp from '@/components/common/ScrollUp'
+import Like from '@/components/like/Like'
 import { mapGetters, mapActions } from "vuex";
 import InfiniteLoading from 'vue-infinite-loading';
 import Constant from '@/constant/Constant';
@@ -83,7 +76,8 @@ export default {
     InfiniteLoading,
     CountBar,
     FixedTagBar,
-    ScrollUp
+    ScrollUp,
+    Like
   },
   computed: {
     ...mapGetters(['posts', 'currentUser'])
@@ -109,32 +103,6 @@ export default {
         }).catch(() => {
           notification.warn('글을 불러오지 못했습니다.');
         })
-    },
-    doLike(linkPostId) {
-      event.stopPropagation();
-      var data = {
-        postType: 'LINK_POST',
-        linkPost: { id: linkPostId }
-      };
-      this.axios.post(`${process.env.VUE_APP_API}/api/v1/like/link-posts`, data)
-      .then(() => {
-        var post = this.posts.filter(v => v.id === linkPostId)[0];
-        post.like = true;
-        post.likeCount += 1;
-      }).catch(error => {
-        notification.warn(error.response.data.message);
-      })
-    },
-    cancelLike(linkPostId) {
-      event.stopPropagation();
-      this.axios.delete(`${process.env.VUE_APP_API}/api/v1/like/link-posts/${linkPostId}`)
-      .then(() => {
-        var post = this.posts.filter(v => v.id === linkPostId)[0];
-        post.like = false;
-        post.likeCount -= 1;
-      }).catch(error => {
-        notification.warn(error.response.data.message);
-      })
     },
     timeForToday(createdDate) {
         return timeForToday(createdDate);
@@ -303,6 +271,10 @@ export default {
 }
 .comment-icon {
     margin-left: 40px;
+}
+.like-wrapper {
+  bottom: 10px;
+  left: 15px;
 }
 @media screen and (max-width: 480px) {
     .link-posts > ul {
