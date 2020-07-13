@@ -11,13 +11,16 @@
           companyUrlTypeName, 
           title,
           closingDate,
-          contentUrl }) in posts"
+          contentUrl,
+          like,
+          likeCount }) in posts"
         :key="id"
         :class="{
           naver: companyTypeName==='네이버',
           kakao: companyTypeName==='카카오'
         }"
       >
+        <Like :isLike="like" :postId="id" :likeCount="likeCount" class="like-wrapper"/>
         <a :href="contentUrl" target="_blank">
           <div style="display: flex;">
             <img class="logo" :src="companyLogoUrl" alt="">
@@ -46,6 +49,7 @@
 import CompanyList from '@/components/company/CompanyList';
 import CountBar from '@/components/search/CountBar';
 import ScrollUp from '@/components/common/ScrollUp'
+import Like from '@/components/like/Like'
 import { mapGetters, mapActions } from "vuex";
 import InfiniteLoading from 'vue-infinite-loading';
 
@@ -54,7 +58,8 @@ export default {
     CompanyList,
     InfiniteLoading,
     CountBar,
-    ScrollUp
+    ScrollUp,
+    Like
   },
   watch: {
     posts() {
@@ -159,6 +164,10 @@ export default {
 }
 .infinite-message a:hover {
   background-color: #e4e4e4;
+}
+.like-wrapper {
+  top: 15px;
+  right: 19px;
 }
 @media screen and (max-width: 380px) { 
     .recruit-posts ul {

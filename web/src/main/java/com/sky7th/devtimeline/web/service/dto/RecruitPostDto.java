@@ -16,6 +16,8 @@ public class RecruitPostDto {
     private String closingDate;
     private String contentUrl;
     private String sortDate;
+    private Long likeCount;
+    private boolean isLike;
 
     public RecruitPostDto(RecruitPostItem recruitPost) {
         this.id = recruitPost.getPostId();
@@ -26,5 +28,7 @@ public class RecruitPostDto {
         this.closingDate = recruitPost.getRecruitPost().getClosingDate();
         this.contentUrl = recruitPost.getRecruitPost().getContentUrl();
         this.sortDate = toStringDate(recruitPost.getRecruitPost().getSortDate(), "yyyy-MM-dd");
+        this.likeCount = recruitPost.getLikeCount();
+        this.isLike = recruitPost.getIsLike();
     }
 }

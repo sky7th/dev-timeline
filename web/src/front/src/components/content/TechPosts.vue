@@ -13,13 +13,16 @@
           author,
           date,
           thumbnailUrl,
-          contentUrl }) in posts"
+          contentUrl,
+          like,
+          likeCount }) in posts"
         :key="id"
       >
+        <Like :isLike="like" :postId="id" :likeCount="likeCount" class="like-wrapper"/>
         <a :href="contentUrl" style="display: flex;" target="_blank">
           <div class="left">
             <img class="logo" :src="companyLogoUrl" alt="">
-            <div class="company">{{ companyTypeName }}</div>
+            <!-- <div class="company">{{ companyTypeName }}</div> -->
           </div>
           <div class="middle">
             <div class="title">{{ title }}</div>
@@ -48,6 +51,7 @@
 import CompanyList from '@/components/company/CompanyList';
 import CountBar from '@/components/search/CountBar';
 import PagingBar from '@/components/search/PagingBar';
+import Like from '@/components/like/Like';
 import { mapGetters, mapActions } from "vuex";
 import { timeForToday } from '@/utils/time';
 
@@ -55,7 +59,8 @@ export default {
   components: {
     CompanyList,
     CountBar,
-    PagingBar
+    PagingBar,
+    Like
   },
   created() {
     this.updatePosts()
@@ -80,15 +85,16 @@ export default {
   padding: 15px 10px;
 }
 .tech-posts ul li {
-    background-color: white;
-    padding: 7px 17px;
-    margin-bottom: 15px;
-    border-radius: 10px;
-    width: 100%;
-    max-width: 550px;
-    -webkit-animation: fadeIn 0.3s ease-in-out;
-    animation: fadeIn 0.3s ease-in-out;
-    box-shadow: 0 1px 4px rgba(27,31,35,.1);
+  position: relative;
+  background-color: white;
+  padding: 7px 17px;
+  margin-bottom: 15px;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 550px;
+  -webkit-animation: fadeIn 0.3s ease-in-out;
+  animation: fadeIn 0.3s ease-in-out;
+  box-shadow: 0 1px 4px rgba(27,31,35,.1);
 }
 .tech-posts ul li:hover {
   box-shadow: 0 1px 6px rgba(27,31,35,.3);
@@ -165,6 +171,10 @@ export default {
   font-size: 12px;
   margin: 0 17px;
 }
+.like-wrapper {
+  bottom: 6px;
+  left: 8px;
+}
 @media screen and (max-width: 480px) {
     .tech-posts > ul {
         padding: 15px 10px;
@@ -183,6 +193,16 @@ export default {
     }
     .right {
         display: none;
+    }
+    .logo {
+      height: 35px;
+      width: 35px;
+    }
+    .title {
+      font-size: 14px;
+    }
+    .author, .date {
+      font-size: 13px;
     }
 }
 </style>

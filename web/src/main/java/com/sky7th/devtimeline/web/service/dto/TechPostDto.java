@@ -19,6 +19,8 @@ public class TechPostDto {
     private String thumbnailUrl;
     private String contentUrl;
     private String sortDate;
+    private Long likeCount;
+    private boolean isLike;
 
     public TechPostDto(TechPostItem techPost) {
         this.id = techPost.getPostId();
@@ -32,5 +34,7 @@ public class TechPostDto {
         this.thumbnailUrl = techPost.getTechPost().getThumbnailUrl();
         this.contentUrl = techPost.getTechPost().getContentUrl();
         this.sortDate = toStringDate(techPost.getTechPost().getSortDate(), "yyyy-MM-dd");
+        this.likeCount = techPost.getLikeCount();
+        this.isLike = techPost.getIsLike();
     }
 }

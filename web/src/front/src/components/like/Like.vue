@@ -58,9 +58,6 @@ export default {
 <style scoped>
 .post-like {
   position: absolute;
-  display: flex;
-  bottom: 0px;
-  left: 0px;
   color: #7a7a7a;
   font-size: 14px;
 }

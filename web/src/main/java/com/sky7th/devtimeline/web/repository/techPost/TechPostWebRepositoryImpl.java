@@ -27,7 +27,8 @@ public class TechPostWebRepositoryImpl implements TechPostWebRepositoryCustom {
     @Override
     public List<TechPostItem> findAllWithLikeCountAndIsLikeBySearchForm(PostSearchForm postSearchForm, Long userId) {
         return queryFactory
-                .select(Projections.fields(TechPostItem.class, techPost, post.id,
+                .select(Projections.fields(TechPostItem.class, techPost,
+                        ExpressionUtils.as(post.id, "postId"),
                         ExpressionUtils.as(
                                 JPAExpressions.select(postLike)
                                         .from(postLike)
