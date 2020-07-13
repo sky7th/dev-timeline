@@ -5,7 +5,7 @@
     <TechPosts v-else-if="selectedMenu==='tech-posts'"/>
     <LinkPosts v-else-if="selectedMenu==='link-posts'"/>
 
-    <SideButton v-if="isMenuPossibleWrite && currentUser!=null" @event="handlerOnModalState" style="bottom: 50%;"/>
+    <SideButton v-if="isMenuPossibleWrite && currentUser!=null" @event="handlerOnModalState" style="bottom: 14%;"/>
     <ChatButton v-if="isBtnVisible"/>
     <div class="chat-bottoms-wrapper">
       <ChatContainer 

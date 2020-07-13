@@ -93,6 +93,8 @@ input[type=checkbox] { display:none; }
 input[type=checkbox] + label { 
     display: inline-block;
     cursor: pointer;
+    min-width: 38px;
+    text-align: center;
     padding-top: 64px;
     margin-top: -20px;
     background-size: 38px;

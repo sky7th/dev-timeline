@@ -62,6 +62,7 @@ export default {
   border: 1.5px solid #bababa;
   border-radius: 0px 4px 4px 0px;
   box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.2) inset;
+  cursor: pointer;
 }
 .search-bar button:hover {
   background-color: #eaeaea;

@@ -92,7 +92,7 @@ export default {
 <style scoped>
 .chat-button {
   position: fixed;
-  bottom: 50px;
+  bottom: 20px;
   right: 0;
   z-index: 2000;
   animation: fadeIn 0.3s ease-in-out;
