@@ -18,6 +18,7 @@ import java.util.Optional;
 import static com.sky7th.devtimeline.core.domain.like.QPostLike.postLike;
 import static com.sky7th.devtimeline.core.domain.post.linkpost.QLinkPost.linkPost;
 import static com.sky7th.devtimeline.core.domain.comment.QComment.comment;
+import static com.sky7th.devtimeline.core.domain.post.QPost.post;
 
 @RequiredArgsConstructor
 public class LinkPostWebRepositoryImpl implements LinkPostWebRepositoryCustom {
@@ -25,7 +26,7 @@ public class LinkPostWebRepositoryImpl implements LinkPostWebRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Optional<LinkPostItem> findWithLikeCountAndIsLikeByIdAndUserId(Long linkPostid, Long userId) {
+    public Optional<LinkPostItem> findWithLikeCountAndIsLikeByIdAndUserId(Long postId, Long userId) {
         List<LinkPostItem> linkPosts = queryFactory
                 .select(
                     Projections.fields(LinkPostItem.class, linkPost,
@@ -50,7 +51,7 @@ public class LinkPostWebRepositoryImpl implements LinkPostWebRepositoryCustom {
                 )
                 .from(linkPost)
                 .leftJoin(linkPost.user).fetchJoin()
-                .where(linkPost.id.eq(linkPostid))
+                .where(linkPost.post.id.eq(postId))
                 .fetch();
 
         return Optional.ofNullable(linkPosts.get(0));

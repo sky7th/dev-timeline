@@ -18,13 +18,13 @@ public class PostLikeController {
 
     private final PostLikeService postLikeService;
 
-    @PostMapping("/api/v1/like/link-posts")
+    @PostMapping("/api/v1/like")
     public WebResponseDto<Object> saveLike(@RequestBody PostLikeDto likeDto, @CurrentUser UserPrincipal userPrincipal) {
         postLikeService.save(likeDto, userPrincipal);
         return WebResponseDto.builder().status(OK).build();
     }
 
-    @DeleteMapping("/api/v1/like/link-posts/{id}")
+    @DeleteMapping("/api/v1/like/{id}")
     public WebResponseDto<Object> deleteLike(@PathVariable("id") Long id,
                                              @CurrentUser UserPrincipal userPrincipal) {
         postLikeService.delete(id, userPrincipal);

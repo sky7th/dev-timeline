@@ -27,7 +27,7 @@ public class LinkPostDetailDto {
     private List<CommentDto> comments;
 
     public LinkPostDetailDto(LinkPostItem linkPostItem) {
-        this.id = linkPostItem.getLinkPost().getId();
+        this.id = linkPostItem.getLinkPost().getPost().getId();
         this.user = new UserDto(linkPostItem.getLinkPost().getUser());
         this.title = linkPostItem.getLinkPost().getTitle();
         this.content = linkPostItem.getLinkPost().getContent();

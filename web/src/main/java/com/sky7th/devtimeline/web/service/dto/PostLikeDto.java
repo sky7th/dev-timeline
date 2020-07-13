@@ -10,19 +10,14 @@ import lombok.RequiredArgsConstructor;
 @Getter
 public class PostLikeDto {
 
-    private PostType postType;
     private Long postId;
-    private UserDto user;
 
-    public PostLikeDto(PostType postType, Long postId, UserDto user) {
-        this.postType = postType;
+    public PostLikeDto(Long postId) {
         this.postId = postId;
-        this.user = user;
     }
 
     public PostLike toLike() {
         return PostLike.builder()
-                .postType(this.postType)
                 .post(Post.builder()
                         .id(this.postId)
                         .build())
