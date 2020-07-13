@@ -1,6 +1,8 @@
 package com.sky7th.devtimeline.web.presentation.api;
 
 import com.sky7th.devtimeline.web.presentation.api.dto.WebResponseDto;
+import com.sky7th.devtimeline.web.security.CurrentUser;
+import com.sky7th.devtimeline.web.security.UserPrincipal;
 import com.sky7th.devtimeline.web.service.TechPostService;
 import com.sky7th.devtimeline.web.service.dto.PostSearchForm;
 import com.sky7th.devtimeline.web.service.dto.TechPostView;
@@ -23,9 +25,10 @@ public class TechPostApiController {
     private final TechPostService techPostService;
 
     @GetMapping("/api/v1/tech-posts")
-    public WebResponseDto<Object> getTechPosts(@Valid PostSearchForm searchForm) {
+    public WebResponseDto<Object> getTechPosts(@Valid PostSearchForm searchForm,
+                                               @CurrentUser UserPrincipal userPrincipal) {
         Map<String, Object> templateData = new HashMap<>();
-        TechPostView techPostView = techPostService.findBySearchForm(searchForm);
+        TechPostView techPostView = techPostService.findBySearchForm(searchForm, userPrincipal);
         templateData.put("posts", techPostView.getTechPostDtos());
         templateData.put("offset", searchForm.getOffset() + techPostView.getTechPostDtos().size());
         templateData.put("postCounts", techPostView.getTechPostCounts());

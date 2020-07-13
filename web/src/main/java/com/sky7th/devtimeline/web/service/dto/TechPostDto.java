@@ -20,17 +20,17 @@ public class TechPostDto {
     private String contentUrl;
     private String sortDate;
 
-    public TechPostDto(TechPost techPost) {
-        this.id = techPost.getId();
-        this.companyLogoUrl = techPost.getCompanyUrl().getCompany().getLogoUrl();
-        this.companyTypeName = techPost.getCompanyUrl().getCompany().getCompanyType().getName();
-        this.companyUrlTypeName = techPost.getCompanyUrl().getCompanyUrlType().getName();
-        this.title = techPost.getTitle();
-        this.description = techPost.getDescription();
-        this.author = techPost.getAuthor();
-        this.date = techPost.getDate();
-        this.thumbnailUrl = techPost.getThumbnailUrl();
-        this.contentUrl = techPost.getContentUrl();
-        this.sortDate = toStringDate(techPost.getSortDate(), "yyyy-MM-dd");
+    public TechPostDto(TechPostItem techPost) {
+        this.id = techPost.getTechPost().getId();
+        this.companyLogoUrl = techPost.getTechPost().getCompanyUrl().getCompany().getLogoUrl();
+        this.companyTypeName = techPost.getTechPost().getCompanyUrl().getCompany().getCompanyType().getName();
+        this.companyUrlTypeName = techPost.getTechPost().getCompanyUrl().getCompanyUrlType().getName();
+        this.title = techPost.getTechPost().getTitle();
+        this.description = techPost.getTechPost().getDescription();
+        this.author = techPost.getTechPost().getAuthor();
+        this.date = techPost.getTechPost().getDate();
+        this.thumbnailUrl = techPost.getTechPost().getThumbnailUrl();
+        this.contentUrl = techPost.getTechPost().getContentUrl();
+        this.sortDate = toStringDate(techPost.getTechPost().getSortDate(), "yyyy-MM-dd");
     }
 }

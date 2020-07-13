@@ -17,14 +17,14 @@ public class RecruitPostDto {
     private String contentUrl;
     private String sortDate;
 
-    public RecruitPostDto(RecruitPost recruitPost) {
-        this.id = recruitPost.getId();
-        this.companyLogoUrl = recruitPost.getCompanyUrl().getCompany().getLogoUrl();
-        this.companyTypeName = recruitPost.getCompanyUrl().getCompany().getCompanyType().getName();
-        this.companyUrlTypeName = recruitPost.getCompanyUrl().getCompanyUrlType().getName();
-        this.title = recruitPost.getTitle();
-        this.closingDate = recruitPost.getClosingDate();
-        this.contentUrl = recruitPost.getContentUrl();
-        this.sortDate = toStringDate(recruitPost.getSortDate(), "yyyy-MM-dd");
+    public RecruitPostDto(RecruitPostItem recruitPost) {
+        this.id = recruitPost.getRecruitPost().getId();
+        this.companyLogoUrl = recruitPost.getRecruitPost().getCompanyUrl().getCompany().getLogoUrl();
+        this.companyTypeName = recruitPost.getRecruitPost().getCompanyUrl().getCompany().getCompanyType().getName();
+        this.companyUrlTypeName = recruitPost.getRecruitPost().getCompanyUrl().getCompanyUrlType().getName();
+        this.title = recruitPost.getRecruitPost().getTitle();
+        this.closingDate = recruitPost.getRecruitPost().getClosingDate();
+        this.contentUrl = recruitPost.getRecruitPost().getContentUrl();
+        this.sortDate = toStringDate(recruitPost.getRecruitPost().getSortDate(), "yyyy-MM-dd");
     }
 }

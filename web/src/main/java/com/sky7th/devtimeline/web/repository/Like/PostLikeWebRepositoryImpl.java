@@ -11,9 +11,9 @@ public class PostLikeWebRepositoryImpl implements PostLikeWebRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public void deleteByLinkPostAndUser(Long linkPostId, Long userId) {
+    public void deleteByPostIdAndUserId(Long postId, Long userId) {
         queryFactory.delete(postLike)
-                .where(postLike.post.id.eq(linkPostId)
+                .where(postLike.post.id.eq(postId)
                         .and(postLike.user.id.eq(userId)))
                 .execute();
     }

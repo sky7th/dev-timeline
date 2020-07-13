@@ -1,10 +1,7 @@
 package com.sky7th.devtimeline.web.repository.recruitPost;
 
-import com.querydsl.core.QueryFactory;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.sky7th.devtimeline.core.domain.post.linkpost.LinkPost;
 import com.sky7th.devtimeline.core.domain.post.recruitpost.RecruitPost;
-import com.sky7th.devtimeline.web.repository.LinkPost.LinkPostWebRepository;
 import com.sky7th.devtimeline.web.service.dto.PostSearchForm;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -53,7 +50,7 @@ public class RecruitPostWebRepositoryTest {
                 .limit(10L)
                 .build();
         //when
-        List<RecruitPost> recruitPosts = recruitPostWebRepository.findBySearchForm(searchForm);
+        List<RecruitPost> recruitPosts = recruitPostWebRepository.findAllWithLikeCountAndIsLikeBySearchForm(searchForm);
 
         for (RecruitPost recruitPost : recruitPosts) {
             System.out.println(

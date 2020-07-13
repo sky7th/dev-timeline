@@ -27,7 +27,7 @@ public class PostLikeService {
 
     @Transactional
     public void delete(Long postId, UserPrincipal userPrincipal) {
-        likeWebRepository.deleteByLinkPostAndUser(postId, userPrincipal.getId());
+        likeWebRepository.deleteByPostIdAndUserId(postId, userPrincipal.getId());
     }
 
 }

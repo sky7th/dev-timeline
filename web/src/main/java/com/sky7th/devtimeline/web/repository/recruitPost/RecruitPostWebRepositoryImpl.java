@@ -1,16 +1,21 @@
 package com.sky7th.devtimeline.web.repository.recruitPost;
 
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sky7th.devtimeline.core.domain.company.CompanyType;
 import com.sky7th.devtimeline.core.domain.post.recruitpost.RecruitPost;
 import com.sky7th.devtimeline.web.service.dto.PostSearchForm;
+import com.sky7th.devtimeline.web.service.dto.RecruitPostItem;
 import lombok.RequiredArgsConstructor;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
 
+import static com.sky7th.devtimeline.core.domain.like.QPostLike.postLike;
 import static com.sky7th.devtimeline.core.domain.post.recruitpost.QRecruitPost.recruitPost;
 import static com.sky7th.devtimeline.core.domain.post.QPost.post;
 
@@ -20,9 +25,23 @@ public class RecruitPostWebRepositoryImpl implements RecruitPostWebRepositoryCus
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<RecruitPost> findBySearchForm(PostSearchForm postSearchForm) {
+    public List<RecruitPostItem> findAllWithLikeCountAndIsLikeBySearchForm(PostSearchForm postSearchForm, Long userId) {
         return queryFactory
-                .selectFrom(recruitPost)
+                .select(Projections.fields(RecruitPostItem.class, recruitPost,
+                        ExpressionUtils.as(
+                                JPAExpressions.select(postLike)
+                                        .from(postLike)
+                                        .where(postLike.user.id.eq(userId)
+                                                .and(postLike.post.id.eq(post.id)))
+                                        .exists(),
+                                "isLike"),
+                        ExpressionUtils.as(
+                                JPAExpressions.select(postLike.count())
+                                        .from(postLike)
+                                        .where(postLike.post.id.eq(post.id)),
+                                "likeCount")
+                ))
+                .from(recruitPost)
                 .leftJoin(post).on(post.crawlId.eq(recruitPost.postCrawlId))
                 .leftJoin(recruitPost.companyUrl).fetchJoin()
                 .where(containsTags(postSearchForm.getTags()),

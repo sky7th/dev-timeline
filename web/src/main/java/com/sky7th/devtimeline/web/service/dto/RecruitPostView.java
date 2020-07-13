@@ -9,18 +9,18 @@ import java.util.List;
 @Getter
 public class RecruitPostView {
 
-    private final List<RecruitPost> recruitPosts;
+    private final List<RecruitPostItem> recruitPosts;
     private final long recruitPostCounts;
     private List<RecruitPostDto> recruitPostDtos = new ArrayList<>();
 
-    public RecruitPostView(List<RecruitPost> recruitPosts, long recruitPostCounts) {
+    public RecruitPostView(List<RecruitPostItem> recruitPosts, long recruitPostCounts) {
         this.recruitPosts = recruitPosts;
         this.recruitPostCounts = recruitPostCounts;
         this.map();
     }
 
     private void map() {
-        for (RecruitPost recruitPost : recruitPosts) {
+        for (RecruitPostItem recruitPost : recruitPosts) {
             recruitPostDtos.add(new RecruitPostDto(recruitPost));
         }
     }

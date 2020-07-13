@@ -1,6 +1,8 @@
 package com.sky7th.devtimeline.web.presentation.api;
 
 import com.sky7th.devtimeline.web.presentation.api.dto.WebResponseDto;
+import com.sky7th.devtimeline.web.security.CurrentUser;
+import com.sky7th.devtimeline.web.security.UserPrincipal;
 import com.sky7th.devtimeline.web.service.RecruitPostService;
 import com.sky7th.devtimeline.web.service.dto.PostSearchForm;
 import com.sky7th.devtimeline.web.service.dto.RecruitPostDto;
@@ -25,9 +27,10 @@ public class RecruitPostApiController {
     private final RecruitPostService recruitPostService;
 
     @GetMapping("/api/v1/recruit-posts")
-    public WebResponseDto<Object> getRecruitPosts(@Valid PostSearchForm searchForm) {
+    public WebResponseDto<Object> getRecruitPosts(@Valid PostSearchForm searchForm,
+                                                  @CurrentUser UserPrincipal userPrincipal) {
         Map<String, Object> templateData = new HashMap<>();
-        RecruitPostView recruitPostView = recruitPostService.findBySearchForm(searchForm);
+        RecruitPostView recruitPostView = recruitPostService.findBySearchForm(searchForm, userPrincipal);
         templateData.put("posts", recruitPostView.getRecruitPostDtos());
         templateData.put("offset", searchForm.getOffset() + recruitPostView.getRecruitPostDtos().size());
         templateData.put("postCounts", recruitPostView.getRecruitPostCounts());
