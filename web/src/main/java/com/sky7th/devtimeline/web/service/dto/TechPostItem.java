@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 public class TechPostItem {
 
     private TechPost techPost;
+    private Long postId;
     private Long likeCount;
     private Boolean isLike;
 }

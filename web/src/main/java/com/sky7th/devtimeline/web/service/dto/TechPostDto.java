@@ -21,7 +21,7 @@ public class TechPostDto {
     private String sortDate;
 
     public TechPostDto(TechPostItem techPost) {
-        this.id = techPost.getTechPost().getId();
+        this.id = techPost.getPostId();
         this.companyLogoUrl = techPost.getTechPost().getCompanyUrl().getCompany().getLogoUrl();
         this.companyTypeName = techPost.getTechPost().getCompanyUrl().getCompany().getCompanyType().getName();
         this.companyUrlTypeName = techPost.getTechPost().getCompanyUrl().getCompanyUrlType().getName();

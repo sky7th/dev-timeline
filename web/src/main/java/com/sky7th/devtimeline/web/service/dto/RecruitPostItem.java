@@ -17,6 +17,7 @@ import java.util.List;
 public class RecruitPostItem {
 
     private RecruitPost recruitPost;
+    private Long postId;
     private Long likeCount;
     private Boolean isLike;
 }

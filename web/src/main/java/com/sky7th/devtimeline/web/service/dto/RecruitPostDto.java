@@ -18,7 +18,7 @@ public class RecruitPostDto {
     private String sortDate;
 
     public RecruitPostDto(RecruitPostItem recruitPost) {
-        this.id = recruitPost.getRecruitPost().getId();
+        this.id = recruitPost.getPostId();
         this.companyLogoUrl = recruitPost.getRecruitPost().getCompanyUrl().getCompany().getLogoUrl();
         this.companyTypeName = recruitPost.getRecruitPost().getCompanyUrl().getCompany().getCompanyType().getName();
         this.companyUrlTypeName = recruitPost.getRecruitPost().getCompanyUrl().getCompanyUrlType().getName();

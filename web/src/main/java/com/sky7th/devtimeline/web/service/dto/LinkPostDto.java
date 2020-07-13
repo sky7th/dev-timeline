@@ -19,7 +19,6 @@ import static com.sky7th.devtimeline.core.domain.utils.LocalDateTimeUtils.toStri
 public class LinkPostDto {
 
     private Long id;
-    private Long postId;
     private UserDto user;
     private String title;
     private String content;
@@ -31,8 +30,7 @@ public class LinkPostDto {
     private boolean isLike;
 
     public LinkPostDto(LinkPostItem linkPostItem) {
-        this.id = linkPostItem.getLinkPost().getId();
-        this.postId = linkPostItem.getLinkPost().getPost().getId();
+        this.id = linkPostItem.getLinkPost().getPost().getId();
         this.user = new UserDto(linkPostItem.getLinkPost().getUser());
         this.title = linkPostItem.getLinkPost().getTitle();
         this.content = linkPostItem.getLinkPost().getContent();
@@ -47,7 +45,6 @@ public class LinkPostDto {
     public LinkPost toLinkPost() {
         LinkPost linkPost = LinkPost.builder()
                 .post(Post.builder()
-                    .id(this.postId)
                     .likeCount(0)
                     .commentCount(0)
                     .postType(PostType.LINK_POST)

@@ -27,7 +27,7 @@ public class RecruitPostWebRepositoryImpl implements RecruitPostWebRepositoryCus
     @Override
     public List<RecruitPostItem> findAllWithLikeCountAndIsLikeBySearchForm(PostSearchForm postSearchForm, Long userId) {
         return queryFactory
-                .select(Projections.fields(RecruitPostItem.class, recruitPost,
+                .select(Projections.fields(RecruitPostItem.class, recruitPost, post.id,
                         ExpressionUtils.as(
                                 JPAExpressions.select(postLike)
                                         .from(postLike)
