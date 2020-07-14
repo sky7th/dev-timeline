@@ -1,6 +1,7 @@
 <template>
   <div class="search-bar">
-    <input type="text" v-model="searchName" @keypress="handleSearchPressEnter">
+    <input type="text" v-model="searchName" @keypress="handleSearchPressEnter"
+      :placeholder="isClickedMyLike ? '보관함 내에서 검색...' : ''">
     <button @click="handleSearch">
         <font-awesome-icon :icon="['fas', 'search']" class="menu-bars"/>
     </button>
@@ -8,13 +9,16 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   data() {
     return {
       searchName: ''
     }
+  },
+  computed: {
+    ...mapGetters(['isClickedMyLike'])
   },
   watch: {
     searchName(val) {
@@ -41,6 +45,7 @@ export default {
 <style scoped>
 .search-bar {
     width: 50%;
+    max-width: 450px;
     display: flex;
 }
 .search-bar input {
@@ -50,6 +55,10 @@ export default {
   border-radius: 4px 0 0 4px;
   box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.2) inset;
   padding: 0 8px;
+}
+.search-bar input::placeholder {
+  font-size: 13px;
+  color: #aaa;
 }
 .search-bar button {
   height: 32px;

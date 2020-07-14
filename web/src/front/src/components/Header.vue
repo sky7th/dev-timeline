@@ -1,7 +1,10 @@
 <template>
   <div class="header">
     <notifications group="notify" position="bottom center"/>
-    <a href="/" class="logo-name">dev-time</a>
+    <div class="logo-name">
+      <a href="/">dev-time</a>
+      <span v-if="isClickedMyLike" class="logo-sub-name">보관함</span>
+    </div>
     <SearchBar/>
     <button v-if="token==null || token==='null' || token ===''" @click="login()" class="btn-login">
         <font-awesome-icon :icon="['fas', 'user']" class="user-icon"/>
@@ -53,7 +56,7 @@ export default {
         this.updateClickMenuList([
         { name: '내 정보', func: this.onClickMyAccount },
         { name: '내 친구', func: this.onClickMyFollow },
-        { name: this.isClickedMyLike ? '보관함 나가기' : '보관함', func: this.onClickMyLike },
+        { name: this.isClickedMyLike ? '메인으로' : '보관함', func: this.onClickMyLike },
         { name: this.currentUser ? '로그아웃' : '로그인', func: this.onClickLoginOrLogout }
       ]);
       }
@@ -94,7 +97,6 @@ export default {
   position: fixed;
   top: 0;
   width: 100%;
-  padding: 0 40px;
   background-color: white;
   display: flex;
   justify-content: space-between;
@@ -104,6 +106,7 @@ export default {
   z-index: 1000;
 }
 .logo-name {
+  padding-left: 20px;
   font-size: 25px;
   font-weight: bold;
   color: #4E5763;
@@ -130,6 +133,10 @@ export default {
     width: 29px;
     border-radius: 5px;
     margin: 5px 10px 0 10px;
+}
+.logo-sub-name {
+  font-size: 13px;
+  margin-left: 6px;
 }
 @media screen and (max-width: 480px) {
     .logo-name {

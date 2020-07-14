@@ -1,5 +1,6 @@
 <template>
   <div class="count-bar">
+    <span v-if="isClickedMyLike">보관함에 </span>
     <span class="count">{{ postCounts }}</span>
     <span>{{ handlerCountDescription() }}</span>
   </div>
@@ -10,7 +11,7 @@ import { mapGetters } from "vuex";
 
 export default {
   computed: {
-    ...mapGetters(['selectedMenu', 'postCounts']),
+    ...mapGetters(['selectedMenu', 'postCounts', 'isClickedMyLike']),
   },
   methods: {
     handlerCountDescription() {
