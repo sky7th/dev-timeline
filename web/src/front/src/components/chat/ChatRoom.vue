@@ -1,16 +1,7 @@
 <template>
   <div class="chat-room" v-cloak>
     <button class="btn-close" @click="disconnect">x</button>
-    <ul v-if="connected" class="message-list">
-      <li class="message-item" :class="{ 'user-me': isCurrentUser(msg) }" v-for="(msg, i) in messages" :key="i">
-        <div
-          v-if="!isNoticeMessage(msg)" 
-          class="user-name">{{ msg.sender.name }}</div>
-        <div 
-          :class="{ 'notice-message': isNoticeMessage(msg) }" 
-          class="user-message">{{ msg.message }}</div>
-      </li>
-    </ul>
+    <ChatMessageList v-if="connected" :messages="messages"/>
     <div class="no-connect-wrapper" v-else>
       <div class="no-connect-message">연결되지 않았습니다.</div>
       <div class="re-connect" @click="reConnect">다시 연결</div>
@@ -18,7 +9,7 @@
     <div class="bottom">
       <textarea type="text" class="form-text" placeholder="내용을 입력해주세요..."
         v-model="message" 
-        v-on:keypress.enter="sendMessage">
+        v-on:keyup.enter="sendMessage">
       </textarea>
       <button class="btn-send" type="button" @click="sendMessage">전송</button>
     </div>
@@ -30,9 +21,12 @@ import { mapGetters, mapActions } from "vuex";
 import SockJS from 'sockjs-client';
 import Stomp from 'stomp-websocket';
 import notification from '../../libs/notification';
+import ChatMessageList from '@/components/chat/ChatMessageList'
 
 export default {
-  // el: '#app',
+  components: {
+    ChatMessageList
+  },
   props: {
     isChatOpen: { type: Boolean, default: true }
   },
@@ -42,7 +36,6 @@ export default {
       sender: '',
       message: '',
       messages: [],
-      messageListElement: document.getElementsByClassName('message-list'),
       connected: false
     }
   },
@@ -57,7 +50,7 @@ export default {
   methods: {
     ...mapActions(['removeSelectedChatRoom']),
     sendMessage() {
-      if (this.message === '') 
+      if (this.message === '' || this.message === '\n') 
         return;
         
       if (!this.ws || !this.ws.connected) {
@@ -68,7 +61,6 @@ export default {
         type:'TALK', roomId: this.room.roomId, sender: this.sender, message: this.message
       }));
       this.message = '';
-      this.messageListElement.scrollTop = this.messageListElement.scrollHeight;
     },
     recvMessage(recv) {
       this.handlerUpdateUserCount(recv.userCount)
@@ -238,9 +230,11 @@ ul {
 .no-user-name {
   display: none;
 }
-.user-me {
+.message-item {
   display: flex;
   flex-direction: column;
+}
+.user-me {
   align-items: flex-end;
 }
 ::-webkit-scrollbar { width: 3.2px; } /* 스크롤 바 */
