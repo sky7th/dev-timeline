@@ -9,7 +9,7 @@
     <div class="bottom">
       <textarea type="text" class="form-text" placeholder="내용을 입력해주세요..."
         v-model="message" 
-        v-on:keyup.enter="sendMessage">
+        v-on:keydown.enter="sendMessage">
       </textarea>
       <button class="btn-send" type="button" @click="sendMessage">전송</button>
     </div>
@@ -21,7 +21,9 @@ import { mapGetters, mapActions } from "vuex";
 import SockJS from 'sockjs-client';
 import Stomp from 'stomp-websocket';
 import notification from '../../libs/notification';
-import ChatMessageList from '@/components/chat/ChatMessageList'
+import ChatMessageList from '@/components/chat/ChatMessageList';
+
+const MAXIMUM_CHAT_MESSAGE_SIZE = 1000;
 
 export default {
   components: {
@@ -49,9 +51,19 @@ export default {
   },
   methods: {
     ...mapActions(['removeSelectedChatRoom']),
-    sendMessage() {
+    sendMessage(event) {
+      event.preventDefault();
+      if (event.keyCode == 13 && event.shiftKey) {
+        this.message +='\n';
+        return;
+      }
       if (this.message === '' || this.message === '\n') 
         return;
+
+      if (this.message.length > MAXIMUM_CHAT_MESSAGE_SIZE) {
+        notification.warn(`채팅글 길이는 ${MAXIMUM_CHAT_MESSAGE_SIZE}자를 넘을 수 없습니다.`);
+        return;
+      }
         
       if (!this.ws || !this.ws.connected) {
         this.connected = false;

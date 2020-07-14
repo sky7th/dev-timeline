@@ -26,7 +26,7 @@ export default {
           this.setUserDetail(response.data)
         }
       } catch (err) {
-        notification.error(err, "사용자 정보를 불러올 수 없습니다.",() => {
+        notification.error(err, "사용자 정보를 불러올 수 없습니다.", () => {
           this.logout();
         });
       }

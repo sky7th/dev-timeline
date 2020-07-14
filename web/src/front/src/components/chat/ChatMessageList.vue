@@ -22,11 +22,6 @@ export default {
   computed: {
     ...mapGetters(['currentUser', 'token'])
   },
-  created() {
-    this.room = JSON.parse(localStorage.getItem('wschat.roomId'));
-    this.sender = JSON.parse(localStorage.getItem('wschat.sender'));
-    this.connect();
-  },
   methods: {
     scrollDown() {
       let element = this.$refs.messageList;
@@ -45,24 +40,22 @@ export default {
 </script>
 
 <style scoped>
-.chat-room {
-  position: relative;
+.message-item {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  height: 500px;
-  background-color: white;
-  padding: 5px;
-  border-radius: 3px;
-  box-shadow: 0 1px 2px 0 rgba(9,30,66,0.25), 0 0 1px 0 rgba(9,30,66,0.31);
-  transition: all 600ms cubic-bezier(0.36, 0, 0.07, 1);
-}
-li {
-  list-style: none;
 }
 .user-name {
   font-size: 13px;
   margin: 6px 0 3px 0;
+}
+ul {
+  overflow-y: scroll;
+  height: 100%;
+  margin-bottom: 5px;
+  padding: 0 6px 0 1px;
+}
+li {
+  list-style: none;
 }
 .user-message {
   word-break: break-all;
@@ -75,73 +68,7 @@ li {
   width: fit-content;
   font-size: 14px;
   line-height: 130%;
-}
-.btn-close {
-  position: absolute;
-  border: 0px;
-  right: 5px;
-  font-weight: bold;
-  border-radius: 5px;
-  background-color: #eaeaea;
-  top: -25px;
-  cursor: pointer;
-}
-.btn-close:hover {
-  background-color: #aaaaaa;
-}
-ul {
-  overflow-y: scroll;
-  height: 100%;
-  margin-bottom: 5px;
-  padding: 0 6px 0 1px;
-}
-.bottom {
-  display: flex;
-}
-.bottom .form-text {
-  height: 52px;
-  border: 1.5px solid #dadada;
-  border-radius: 4px;
-  box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.2) inset;
-  padding: 3px 8px;
-  word-break: break-all;
-  background-color: #f2f2f2;
-  resize: none;
-  font-size: 14px;
-  flex: 6;
-}
-.bottom .btn-send {
-  flex: 1;
-  background-color: #fafafa;
-  border: 1.5px solid #e8e8e8;
-  border-radius: 4px;
-  box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.2) inset;
-  font-size: 13px;
-  cursor: pointer;
-}
-.bottom .btn-send:hover {
-  background-color: #eaeaea;
-}
-.no-connect-wrapper {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  justify-content: center;
-  align-items: center;
-}
-.no-connect-message {
-  font-size: 14px;
-  margin-bottom: 20px;
-}
-.re-connect {
-  font-size: 14px;
-  border: 1px solid #aaaaaa;
-  border-radius: 3px;
-  padding: 4px 6px;
-  cursor: pointer;
-}
-.re-connect:hover {
-  background-color: #eaeaea;
+  white-space: pre;
 }
 .notice-message {
   width: 100%;
@@ -149,13 +76,6 @@ ul {
   text-align: center;
   background-color: white;
   font-size: 12px;
-}
-.no-user-name {
-  display: none;
-}
-.message-item {
-  display: flex;
-  flex-direction: column;
 }
 .user-me {
   align-items: flex-end;
