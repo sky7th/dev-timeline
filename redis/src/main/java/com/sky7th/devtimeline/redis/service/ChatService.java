@@ -8,6 +8,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+
 @RequiredArgsConstructor
 @Service
 public class ChatService {
@@ -34,6 +36,8 @@ public class ChatService {
             chatMessage.setMessage(chatMessage.getSender().getName() + " 나갔습니다.");
             chatMessage.setSender(noticeSender);
         }
+        String nowTime = ChatMessage.format.format(new Date());
+        chatMessage.setCreatedDate(nowTime);
         redisTemplate.convertAndSend(channelTopic.getTopic(), chatMessage);
     }
 }

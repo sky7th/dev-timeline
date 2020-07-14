@@ -1,12 +1,23 @@
 <template>
   <ul id="message-list" ref="messageList">
-    <li class="message-item" :class="{ 'user-me': isCurrentUser(msg) }" v-for="(msg, i) in messages" :key="i">
-      <div
-        v-if="!isNoticeMessage(msg)" 
-        class="user-name">{{ msg.sender.name }}</div>
-      <div 
-        :class="{ 'notice-message': isNoticeMessage(msg) }" 
-        class="user-message">{{ msg.message }}</div>
+    <li class="message-item" 
+      :class="{ 'user-me': isCurrentUser(msg), 'alert-message': isNoticeMessage(msg) }" 
+      v-for="(msg, i) in messages" :key="i"
+    >
+      <img v-if="!isNoticeMessage(msg)" class="img-user" :src="msg.sender.imageUrl" alt="">
+      <div>
+        <div
+          v-if="!isNoticeMessage(msg)" 
+          class="user-name">{{ msg.sender.name }}</div>
+        <div class="user-message-wrapper" 
+          :class="{ 'user-me-message': isCurrentUser(msg)}"
+        >
+          <div 
+            :class="{ 'notice-message': isNoticeMessage(msg) }" 
+            class="user-message">{{ msg.message }}</div>
+          <div v-if="!isNoticeMessage(msg)" class="date">{{ convertDate(msg.createdDate) }}</div>
+        </div>
+      </div>
     </li>
   </ul>
 </template>
@@ -34,6 +45,19 @@ export default {
     },
     isCurrentUser(msg) {
       return this.currentUser.id == msg.sender.id
+    },
+    convertDate(date) {
+      let HHmm = date.substr(11, 5);
+      let [hour, min] = HHmm.split(':');
+      let pre = '오전';
+      if (hour > 12) {
+        pre = '오후';
+        hour = String(Number(hour) - 12)
+      }
+      if (hour.length == 2) {
+        hour = hour.substr(1, 1);
+      }
+      return pre + ' ' + hour + ':' + min;
     }
   }
 }
@@ -42,11 +66,12 @@ export default {
 <style scoped>
 .message-item {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  margin-top: 3px;
 }
 .user-name {
-  font-size: 13px;
-  margin: 6px 0 3px 0;
+  font-size: 11px;
+  margin: 6px 4px 4px 4px;
 }
 ul {
   overflow-y: scroll;
@@ -57,18 +82,23 @@ ul {
 li {
   list-style: none;
 }
+.user-message-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+}
 .user-message {
   word-break: break-all;
   max-width: 200px;
   background-color: #eeeeee;
   border-radius: 5px;
-  padding: 5px 6px;
-  margin-left: 2px;
-  margin-bottom: 4px;
+  padding: 5px 8px;
+  margin: 0 2px 4px 2px;
   width: fit-content;
-  font-size: 14px;
+  font-size: 13px;
   line-height: 130%;
-  white-space: pre;
+  white-space: break-spaces;
+  /* color: #24292e */
 }
 .notice-message {
   width: 100%;
@@ -78,7 +108,26 @@ li {
   font-size: 12px;
 }
 .user-me {
-  align-items: flex-end;
+  align-items: flex-start;
+  flex-direction: row-reverse;
+  text-align: end;
+}
+.user-me-message {
+  flex-direction: row-reverse;
+}
+.img-user {
+  height: 23px;
+  width: 23px;
+  border-radius: 5px;
+  margin: 6px 3px 0 3px;
+}
+.date {
+  font-size: 10px;
+  color: #24292e;
+  margin: 0 4px 5px 4px;
+}
+.alert-message {
+  justify-content: center;
 }
 ::-webkit-scrollbar { width: 3.2px; } /* 스크롤 바 */
 ::-webkit-scrollbar-track { background-color:#f7f7f7; } /* 스크롤 바 밑의 배경 */

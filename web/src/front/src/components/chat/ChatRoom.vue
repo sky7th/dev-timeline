@@ -76,7 +76,8 @@ export default {
     },
     recvMessage(recv) {
       this.handlerUpdateUserCount(recv.userCount)
-      this.messages.push({"type":recv.type, "sender":recv.sender, "message":recv.message});
+      this.messages.push({"type":recv.type, "sender":recv.sender, "message":recv.message,
+        "createdDate": recv.createdDate});
     },
     connect() {
       this.connected = true;
@@ -146,25 +147,6 @@ export default {
   box-shadow: 0 1px 2px 0 rgba(9,30,66,0.25), 0 0 1px 0 rgba(9,30,66,0.31);
   transition: all 600ms cubic-bezier(0.36, 0, 0.07, 1);
 }
-li {
-  list-style: none;
-}
-.user-name {
-  font-size: 13px;
-  margin: 6px 0 3px 0;
-}
-.user-message {
-  word-break: break-all;
-  max-width: 200px;
-  background-color: #eeeeee;
-  border-radius: 5px;
-  padding: 5px 6px;
-  margin-left: 2px;
-  margin-bottom: 4px;
-  width: fit-content;
-  font-size: 14px;
-  line-height: 130%;
-}
 .btn-close {
   position: absolute;
   border: 0px;
@@ -178,12 +160,6 @@ li {
 .btn-close:hover {
   background-color: #aaaaaa;
 }
-ul {
-  overflow-y: scroll;
-  height: 100%;
-  margin-bottom: 5px;
-  padding: 0 6px 0 1px;
-}
 .bottom {
   display: flex;
 }
@@ -192,11 +168,11 @@ ul {
   border: 1.5px solid #dadada;
   border-radius: 4px;
   box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.2) inset;
-  padding: 3px 8px;
+  padding: 7px 8px;
   word-break: break-all;
   background-color: #f2f2f2;
   resize: none;
-  font-size: 14px;
+  font-size: 13px;
   flex: 6;
 }
 .bottom .btn-send {
@@ -232,22 +208,8 @@ ul {
 .re-connect:hover {
   background-color: #eaeaea;
 }
-.notice-message {
-  width: 100%;
-  max-width: none;
-  text-align: center;
-  background-color: white;
-  font-size: 12px;
-}
 .no-user-name {
   display: none;
-}
-.message-item {
-  display: flex;
-  flex-direction: column;
-}
-.user-me {
-  align-items: flex-end;
 }
 ::-webkit-scrollbar { width: 3.2px; } /* 스크롤 바 */
 ::-webkit-scrollbar-track { background-color:#f7f7f7; } /* 스크롤 바 밑의 배경 */
