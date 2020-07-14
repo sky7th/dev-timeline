@@ -53,7 +53,8 @@ export default new Vuex.Store({
     isLoadingContent: false,
     isClickedClickMenu: false,
     clickMenuList: [],
-    clickMenuLocation: []
+    clickMenuLocation: [],
+    isClickedMyLike: false
   },
   getters: {
     token: state => state.token,
@@ -73,7 +74,8 @@ export default new Vuex.Store({
     isLoadingContent: state => state.isLoadingContent,
     isClickedClickMenu: state => state.isClickedClickMenu,
     clickMenuList: state => state.clickMenuList,
-    clickMenuLocation: state => state.clickMenuLocation
+    clickMenuLocation: state => state.clickMenuLocation,
+    isClickedMyLike: state => state.isClickedMyLike
   },
   mutations: {
     setToken(state, accessToken) {
@@ -92,7 +94,8 @@ export default new Vuex.Store({
                 + getOffsetQuery(state.offset)
                 + getLimitQuery(Constant.POST_LIMIT)
                 + getCheckedCompaniesQuery(state.checkedCompanies)
-                + getTagsQuery(state.tags))
+                + getTagsQuery(state.tags)
+                + '&liked='+ (state.isClickedMyLike ? 'true' : 'false'))
       .then(response => {
         if (state.selectedMenu !== updatingMenu)
           return;
@@ -114,7 +117,8 @@ export default new Vuex.Store({
                 + getOffsetQuery(state.offset)
                 + getLimitQuery(Constant.POST_LIMIT)
                 + getCheckedCompaniesQuery(state.checkedCompanies)
-                + getTagsQuery(state.tags))
+                + getTagsQuery(state.tags)
+                + '&liked='+ (state.isClickedMyLike ? 'true' : 'false'))
       .then(({ data }) => {
         if (state.selectedMenu !== updatingMenu)
           return;
@@ -166,7 +170,8 @@ export default new Vuex.Store({
     updateIsLoadingContent: (state, payload) => state.isLoadingContent = payload,
     updateIsClickedClickMenu: (state, payload) => state.isClickedClickMenu = payload,
     updateClickMenuList: (state, payload) => state.clickMenuList = payload,
-    updateClickMenuLocation: (state, payload) => state.clickMenuLocation = payload
+    updateClickMenuLocation: (state, payload) => state.clickMenuLocation = payload,
+    updateIsClickedMyLike: (state, payload) => state.isClickedMyLike = payload
   },
   actions: {
     setToken: (context, payload) => context.commit('setToken', payload),
@@ -194,6 +199,7 @@ export default new Vuex.Store({
     updateIsClickedClickMenu: (context, payload) => context.commit('updateIsClickedClickMenu', payload),
     updateClickMenuList: (context, payload) => context.commit('updateClickMenuList', payload),
     updateClickMenuLocation: (context, payload) => context.commit('updateClickMenuLocation', payload),
+    updateIsClickedMyLike: (context, payload) => context.commit('updateIsClickedMyLike', payload)
   },
   strict: debug
 });

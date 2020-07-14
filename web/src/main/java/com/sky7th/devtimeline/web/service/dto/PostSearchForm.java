@@ -23,14 +23,16 @@ public class PostSearchForm {
     List<String> tags;
     List<String> companies;
     List<String> linkTypes;
+    boolean liked;
 
     @Builder
-    public PostSearchForm(Long offset, Long limit, List<String> tags, List<String> companies, List<String> linkTypes) {
+    public PostSearchForm(Long offset, Long limit, List<String> tags, List<String> companies, List<String> linkTypes, boolean liked) {
         this.offset = offset;
         this.limit = limit;
         this.tags = tags;
         this.companies = companies;
         this.linkTypes = linkTypes;
+        this.liked = liked;
     }
 
     @Override

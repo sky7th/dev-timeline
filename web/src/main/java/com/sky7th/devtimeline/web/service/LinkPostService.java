@@ -22,15 +22,16 @@ public class LinkPostService {
 
     @Transactional(readOnly = true)
     public LinkPostView findBySearchForm(PostSearchForm postSearchForm, UserPrincipal userPrincipal) {
-        List<LinkPostItem> recruitPosts = linkPostWebRepository.findAllWithLikeCountAndIsLikeBySearchForm(postSearchForm, userPrincipal==null?0:userPrincipal.getId());
-        long recruitPostCounts = linkPostWebRepository.countBySearchForm(postSearchForm);
+        List<LinkPostItem> recruitPosts = linkPostWebRepository.findAllWithLikeCountAndIsLikeBySearchForm(postSearchForm, userPrincipal);
+        long recruitPostCounts = linkPostWebRepository.countBySearchForm(postSearchForm, userPrincipal);
 
         return new LinkPostView(recruitPosts, recruitPostCounts);
     }
 
     @Transactional(readOnly = true)
     public LinkPostDetailDto findOne(Long id, UserPrincipal userPrincipal) {
-        LinkPostItem linkPostItem = linkPostWebRepository.findWithLikeCountAndIsLikeByIdAndUserId(id, userPrincipal==null?0:userPrincipal.getId()).orElseThrow(() -> new IllegalStateException("해당 link post는 존재하지 않습니다. id=" + id));
+        LinkPostItem linkPostItem = linkPostWebRepository.findWithLikeCountAndIsLikeByIdAndUserId(id, userPrincipal)
+                .orElseThrow(() -> new IllegalStateException("해당 link post는 존재하지 않습니다. id=" + id));
         linkPostItem.setComments(commentWebRepository.findFromLastCommentIdToLimit(id, null, 5L));
 
         return new LinkPostDetailDto(linkPostItem);

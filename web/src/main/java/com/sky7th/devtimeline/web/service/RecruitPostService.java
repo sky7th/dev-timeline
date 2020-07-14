@@ -20,8 +20,8 @@ public class RecruitPostService {
 
     @Transactional(readOnly = true)
     public RecruitPostView findBySearchForm(PostSearchForm postSearchForm, UserPrincipal userPrincipal) {
-        List<RecruitPostItem> recruitPosts = recruitPostWebRepository.findAllWithLikeCountAndIsLikeBySearchForm(postSearchForm, userPrincipal==null?0:userPrincipal.getId());
-        long recruitPostCounts = recruitPostWebRepository.countBySearchForm(postSearchForm);
+        List<RecruitPostItem> recruitPosts = recruitPostWebRepository.findAllWithLikeCountAndIsLikeBySearchForm(postSearchForm, userPrincipal);
+        long recruitPostCounts = recruitPostWebRepository.countBySearchForm(postSearchForm, userPrincipal);
 
         return new RecruitPostView(recruitPosts, recruitPostCounts);
     }

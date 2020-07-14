@@ -6,7 +6,7 @@
           name,
           func}) in clickMenuList"
         :key="name"
-        @click="func()"
+        @click="onClick(func)"
       >
         <div>{{name}}</div>
       </li>
@@ -40,6 +40,10 @@ export default {
       this.updateIsClickedClickMenu(false);
       this.updateClickMenuList([]);
       this.updateClickMenuLocation([])
+    },
+    onClick(func) {
+      func();
+      this.closeClickMenu();
     }
   },
 }

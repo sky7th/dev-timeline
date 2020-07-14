@@ -23,10 +23,11 @@ export default {
     SearchBar
   },
   computed: {
-    ...mapGetters(['token', 'currentUser', 'isClickedClickMenu'])
+    ...mapGetters(['token', 'currentUser', 'isClickedClickMenu', 'isClickedMyLike'])
   },
   methods: {
-    ...mapActions(['setToken', 'setUserDetail', 'updateIsClickedClickMenu', 'updateClickMenuList', 'updateClickMenuLocation']),
+    ...mapActions(['setToken', 'setUserDetail', 'updateIsClickedClickMenu', 
+      'updateClickMenuList', 'updateClickMenuLocation', 'updateIsClickedMyLike', 'resetAll']),
     logout() {
       this.setToken(null)
       this.setUserDetail(null)
@@ -51,7 +52,8 @@ export default {
         this.updateClickMenuLocation([x - 70, y + 13]);
         this.updateClickMenuList([
         { name: '내 정보', func: this.onClickMyAccount },
-        { name: '내 친구', func: this.onClickMyAccount },
+        { name: '내 친구', func: this.onClickMyFollow },
+        { name: this.isClickedMyLike ? '보관함 나가기' : '보관함', func: this.onClickMyLike },
         { name: this.currentUser ? '로그아웃' : '로그인', func: this.onClickLoginOrLogout }
       ]);
       }
@@ -64,6 +66,15 @@ export default {
     onClickMyFollow() {
       event.stopPropagation();
       console.log('내 친구');
+    },
+    onClickMyLike() {
+      event.stopPropagation();
+      if (this.isClickedMyLike) {
+        this.updateIsClickedMyLike(false);
+      } else {
+        this.updateIsClickedMyLike(true);
+      }
+      this.resetAll();
     },
     onClickLoginOrLogout() {
       event.stopPropagation();
