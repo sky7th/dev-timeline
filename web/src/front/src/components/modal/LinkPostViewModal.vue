@@ -247,5 +247,8 @@ export default {
 .btn-comment {
     display: inline-block;
 }
-
+.like-wrapper {
+  bottom: 0;
+  left: 0;
+}
 </style>

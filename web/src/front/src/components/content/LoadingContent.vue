@@ -21,11 +21,11 @@ export default {
 }
 
 .loading-content {
-  position: fixed;
+  position: absolute;
   top: 50%;
   left: 50%;
   width: 100px;
-  transform: translate(-37%, -40%);
+  transform: translate(-50%, -40%);
   transition: 0.125s all ease-in;
 }
 </style>

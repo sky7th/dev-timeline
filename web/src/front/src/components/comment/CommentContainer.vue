@@ -78,4 +78,9 @@ export default {
     height: 50px;
     margin-top: -10px;
 }
+li + li {
+  margin-top: 13px;
+  padding-top: 13px;
+  border-top: 1px dashed #ddd;
+}
 </style>

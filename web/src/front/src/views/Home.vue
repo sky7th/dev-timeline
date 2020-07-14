@@ -6,6 +6,7 @@
       <Content/>
     </div>
     <Modal v-if="modalState"/>
+    <ClickMenu />
   </div>
 </template>
 
@@ -15,13 +16,15 @@ import Content from '@/components/Content';
 import SideMenu from '@/components/SideMenu';
 import { mapGetters } from "vuex";
 import Modal from '@/components/modal/Modal'
+import ClickMenu from '@/components/clickMenu/ClickMenu';
 
 export default {
   components: {
     Header,
     Content,
     SideMenu,
-    Modal
+    Modal,
+    ClickMenu
   },
   computed: {
     ...mapGetters(['modalState'])

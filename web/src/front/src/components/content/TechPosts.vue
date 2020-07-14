@@ -172,8 +172,8 @@ export default {
   margin: 0 17px;
 }
 .like-wrapper {
-  bottom: 6px;
-  left: 8px;
+  bottom: 5px;
+  left: 12px;
 }
 @media screen and (max-width: 480px) {
     .tech-posts > ul {

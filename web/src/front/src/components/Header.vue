@@ -6,7 +6,7 @@
     <button v-if="token==null || token==='null' || token ===''" @click="login()" class="btn-login">
         <font-awesome-icon :icon="['fas', 'user']" class="user-icon"/>
     </button>
-    <button v-else @click="logout()" class="btn-login">
+    <button v-else @click="onClick" class="btn-login">
         <img v-if="currentUser" class="login-user-img" :src="currentUser.imageUrl" alt=""> 
         <img v-else class="login-user-img" alt="">
     </button>
@@ -23,13 +23,11 @@ export default {
     SearchBar
   },
   computed: {
-    ...mapGetters(['token', 'currentUser'])
+    ...mapGetters(['token', 'currentUser', 'isClickedClickMenu'])
   },
   methods: {
-    ...mapActions(['setToken', 'setUserDetail']),
+    ...mapActions(['setToken', 'setUserDetail', 'updateIsClickedClickMenu', 'updateClickMenuList', 'updateClickMenuLocation']),
     logout() {
-      if (!confirm('로그아웃 하시겠습니까?'))
-        return;
       this.setToken(null)
       this.setUserDetail(null)
       this.$router.replace('/');
@@ -38,6 +36,43 @@ export default {
     },
     login() {
       this.$router.replace('/login');
+    },
+    onClick(event) {
+      event.stopPropagation();
+      if (this.isClickedClickMenu) {
+        this.updateIsClickedClickMenu(false);
+        this.updateClickMenuList([]);
+        this.updateClickMenuLocation([])
+      } 
+      else {
+        this.updateIsClickedClickMenu(true);
+        let x = event.clientX + (document.documentElement.scrollLeft?document.documentElement.scrollLeft:document.body.scrollLeft);
+        let y = event.clientY + (document.documentElement.scrollTop?document.documentElement.scrollTop:document.body.scrollTop);
+        this.updateClickMenuLocation([x - 70, y + 13]);
+        this.updateClickMenuList([
+        { name: '내 정보', func: this.onClickMyAccount },
+        { name: '내 친구', func: this.onClickMyAccount },
+        { name: this.currentUser ? '로그아웃' : '로그인', func: this.onClickLoginOrLogout }
+      ]);
+      }
+      
+    },
+    onClickMyAccount() {
+      event.stopPropagation();
+      console.log('내 정보');
+    },
+    onClickMyFollow() {
+      event.stopPropagation();
+      console.log('내 친구');
+    },
+    onClickLoginOrLogout() {
+      event.stopPropagation();
+      if (this.currentUser) {
+        this.logout();
+      }
+      else {
+        this.login();
+      }
     }
   }
 }
@@ -83,7 +118,6 @@ export default {
     height: 29px;
     width: 29px;
     border-radius: 5px;
-    border: 1px solid;
     margin: 5px 10px 0 10px;
 }
 @media screen and (max-width: 480px) {

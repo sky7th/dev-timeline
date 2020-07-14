@@ -50,7 +50,10 @@ export default new Vuex.Store({
     selectedChatRooms: [],
     modalState: false,
     postState: Constant.READ,
-    isLoadingContent: false
+    isLoadingContent: false,
+    isClickedClickMenu: false,
+    clickMenuList: [],
+    clickMenuLocation: []
   },
   getters: {
     token: state => state.token,
@@ -67,7 +70,10 @@ export default new Vuex.Store({
     selectedChatRooms: state => state.selectedChatRooms,
     modalState: state => state.modalState,
     postState: state => state.postState,
-    isLoadingContent: state => state.isLoadingContent
+    isLoadingContent: state => state.isLoadingContent,
+    isClickedClickMenu: state => state.isClickedClickMenu,
+    clickMenuList: state => state.clickMenuList,
+    clickMenuLocation: state => state.clickMenuLocation
   },
   mutations: {
     setToken(state, accessToken) {
@@ -157,7 +163,10 @@ export default new Vuex.Store({
     onModalState: state => state.modalState = true,
     offModalState: state => state.modalState = false,
     updatePostState: (state, payload) => state.postState = payload,
-    updateIsLoadingContent: (state, payload) => state.isLoadingContent = payload
+    updateIsLoadingContent: (state, payload) => state.isLoadingContent = payload,
+    updateIsClickedClickMenu: (state, payload) => state.isClickedClickMenu = payload,
+    updateClickMenuList: (state, payload) => state.clickMenuList = payload,
+    updateClickMenuLocation: (state, payload) => state.clickMenuLocation = payload
   },
   actions: {
     setToken: (context, payload) => context.commit('setToken', payload),
@@ -182,6 +191,9 @@ export default new Vuex.Store({
     offModalState: context => context.commit('offModalState'),
     updatePostState: (context, payload) => context.commit('updatePostState', payload),
     updateIsLoadingContent: (context, payload) => context.commit('updateIsLoadingContent', payload),
+    updateIsClickedClickMenu: (context, payload) => context.commit('updateIsClickedClickMenu', payload),
+    updateClickMenuList: (context, payload) => context.commit('updateClickMenuList', payload),
+    updateClickMenuLocation: (context, payload) => context.commit('updateClickMenuLocation', payload),
   },
   strict: debug
 });

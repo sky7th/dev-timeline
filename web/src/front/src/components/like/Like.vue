@@ -63,7 +63,7 @@ export default {
 }
 .like-count {
   margin-left: 4px;
-  font-size: 13px;
+  font-size: 12px;
 }
 .btn-like {
   cursor: pointer;

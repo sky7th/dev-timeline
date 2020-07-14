@@ -72,13 +72,11 @@ export default {
 <style scoped>
 .comment-wrapper {
   display: flex;
-  margin-bottom: 15px;
 }
 .comment-wrapper .img-user {
   height: 23px;
   width: 23px;
   border-radius: 5px;
-  border: 0.5px solid;
 }
 .comment-wrapper .header {
     font-size: 14px;
@@ -88,8 +86,10 @@ export default {
   margin: 0px 10px 0px 10px;
 }
 .comment-wrapper .content {
-    margin: 8px 0 0 10px;
-    font-size: 14px;
+  margin: 8px 0 0 10px;
+  font-size: 14px;
+  white-space: pre-line;
+  word-break: break-all;
 }
 .between {
     margin: 0 13px 0 14px;
