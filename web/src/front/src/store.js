@@ -45,6 +45,7 @@ export default new Vuex.Store({
     checkedCompanies: [],
     offset: 0,
     tags: [],
+    sortOrder: 'desc',
     postCounts: 0,
     chatRooms: [],
     selectedChatRooms: [],
@@ -66,6 +67,7 @@ export default new Vuex.Store({
     checkedCompanies: state => state.checkedCompanies,
     offset: state => state.offset,
     tags: state => state.tags,
+    sortOrder: state => state.sortOrder,
     postCounts: state => state.postCounts,
     chatRooms: state => state.chatRooms,
     selectedChatRooms: state => state.selectedChatRooms,
@@ -148,6 +150,7 @@ export default new Vuex.Store({
       state.tags = state.tags.filter(tag => tag.id !== payload.id);
     },
     removeAllTag: state => state.tags = [],
+    updateSortOrder: (state, payload) => state.sortOrder = payload,
     updateSelectedMenu: (state, payload) => state.selectedMenu = payload.selectedMenu,
     resetAll: state => {
       state.selectedMenu = 'recruit-posts';
@@ -157,6 +160,7 @@ export default new Vuex.Store({
       state.offset = 0;
       state.postCounts = 0;
       state.modalState = false;
+      state.sortOrder = 'desc';
     },
     updatePostCounts: (state, payload) => state.postCounts = payload.postCounts,
     updateChatRooms: (state, payload) => state.chatRooms = payload,
@@ -186,6 +190,7 @@ export default new Vuex.Store({
     insertTag: (context, payload) => context.commit('insertTag', { tagName: payload.tagName }),
     removeTag: (context, payload) => context.commit('removeTag', { id: payload.id }),
     removeAllTag: context => context.commit('removeAllTag'),
+    updateSortOrder: (context, payload) => context.commit('updateSortOrder', payload),
     updateSelectedMenu: (context, payload) => context.commit('updateSelectedMenu', { selectedMenu: payload.selectedMenu }),
     resetAll: context => context.commit('resetAll'),
     updatePostCounts: (context, payload) => context.commit('postCounts', { postCounts: payload.postCounts }),

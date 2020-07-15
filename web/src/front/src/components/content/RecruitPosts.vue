@@ -2,6 +2,7 @@
   <div class="recruit-posts">
     <CompanyList/>
     <CountBar/>
+    <SortButton/>
     <ul>
       <li
         v-for="({
@@ -53,6 +54,7 @@ import CountBar from '@/components/search/CountBar';
 import ScrollUp from '@/components/common/ScrollUp'
 import NewIcon from '@/components/common/NewIcon'
 import Like from '@/components/like/Like'
+import SortButton from '@/components/sortButton/SortButton'
 import { mapGetters, mapActions } from "vuex";
 import InfiniteLoading from 'vue-infinite-loading';
 
@@ -63,7 +65,8 @@ export default {
     CountBar,
     ScrollUp,
     Like,
-    NewIcon
+    NewIcon,
+    SortButton
   },
   watch: {
     posts() {

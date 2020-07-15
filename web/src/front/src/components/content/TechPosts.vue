@@ -2,6 +2,7 @@
   <div class="tech-posts">
     <CompanyList/>
     <CountBar/>
+    <SortButton/>
     <ul>
       <li
         v-for="({
@@ -55,6 +56,7 @@ import CountBar from '@/components/search/CountBar';
 import PagingBar from '@/components/search/PagingBar';
 import Like from '@/components/like/Like';
 import NewIcon from '@/components/common/NewIcon'
+import SortButton from '@/components/sortButton/SortButton'
 import { mapGetters, mapActions } from "vuex";
 import { timeForToday } from '@/utils/time';
 
@@ -64,7 +66,8 @@ export default {
     CountBar,
     PagingBar,
     Like,
-    NewIcon
+    NewIcon,
+    SortButton
   },
   created() {
     this.updatePosts()

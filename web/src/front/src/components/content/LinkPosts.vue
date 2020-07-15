@@ -2,6 +2,7 @@
   <div class="link-posts">
     <FixedTagBar/>
     <CountBar style="margin-bottom: 11px;"/>
+    <SortButton/>
     <ul>
       <li
         v-for="({
@@ -62,6 +63,7 @@ import FixedTagBar from '@/components/search/FixedTagBar';
 import ScrollUp from '@/components/common/ScrollUp'
 import Like from '@/components/like/Like'
 import NewIcon from '@/components/common/NewIcon'
+import SortButton from '@/components/sortButton/SortButton'
 import { mapGetters, mapActions } from "vuex";
 import InfiniteLoading from 'vue-infinite-loading';
 import Constant from '@/constant/Constant';
@@ -80,7 +82,8 @@ export default {
     FixedTagBar,
     ScrollUp,
     Like,
-    NewIcon
+    NewIcon,
+    SortButton
   },
   computed: {
     ...mapGetters(['posts', 'currentUser'])
