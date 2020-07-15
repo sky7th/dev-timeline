@@ -63,9 +63,10 @@ export default {
 .sort-button-wrapper {
   text-align: right;
   padding-right: 30px;
-  margin-top: 8px;
+  margin-top: 10px;
 }
 .sort-button {
+  display: inline-block;
   background-color: white;
   border: 1px solid #ccc;
   border-radius: 5px;

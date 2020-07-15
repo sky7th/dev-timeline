@@ -136,6 +136,13 @@ export default {
   max-height: 200px;
   line-height: 140%;
   word-break: break-all;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+  word-wrap: break-word;
+  display: -webkit-box;
+  -webkit-line-clamp: 8;
+  -webkit-box-orient: vertical;
 }
 .post-container .middle .middle-bottom {
   display: flex;
@@ -250,5 +257,15 @@ export default {
 .like-wrapper {
   bottom: 0;
   left: 0;
+}
+@media screen and (max-width: 480px) {
+  .post-container .middle .middle-bottom {
+    align-items: flex-end;
+    flex-direction: column;
+  }
+  .between {
+    visibility: hidden;
+    height: 13px;
+  }
 }
 </style>

@@ -133,7 +133,7 @@ export default {
 }
 .link-posts > ul {
   text-align: center;
-  padding: 3px 20px;
+  padding: 10px 20px;
 }
 .link-posts > ul > li {
   position: relative;
@@ -289,7 +289,7 @@ export default {
 }
 @media screen and (max-width: 480px) {
     .link-posts > ul {
-        padding: 3px 10px;
+        padding: 10px 10px;
     }
     .link-posts > ul > li {
         width: 100%;

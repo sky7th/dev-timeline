@@ -23,12 +23,12 @@ export default {
   padding: 7px 8px;
   word-break: break-all;
   resize: none;
-  font-size: 14px;
   width: 100%;
-  font-size: 15px;
+  font-size: 14px;
   color: #6a6a6a;
 }
 .textarea-form::placeholder {
   color: #c2c2c2;
+  font-size: 14px;
 }
 </style>
