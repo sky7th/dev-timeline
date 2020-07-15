@@ -27,8 +27,8 @@ export default {
       } 
       else {
         this.updateIsClickedClickMenu(true);
-        let x = event.clientX + (document.documentElement.scrollLeft?document.documentElement.scrollLeft:document.body.scrollLeft);
-        let y = event.clientY + (document.documentElement.scrollTop?document.documentElement.scrollTop:document.body.scrollTop);
+        let x = event.clientX;
+        let y = event.clientY;
         this.updateClickMenuLocation([x - 55, y + 13]);
         this.updateClickMenuList([
         { name: '인기순', func: this.onClickSortLike },
