@@ -32,6 +32,7 @@ var getTagsQuery = (tags) => {
 }
 var getOffsetQuery = (offset) => '&offset=' + offset;
 var getLimitQuery = (limit) => '&limit=' + limit;
+var getSortOrderQuery = (sortOrder) => '&sortOrderType=' + sortOrder;
 
 export default new Vuex.Store({
   plugins: [initUser],
@@ -45,7 +46,7 @@ export default new Vuex.Store({
     checkedCompanies: [],
     offset: 0,
     tags: [],
-    sortOrder: 'desc',
+    sortOrder: 'DESC',
     postCounts: 0,
     chatRooms: [],
     selectedChatRooms: [],
@@ -97,7 +98,8 @@ export default new Vuex.Store({
                 + getLimitQuery(Constant.POST_LIMIT)
                 + getCheckedCompaniesQuery(state.checkedCompanies)
                 + getTagsQuery(state.tags)
-                + '&liked='+ (state.isClickedMyLike ? 'true' : 'false'))
+                + '&liked='+ (state.isClickedMyLike ? 'true' : 'false')
+                + getSortOrderQuery(state.sortOrder))
       .then(response => {
         if (state.selectedMenu !== updatingMenu)
           return;
@@ -120,7 +122,8 @@ export default new Vuex.Store({
                 + getLimitQuery(Constant.POST_LIMIT)
                 + getCheckedCompaniesQuery(state.checkedCompanies)
                 + getTagsQuery(state.tags)
-                + '&liked='+ (state.isClickedMyLike ? 'true' : 'false'))
+                + '&liked='+ (state.isClickedMyLike ? 'true' : 'false')
+                + getSortOrderQuery(state.sortOrder))
       .then(({ data }) => {
         if (state.selectedMenu !== updatingMenu)
           return;
@@ -160,7 +163,7 @@ export default new Vuex.Store({
       state.offset = 0;
       state.postCounts = 0;
       state.modalState = false;
-      state.sortOrder = 'desc';
+      state.sortOrder = 'DESC';
     },
     updatePostCounts: (state, payload) => state.postCounts = payload.postCounts,
     updateChatRooms: (state, payload) => state.chatRooms = payload,

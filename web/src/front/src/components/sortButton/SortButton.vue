@@ -1,7 +1,7 @@
 <template>
   <div class="sort-button-wrapper">
     <span @click="onClick" class="sort-button">
-      {{ sortOrder == 'like' ? '인기순' : (sortOrder == 'desc' ? '최신순' : '오래된순') }}
+      {{ sortOrder == 'LIKE' ? '인기순' : (sortOrder == 'DESC' ? '최신순' : '오래된순') }}
     </span>
   </div>
 </template>
@@ -39,19 +39,19 @@ export default {
     },
     onClickSortLike() {
       event.stopPropagation();
-      this.updateSortOrder('like')
+      this.updateSortOrder('LIKE')
       this.resetOffset();
       this.updatePosts();
     },
     onClickSortDesc() {
       event.stopPropagation();
-      this.updateSortOrder('desc')
+      this.updateSortOrder('DESC')
       this.resetOffset();
       this.updatePosts();
     },
     onClickSortAsc() {
       event.stopPropagation();
-      this.updateSortOrder('asc')
+      this.updateSortOrder('ASC')
       this.resetOffset();
       this.updatePosts();
     }

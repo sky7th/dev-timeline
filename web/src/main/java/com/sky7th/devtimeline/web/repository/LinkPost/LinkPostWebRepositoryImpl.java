@@ -2,15 +2,18 @@ package com.sky7th.devtimeline.web.repository.LinkPost;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sky7th.devtimeline.core.domain.post.linkpost.LinkType;
 import com.sky7th.devtimeline.web.security.UserPrincipal;
 import com.sky7th.devtimeline.web.service.dto.LinkPostItem;
 import com.sky7th.devtimeline.web.service.dto.PostSearchForm;
+import com.sky7th.devtimeline.web.service.dto.SortOrderType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.util.StringUtils;
 
@@ -21,11 +24,14 @@ import static com.sky7th.devtimeline.core.domain.like.QPostLike.postLike;
 import static com.sky7th.devtimeline.core.domain.post.linkpost.QLinkPost.linkPost;
 import static com.sky7th.devtimeline.core.domain.comment.QComment.comment;
 import static com.sky7th.devtimeline.core.domain.post.QPost.post;
+import static com.sky7th.devtimeline.core.domain.post.recruitpost.QRecruitPost.recruitPost;
 
 @RequiredArgsConstructor
 public class LinkPostWebRepositoryImpl implements LinkPostWebRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
+
+    private NumberPath<Long> likeCount = Expressions.numberPath(Long.class, "likeCount");
 
     @Override
     public Optional<LinkPostItem> findWithLikeCountAndIsLikeByIdAndUserId(Long postId, UserPrincipal userPrincipal) {
@@ -69,7 +75,7 @@ public class LinkPostWebRepositoryImpl implements LinkPostWebRepositoryCustom {
                             JPAExpressions.select(postLike.count())
                                 .from(postLike)
                                 .where(postLike.post.id.eq(linkPost.post.id)),
-                            "likeCount"),
+                                likeCount),
                         ExpressionUtils.as(
                             JPAExpressions.select(comment.count())
                                 .from(comment)
@@ -85,8 +91,17 @@ public class LinkPostWebRepositoryImpl implements LinkPostWebRepositoryCustom {
                         liked(postSearchForm.isLiked(), likedExpression))
                 .offset(postSearchForm.getOffset())
                 .limit(postSearchForm.getLimit())
-                .orderBy(linkPost.createdDate.desc())
+                .orderBy(sortOrder(SortOrderType.valueOf(postSearchForm.getSortOrderType())))
                 .fetch();
+    }
+
+    private OrderSpecifier sortOrder(SortOrderType sortOrderType) {
+        if (sortOrderType == SortOrderType.ASC) {
+            return linkPost.createdDate.asc();
+        } else if (sortOrderType == SortOrderType.LIKE) {
+            return likeCount.desc();
+        }
+        return linkPost.createdDate.desc();
     }
 
 //    public static <T> Predicate<T> distinctByKey(Function<? super T, Object> keyExtractor) {

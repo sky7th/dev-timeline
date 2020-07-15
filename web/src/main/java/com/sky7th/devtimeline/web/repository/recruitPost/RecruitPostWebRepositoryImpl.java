@@ -1,17 +1,22 @@
 package com.sky7th.devtimeline.web.repository.recruitPost;
 
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.jpa.JPAExpressions;
+import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sky7th.devtimeline.core.domain.company.CompanyType;
 import com.sky7th.devtimeline.core.domain.post.recruitpost.RecruitPost;
 import com.sky7th.devtimeline.web.security.UserPrincipal;
 import com.sky7th.devtimeline.web.service.dto.PostSearchForm;
 import com.sky7th.devtimeline.web.service.dto.RecruitPostItem;
+import com.sky7th.devtimeline.web.service.dto.SortOrderType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.util.StringUtils;
 
@@ -27,6 +32,8 @@ public class RecruitPostWebRepositoryImpl implements RecruitPostWebRepositoryCus
 
     private final JPAQueryFactory queryFactory;
 
+    private NumberPath<Long> likeCount = Expressions.numberPath(Long.class, "likeCount");
+
     @Override
     public List<RecruitPostItem> findAllWithLikeCountAndIsLikeBySearchForm(PostSearchForm postSearchForm, UserPrincipal userPrincipal) {
         BooleanExpression likedExpression = getLikedExpression(userPrincipal);
@@ -40,7 +47,7 @@ public class RecruitPostWebRepositoryImpl implements RecruitPostWebRepositoryCus
                                 JPAExpressions.select(postLike.count())
                                         .from(postLike)
                                         .where(postLike.post.id.eq(post.id)),
-                                "likeCount")
+                                likeCount)
                 ))
                 .from(recruitPost)
                 .leftJoin(post).on(post.crawlId.eq(recruitPost.postCrawlId))
@@ -50,9 +57,18 @@ public class RecruitPostWebRepositoryImpl implements RecruitPostWebRepositoryCus
                         liked(postSearchForm.isLiked(), likedExpression))
                 .offset(postSearchForm.getOffset())
                 .limit(postSearchForm.getLimit())
-                .orderBy(recruitPost.sortDate.desc(),
+                .orderBy(sortOrder(SortOrderType.valueOf(postSearchForm.getSortOrderType())),
                         recruitPost.id.desc())
                 .fetch();
+    }
+
+    private OrderSpecifier sortOrder(SortOrderType sortOrderType) {
+        if (sortOrderType == SortOrderType.ASC) {
+            return recruitPost.sortDate.asc();
+        } else if (sortOrderType == SortOrderType.LIKE) {
+            return likeCount.desc();
+        }
+        return recruitPost.sortDate.desc();
     }
 
     @Override
