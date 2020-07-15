@@ -12,6 +12,7 @@
           title,
           author,
           date,
+          sortDate,
           thumbnailUrl,
           contentUrl,
           like,
@@ -41,6 +42,7 @@
           
           <!-- <div>{{ companyUrlTypeName }}</div> -->
         </a>
+        <NewIcon :date="sortDate" :period="4" class="new-icon"/>
       </li>
     </ul>
     <PagingBar v-if="postCounts > 0"/>
@@ -52,6 +54,7 @@ import CompanyList from '@/components/company/CompanyList';
 import CountBar from '@/components/search/CountBar';
 import PagingBar from '@/components/search/PagingBar';
 import Like from '@/components/like/Like';
+import NewIcon from '@/components/common/NewIcon'
 import { mapGetters, mapActions } from "vuex";
 import { timeForToday } from '@/utils/time';
 
@@ -60,7 +63,8 @@ export default {
     CompanyList,
     CountBar,
     PagingBar,
-    Like
+    Like,
+    NewIcon
   },
   created() {
     this.updatePosts()
@@ -174,6 +178,10 @@ export default {
 .like-wrapper {
   bottom: 5px;
   left: 12px;
+}
+.new-icon {
+  left: 12px;
+  top: 5px;
 }
 @media screen and (max-width: 480px) {
     .tech-posts > ul {

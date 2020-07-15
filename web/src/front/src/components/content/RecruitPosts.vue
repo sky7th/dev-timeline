@@ -11,6 +11,7 @@
           companyUrlTypeName, 
           title,
           closingDate,
+          sortDate,
           contentUrl,
           like,
           likeCount }) in posts"
@@ -32,6 +33,7 @@
           <!-- <div>{{ companyUrlTypeName }}</div> -->
           <div class="title">{{ title }}</div>
         </a>
+        <NewIcon :date="sortDate" :period="5"/>
       </li>
     </ul>
     <infinite-loading class="infinite-message" @infinite="handlerInfinite" ref="infiniteLoading" spinner="waveDots">
@@ -49,6 +51,7 @@
 import CompanyList from '@/components/company/CompanyList';
 import CountBar from '@/components/search/CountBar';
 import ScrollUp from '@/components/common/ScrollUp'
+import NewIcon from '@/components/common/NewIcon'
 import Like from '@/components/like/Like'
 import { mapGetters, mapActions } from "vuex";
 import InfiniteLoading from 'vue-infinite-loading';
@@ -59,7 +62,8 @@ export default {
     InfiniteLoading,
     CountBar,
     ScrollUp,
-    Like
+    Like,
+    NewIcon
   },
   watch: {
     posts() {

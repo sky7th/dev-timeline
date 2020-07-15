@@ -42,6 +42,7 @@
             <span class="like-count">{{ commentCount }}</span>
           </div>
         </div>
+        <NewIcon :date="createdDate" :period="2" class="new-icon"/>
       </li>
     </ul>
     <infinite-loading class="infinite-message" @infinite="handlerInfinite" ref="infiniteLoading"  spinner="waveDots">
@@ -60,6 +61,7 @@ import CountBar from '@/components/search/CountBar';
 import FixedTagBar from '@/components/search/FixedTagBar';
 import ScrollUp from '@/components/common/ScrollUp'
 import Like from '@/components/like/Like'
+import NewIcon from '@/components/common/NewIcon'
 import { mapGetters, mapActions } from "vuex";
 import InfiniteLoading from 'vue-infinite-loading';
 import Constant from '@/constant/Constant';
@@ -77,7 +79,8 @@ export default {
     CountBar,
     FixedTagBar,
     ScrollUp,
-    Like
+    Like,
+    NewIcon
   },
   computed: {
     ...mapGetters(['posts', 'currentUser'])
@@ -229,7 +232,7 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  width: 250px;
+  width: 88%;
 }
 .tag {
   font-size: 12px;
@@ -275,6 +278,11 @@ export default {
 .like-wrapper {
   bottom: 10px;
   left: 15px;
+}
+.new-icon {
+  right: 24px;
+  top: 10px;
+  text-align: end;
 }
 @media screen and (max-width: 480px) {
     .link-posts > ul {
