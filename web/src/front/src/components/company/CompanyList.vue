@@ -12,7 +12,7 @@
         <input type="checkbox" :id="companyType" :value="companyType" 
           v-model="checkedCompanies"
         >
-        <label :style="{ background: `url(${logoUrl}) left/38px no-repeat`, 'background-position': 'center' }" :for="companyType">{{ companyName }}</label>
+        <label class="company-logo" :style="{ 'background-image': `url(${logoUrl})`}" :for="companyType">{{ companyName }}</label>
       </li>
     </ul>
   </div>
@@ -80,7 +80,9 @@ export default {
 .company-list li {
   padding: 8px 7px 5px 7px;
   display: inline-block;
-  margin-right: 13px;
+}
+.company-list li + li {
+  margin-left: 13px;
 }
 ::-webkit-scrollbar { width: 3.2px; } /* 스크롤 바 */
 ::-webkit-scrollbar-track { background-color:#f7f7f7; } /* 스크롤 바 밑의 배경 */
@@ -100,16 +102,27 @@ input[type=checkbox] + label {
     background-size: 38px;
     color: #4E5763;
     font-weight: bold;
-    background-position: inherit;
+    background-position: center;
+    background-repeat: no-repeat;
     font-size: 14px;
-}
-.naver {
-  background: url('https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQS1ZRzTCwb49Z6sdxtxLM0jJ1SoMDtlBQ_DBHlghI2o6e_9Mov&usqp=CAU') left/22px no-repeat; 
-}
-.kakao {
-  background: url('https://i.pinimg.com/564x/86/39/85/8639859040131440e24166acfe00dcb0.jpg') left/22px no-repeat; 
 }
 .check {
   background-color: #dadada;
+}
+@media screen and (max-width: 480px) {
+  .company-list {
+    margin: 0px 10px 13px 10px;
+  }
+  .company-list ul {
+    height: 72px;
+  }
+  .company-list li + li {
+    margin-left: 5px;
+  }
+  input[type=checkbox] + label { 
+    background-size: 32px;
+    font-size: 12px;
+    padding-top: 56px;
+  }
 }
 </style>
