@@ -21,11 +21,8 @@
         :key="id"
       >
         <Like :isLike="like" :postId="id" :likeCount="likeCount" class="like-wrapper"/>
-        <a :href="contentUrl" style="display: flex;" target="_blank">
-          <div class="left">
-            <img class="logo" :src="companyLogoUrl" alt="">
-            <!-- <div class="company">{{ companyTypeName }}</div> -->
-          </div>
+        <a :href="contentUrl" target="_blank">
+          <img class="logo" :src="companyLogoUrl" alt="">
           <div class="middle">
             <div class="title">{{ title }}</div>
             <div class="middle-bottom">
@@ -34,12 +31,9 @@
               <div class="date">{{ timeForToday(date) }}</div>
             </div>
           </div>
-          <div v-if="thumbnailUrl" class="right">
+          <!-- <div v-if="thumbnailUrl" class="right">
             <img class="thumbnail" v-if="thumbnailUrl" :src="thumbnailUrl" alt="">
-            <!-- <div class="thumbnail-no" v-else>
-              <div>미리보기 이미지가 <br/>없어용.. ㅠ.ㅠ</div>
-            </div> -->
-          </div>
+          </div> -->
           
           <!-- <div>{{ companyUrlTypeName }}</div> -->
         </a>
@@ -86,18 +80,17 @@ export default {
 
 <style scoped>
 .tech-posts ul {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  text-align: center;
   padding: 15px 10px;
 }
 .tech-posts ul li {
+  display: inline-flex;
   position: relative;
   background-color: white;
-  padding: 7px 17px;
-  margin-bottom: 15px;
+  padding: 7px 17px 7px;
+  margin: 6px;
   border-radius: 10px;
-  width: 100%;
+  width: 350px;
   max-width: 550px;
   -webkit-animation: fadeIn 0.3s ease-in-out;
   animation: fadeIn 0.3s ease-in-out;
@@ -106,10 +99,19 @@ export default {
 .tech-posts ul li:hover {
   box-shadow: 0 1px 6px rgba(27,31,35,.3);
 }
+.tech-posts ul li a {
+  padding-left: 50px;
+  display: flex;
+  width: 100%;
+}
 .logo {
-  height: 50px;
-  width: 50px;
+  position: absolute;
+  left: -9px;
+  top: -6px;
+  height: 45px;
+  width: auto;
   margin-bottom: 5px;
+  border-radius: 15px;
 }
 .company {
   text-align: center;
@@ -120,16 +122,16 @@ export default {
   justify-content: center;
   flex-direction: column;
   display: flex;
-  width: 100px;
+  width: 60px;
   align-items: center;
-  margin-right: 20px;
+  margin-right: 10px;
 }
 .middle {
   flex: 3;
   justify-content: center;
   flex-direction: column;
   display: flex;
-  padding-right: 26px;
+  padding-right: 8px;
 }
 .title {
   padding-top: 13px;
@@ -193,7 +195,7 @@ export default {
     .tech-posts > ul > li {
         width: 100%;
         margin: 0 0 10px 0;
-        padding: 7px 10px;
+        padding: 7px 10px 7px;
     }
     .left {
         width: auto;
