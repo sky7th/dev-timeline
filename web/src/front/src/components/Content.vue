@@ -58,8 +58,9 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['onModalState', 'updatePostState']),
+    ...mapActions(['onModalState', 'updatePostState', 'updateModalContent']),
     handlerOnModalState() {
+      this.updateModalContent('LINK')
       this.updatePostState(Constant.CREATE);
       this.onModalState();
     }
