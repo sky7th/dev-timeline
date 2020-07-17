@@ -67,7 +67,7 @@ export default {
 <style scoped>
 .company-list {
   margin: 0px 30px 13px 30px;
-  padding: 14px 0 0px 0;
+  padding: 22px 0 0px 0;
   border-bottom: 2px solid #dadada;
   animation: fadeIn 0.3s ease-in-out;
 }
@@ -114,7 +114,7 @@ input[type=checkbox] + label {
     margin: 0px 10px 13px 10px;
   }
   .company-list ul {
-    height: 72px;
+    height: 75px;
   }
   .company-list li + li {
     margin-left: 5px;

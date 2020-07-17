@@ -79,4 +79,10 @@ export default {
 .sort-button:hover {
   background-color: #eee;
 }
+@media screen and (max-width: 480px) {
+  .sort-button-wrapper {
+    text-align: right;
+    padding-right: 18px;
+  }
+}
 </style>

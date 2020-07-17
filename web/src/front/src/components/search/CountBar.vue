@@ -33,7 +33,7 @@ export default {
 <style scoped>
 .count-bar {
   text-align: center;
-  font-size: 14px;
+  font-size: 13px;
   -webkit-animation: fadeIn 1s ease-in-out;
   animation: twinkle 1s ease-in-out;
   animation-iteration-count: 9999;
