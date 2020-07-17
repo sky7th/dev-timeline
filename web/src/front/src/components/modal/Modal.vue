@@ -4,10 +4,16 @@
     </div>
     <div class="modal" :class="{ 'close-in-delay': isClickCloseBtn }">
       <div class="close" @click="closePopupInDelay">x</div>
-
-      <div v-if="selectedMenu==='link-posts'" class="wrapper">
+      
+      <div v-if="modalContent==='LINK'" class="wrapper">
         <LinkPostViewModal v-if="isStateRead" @closePopup="closePopupInDelay"/>
         <LinkPostWriteModal v-else @closePopup="closePopupInDelay"/>
+      </div>
+      <div v-if="modalContent==='LOGIN'" class="wrapper">
+        <Login/>
+      </div>
+      <div v-if="modalContent==='SIGNUP'" class="wrapper">
+        <SignUp/>
       </div>
       
     </div>
@@ -17,13 +23,17 @@
 <script>
 import LinkPostWriteModal from '@/components/modal/LinkPostWriteModal'
 import LinkPostViewModal from '@/components/modal/LinkPostViewModal'
+import Login from '@/components/user/Login'
+import SignUp from '@/components/user/SignUp'
 import { mapGetters, mapActions } from "vuex";
 import Constant from '@/constant/Constant'
 
 export default {
   components: {
     LinkPostWriteModal,
-    LinkPostViewModal
+    LinkPostViewModal,
+    Login,
+    SignUp
   },
   data() {
     return {
@@ -41,18 +51,19 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['selectedMenu', 'postState']),
+    ...mapGetters(['selectedMenu', 'postState', 'modalContent']),
     isStateRead() {
       return this.postState===Constant.READ;
     }
   },
   methods: {
-    ...mapActions(['offModalState', 'updatePostState', 'updatePost']),
+    ...mapActions(['offModalState', 'updatePostState', 'updatePost', 'updateModalContent']),
     closePopupInDelay() {
       this.isClickCloseBtn = true;
       document.getElementsByTagName('body')[0].style['overflow-y'] = 'scroll';
       setTimeout(() => {
         this.offModalState();
+        this.updateModalContent('');
         this.updatePostState(Constant.READ);
         this.updatePost({});
       }, 500);

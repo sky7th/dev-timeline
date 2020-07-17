@@ -30,7 +30,8 @@ export default {
   },
   methods: {
     ...mapActions(['setToken', 'setUserDetail', 'updateIsClickedClickMenu', 
-      'updateClickMenuList', 'updateClickMenuLocation', 'updateIsClickedMyLike', 'resetAll']),
+      'updateClickMenuList', 'updateClickMenuLocation', 'updateIsClickedMyLike', 'resetAll',
+      'onModalState', 'updateModalContent']),
     logout() {
       this.setToken(null)
       this.setUserDetail(null)
@@ -39,7 +40,9 @@ export default {
       notification.success('로그아웃 처리 되었습니다.')
     },
     login() {
-      this.$router.replace('/login');
+      // this.$router.replace('/login');
+      this.updateModalContent('LOGIN');
+      this.onModalState();
     },
     onClick(event) {
       event.stopPropagation();

@@ -2,7 +2,7 @@
   <div class="login-container">
     <notifications group="notify" position="bottom center"/>
       <div class="login-content">
-          <h1 class="login-title">L O G I N</h1>
+          <h1 class="login-title">dev-time</h1>
           <form @submit.prevent="login">
               <input type="email" name="email"
                       class="form" placeholder="이메일"
@@ -12,27 +12,28 @@
                       v-model="user.password"/>
               <button type="submit" class="btn-login">로그인</button>
           </form>
-          <span class="signup-link"><router-link to="/signup">회원가입</router-link></span>
+          <span class="signup-link" @click="updateModalContent('SIGNUP')">회원가입</span>
           <div class="middle">
-              소셜 계정으로 로그인 하시겠어요 ?
+              <!-- 소셜 계정으로 로그인 하시겠어요 ? -->
           </div>
           <div class="social-login">
-              <a class="social-btn google" :href="getOauthUrl('google')">
+              <!-- <a class="social-btn google" :href="getOauthUrl('google')">
                   <img src="../../assets/images/google-logo.png" alt="Google" /> 
                   <div>Google 로그인</div>
-              </a>
+              </a> -->
               <a class="social-btn github" :href="getOauthUrl('github')">
                     <img src="../../assets/images/github-logo.png" alt="Github" /> 
                     <div>Github 로그인</div>
               </a>
           </div>
-          <span class="main-link"><router-link to="/">홈으로 이동</router-link></span>
+          <!-- <span class="main-link"><router-link to="/">홈으로 이동</router-link></span> -->
       </div>
   </div>
 </template>
 
 <script>
 import notification from '@/libs/notification';
+import { mapActions } from "vuex";
 
 export default {
   name: "login",
@@ -43,6 +44,7 @@ export default {
     }
   }),
   methods: {
+    ...mapActions(['updateModalContent']),
     async login() {
       if (this.user.email === '') {
         notification.warn('이메일을 입력해주세요.')
@@ -57,7 +59,7 @@ export default {
         notification.success('로그인 성공', () => {
           this.$store.commit('setToken', response.data.accessToken);
           this.$emit('getUserDetails');
-          this.$router.replace('/')
+          location.reload();
         });
       })
       .catch(err => {
@@ -114,8 +116,7 @@ export default {
   border-radius: 3px;
   box-shadow: 0 1px 2px 0 rgba(9,30,66,0.25), 0 0 1px 0 rgba(9,30,66,0.31);
   width: 500px;
-  margin-top: 30px;
-  padding: 55px 35px;
+  padding: 35px 35px;
 }
 .login-content form {
   display: flex;
@@ -147,7 +148,7 @@ export default {
 }
 .middle {
   font-size: 14px;
-  margin: 50px 0 10px 0;
+  margin: 30px 0 10px 0;
   color: #5a5a5a;
 }
 .form {
@@ -183,11 +184,11 @@ export default {
   cursor: pointer;
 }
 .login-title {
-    font-size: 1.5em;
-    font-weight: 500;
-    margin-top: 0;
-    margin-bottom: 45px;
-    color: rgba(0, 0, 0, 0.65);
+  font-size: 30px;
+  font-weight: bold;
+  color: #4E5763;
+  margin-top: 0;
+  margin-bottom: 45px;
 }
 .main-link {
   margin-top: 30px;

@@ -2,7 +2,7 @@
     <div class="signup-container">
       <notifications group="notify" position="bottom center"/>
         <div class="signup-content">
-            <h1 class="signup-title">S i g n  U p</h1>
+            <h1 class="signup-title">dev-time</h1>
             <form @submit.prevent="signup">
                 <input type="text" name="name"
                         class="form" placeholder="이름"
@@ -15,13 +15,14 @@
                         v-model="user.password"/>
                 <button type="submit" class="btn-signup">회원가입</button>
             </form>
-            <span class="signup-link"><router-link to="/login">로그인하러 가기</router-link></span>
+            <span class="signup-link" @click="updateModalContent('LOGIN')">로그인하러 가기</span>
         </div>
     </div>
 </template>
 
 <script>
 import notification from '@/libs/notification';
+import { mapActions } from "vuex";
 
 export default {
   name: "signup",
@@ -33,6 +34,7 @@ export default {
     }
   }),
   methods: {
+    ...mapActions(['updateModalContent']),
     async signup() {
       if (this.user.name === '') {
         notification.warn('이름을 입력해주세요.')
@@ -49,7 +51,7 @@ export default {
       this.axios.post('/auth/signup', this.user)
       .then(() => {
         notification.success('회원가입을 완료했습니다.', () => {
-          this.$router.push('/login');
+          this.updateModalContent('LOGIN')
         });
       })
       .catch(err => {
@@ -74,8 +76,7 @@ export default {
   border-radius: 3px;
   box-shadow: 0 1px 2px 0 rgba(9,30,66,0.25), 0 0 1px 0 rgba(9,30,66,0.31);
   width: 500px;
-  margin-top: 30px;
-  padding: 55px 35px;
+  padding: 35px 35px;
 }
 .signup-content form {
   display: flex;
@@ -116,10 +117,10 @@ export default {
   cursor: pointer;
 }
 .signup-title {
-    font-size: 1.5em;
-    font-weight: 500;
-    margin-top: 0;
-    margin-bottom: 45px;
-    color: rgba(0, 0, 0, 0.65);
+  font-size: 30px;
+  font-weight: bold;
+  color: #4E5763;
+  margin-top: 0;
+  margin-bottom: 45px;
 }
 </style>

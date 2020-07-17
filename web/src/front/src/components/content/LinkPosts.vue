@@ -96,7 +96,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['insertPosts', 'onModalState', 'resetOffset', 'updatePosts', 'updatePostState', 'updatePost']),
+    ...mapActions(['insertPosts', 'onModalState', 'resetOffset', 'updatePosts', 'updatePostState', 'updatePost', 'updateModalContent']),
     handlerInfinite($state) {
       this.insertPosts({ infiniteState: $state });
     },
@@ -104,6 +104,7 @@ export default {
       this.axios.get(`${process.env.VUE_APP_API}/api/v1/link-posts/${postId}`)
         .then(response => {
           this.updatePost(response.data.data)
+          this.updateModalContent('LINK')
           this.updatePostState(Constant.READ);
           this.onModalState();
         }).catch(() => {
