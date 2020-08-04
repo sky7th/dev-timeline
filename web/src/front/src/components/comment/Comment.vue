@@ -5,6 +5,7 @@
             <div class="header">
                 <span class="user-name">{{ comment.user.name }} </span>
                 <span>{{ timeForToday(comment.createdDate) }}</span>
+                <span><NewIcon :date="comment.createdDate" :period="1" class="new-icon"/></span>
                 <span v-if="isAuthorized" >
                     <span class="between">|</span>
                     <span @click="remove" class="remove-btn">삭제</span>
@@ -19,8 +20,12 @@
 import { mapGetters } from "vuex";
 import notification from '../../libs/notification';
 import { timeForToday } from '@/utils/time';
+import NewIcon from '../common/NewIcon'
 
 export default {
+    components: {
+        NewIcon,
+    },
     data: () => ({
         content: '',
         isAuthorized: false
@@ -103,4 +108,9 @@ export default {
     cursor: pointer;
     text-decoration: underline;
 }
+.new-icon {
+  position: unset;
+  vertical-align: top;
+  margin-left: 8px;
+} 
 </style>

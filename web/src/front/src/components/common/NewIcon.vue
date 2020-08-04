@@ -1,5 +1,5 @@
 <template>
-  <div v-if="isNew()" class="new-icon">new</div>
+  <span v-if="isNew()" class="new-icon">new</span>
 </template>
 
 <script>

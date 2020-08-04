@@ -3,43 +3,45 @@
     <CompanyList/>
     <CountBar/>
     <SortButton/>
-    <ul>
-      <li
-        v-for="({
-          id, 
-          companyLogoUrl,
-          companyTypeName, 
-          companyUrlTypeName, 
-          title,
-          author,
-          date,
-          sortDate,
-          thumbnailUrl,
-          contentUrl,
-          like,
-          likeCount }) in posts"
-        :key="id"
-      >
-        <Like :isLike="like" :postId="id" :likeCount="likeCount" class="like-wrapper"/>
-        <a :href="contentUrl" target="_blank">
-          <img class="logo" :src="companyLogoUrl" alt="">
-          <div class="middle">
-            <div class="title">{{ title }}</div>
-            <div class="middle-bottom">
-              <div class="author">{{ author }}</div>
-              <div class="between" v-if="author">|</div>
-              <div class="date">{{ timeForToday(date) }}</div>
+    <div class="content-container">
+      <ul>
+        <li
+          v-for="({
+            id, 
+            companyLogoUrl,
+            companyTypeName, 
+            companyUrlTypeName, 
+            title,
+            author,
+            date,
+            sortDate,
+            thumbnailUrl,
+            contentUrl,
+            like,
+            likeCount }) in posts"
+          :key="id"
+        >
+          <Like :isLike="like" :postId="id" :likeCount="likeCount" class="like-wrapper"/>
+          <a :href="contentUrl" target="_blank">
+            <img class="logo" :src="companyLogoUrl" alt="">
+            <div class="middle">
+              <div class="title">{{ title }}</div>
+              <div class="middle-bottom">
+                <div class="author">{{ author }}</div>
+                <div class="between" v-if="author">|</div>
+                <div class="date">{{ timeForToday(date) }}</div>
+              </div>
             </div>
-          </div>
-          <!-- <div v-if="thumbnailUrl" class="right">
-            <img class="thumbnail" v-if="thumbnailUrl" :src="thumbnailUrl" alt="">
-          </div> -->
-          
-          <!-- <div>{{ companyUrlTypeName }}</div> -->
-        </a>
-        <NewIcon :date="sortDate" :period="4" class="new-icon"/>
-      </li>
-    </ul>
+            <!-- <div v-if="thumbnailUrl" class="right">
+              <img class="thumbnail" v-if="thumbnailUrl" :src="thumbnailUrl" alt="">
+            </div> -->
+            
+            <!-- <div>{{ companyUrlTypeName }}</div> -->
+          </a>
+          <NewIcon :date="sortDate" :period="4" class="new-icon"/>
+        </li>
+      </ul>
+    </div>
     <PagingBar v-if="postCounts > 0"/>
   </div>
 </template>
@@ -79,16 +81,24 @@ export default {
 </script>
 
 <style scoped>
+.content-container {
+  text-align: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
 .tech-posts ul {
   text-align: center;
   padding: 15px 10px;
+  width: 900px;
 }
 .tech-posts ul li {
   display: inline-flex;
   position: relative;
   background-color: white;
   padding: 7px 17px 7px;
-  margin: 6px;
+  margin: 8px 10px;
   border-radius: 10px;
   width: 350px;
   max-width: 550px;
@@ -185,15 +195,16 @@ export default {
   left: 12px;
 }
 .new-icon {
-  left: 12px;
+  left: 43px;
   top: 5px;
+  text-align: end;
 }
 @media screen and (max-width: 480px) {
-    .tech-posts > ul {
+    .tech-posts ul {
         padding: 15px 10px;
     }
-    .tech-posts > ul > li {
-        width: 100%;
+    .tech-posts ul li {
+        width: 95%;
         margin: 0 0 10px 0;
         padding: 7px 10px 7px;
     }
