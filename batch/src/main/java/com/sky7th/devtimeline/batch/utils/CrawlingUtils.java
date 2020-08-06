@@ -33,13 +33,13 @@ public class CrawlingUtils {
 
     public static WebElement getWebElement(WebDriver driver, By by) {
         WebElement element = null;
-        WebDriverWait driverWait = new WebDriverWait(driver, 40);
+        WebDriverWait driverWait = new WebDriverWait(driver, 10);
         try {
             try {
                 driverWait.until(ExpectedConditions.visibilityOfElementLocated(by));
 
             } catch(TimeoutException e) {
-                log.error("url: {} 시간초과({} 초)", driver.getCurrentUrl(), 40);
+                log.error("url: {} 시간초과({} 초)", driver.getCurrentUrl(), 10);
                 Thread.sleep(10000);
             }
             element = driver.findElement(by);

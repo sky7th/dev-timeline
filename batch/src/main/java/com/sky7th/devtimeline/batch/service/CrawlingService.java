@@ -30,6 +30,7 @@ public class CrawlingService {
     private final WoowabrosTechCrawlingService woowabrosTechCrawlingService;
     private final LineTechCrawlingService lineTechCrawlingService;
     private final ZumTechCrawlingService zumTechCrawlingService;
+    private final NhnTechCrawlingService nhnTechCrawlingService;
 
     @Transactional(readOnly = true)
     public List<CrawlingDto> crawlingAllCompany() {
@@ -56,6 +57,7 @@ public class CrawlingService {
         crawlingServiceMap.put(CompanyType.WOOWABROS.getName()+"/"+CompanyUrlType.TECH.getName(), woowabrosTechCrawlingService);
         crawlingServiceMap.put(CompanyType.LINE.getName()+"/"+CompanyUrlType.TECH.getName(), lineTechCrawlingService);
         crawlingServiceMap.put(CompanyType.ZUM.getName()+"/"+CompanyUrlType.TECH.getName(), zumTechCrawlingService);
+        crawlingServiceMap.put(CompanyType.NHN.getName()+"/"+CompanyUrlType.TECH.getName(), nhnTechCrawlingService);
         String key = companyDto.getCompanyUrl().getCompany().getCompanyType().getName()
                 + "/" + companyDto.getCompanyUrl().getCompanyUrlType().getName();
 

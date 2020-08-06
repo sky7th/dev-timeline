@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.springframework.stereotype.Service;
@@ -39,6 +40,14 @@ public class ZumTechCrawlingService implements CompanyCrawlingService {
 
     private List<CrawlingDto> getAllCrawlingDtoUntilLastPage() {
         this.driver.get(this.companyDto.getCompanyUrl().getUrl());
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        Long height = (Long) js.executeScript("return document.body.scrollHeight");
+        Long scroll = 0L;
+        Long innerHeight = (Long) js.executeScript("return window.innerHeight");
+        while (Math.abs(scroll + innerHeight - height) > 2) {
+            js.executeScript("window.scrollBy(0, 100)");
+            scroll = (Long) js.executeScript("return window.pageYOffset");
+        }
         WebElement element = CrawlingUtils.getWebElement(this.driver, By.className("flex-grid"));
 
         return new ArrayList<>(parseWebElement(element));

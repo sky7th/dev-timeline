@@ -11,7 +11,8 @@ public enum CompanyType {
     KAKAO("카카오"),
     WOOWABROS("우아한형제들"),
     LINE("라인"),
-    ZUM("줌");
+    ZUM("줌"),
+    NHN("NHN");
 
     private final String name;
 
