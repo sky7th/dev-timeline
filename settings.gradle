@@ -10,4 +10,4 @@ include 'batch'
 include 'core'
 include 'web'
 include 'redis'
-
+include 'gateway'
