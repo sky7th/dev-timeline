@@ -1,4 +1,4 @@
-package com.sky7th.devtimeline.api.presentation.api;
+package com.sky7th.devtimeline.api.controller;
 
 import com.sky7th.devtimeline.core.domain.user.User;
 import com.sky7th.devtimeline.core.domain.user.UserRepository;

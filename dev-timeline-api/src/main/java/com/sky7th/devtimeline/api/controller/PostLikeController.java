@@ -1,4 +1,4 @@
-package com.sky7th.devtimeline.api.presentation.api;
+package com.sky7th.devtimeline.api.controller;
 
 import com.sky7th.devtimeline.api.presentation.api.dto.WebResponseDto;
 import com.sky7th.devtimeline.api.security.CurrentUser;

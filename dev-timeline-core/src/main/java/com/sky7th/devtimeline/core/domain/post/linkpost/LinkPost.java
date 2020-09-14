@@ -19,7 +19,7 @@ public class LinkPost extends BaseTimeEntity {
     private Long id;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "post_crawl_id", foreignKey = @ForeignKey(name = "fk_link_post_post"))
+    @JoinColumn(name = "post_crawl_id")
     private Post post;
 
     @OneToOne
