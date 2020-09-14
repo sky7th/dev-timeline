@@ -47,7 +47,7 @@ subprojects {
 	}
 }
 
-project(':core') {
+project(':dev-timeline-core') {
 	dependencies {
 		compile 'com.querydsl:querydsl-jpa'
 		compile 'com.querydsl:querydsl-apt'
@@ -58,9 +58,9 @@ project(':core') {
 	}
 }
 
-project(':web') {
+project(':dev-timeline-api') {
 	dependencies {
-		implementation project(':core')
+		implementation project(':dev-timeline-core')
 		implementation 'org.springframework.boot:spring-boot-starter-web'
 		implementation 'org.springframework.boot:spring-boot-starter-security'
 		implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
@@ -73,9 +73,9 @@ project(':web') {
 	}
 }
 
-project(':batch') {
+project(':dev-timeline-batch') {
 	dependencies {
-		implementation project(':core')
+		implementation project(':dev-timeline-core')
 		implementation 'org.springframework.boot:spring-boot-starter-batch'
         implementation 'org.springframework.boot:spring-boot-starter-web'
 		implementation group: 'org.jsoup', name: 'jsoup', version: '1.12.1'
@@ -87,7 +87,7 @@ project(':batch') {
 	}
 }
 
-project(':redis') {
+project(':dev-timeline-chat') {
 	dependencies {
 		compile 'org.springframework.boot:spring-boot-starter-data-redis'
 		compile group: 'it.ozimov', name: 'embedded-redis', version: '0.7.2'
@@ -97,7 +97,7 @@ project(':redis') {
 	}
 }
 
-project(':gateway') {
+project(':dev-timeline-gateway') {
 	ext {
 		set('springCloudVersion', "Hoxton.SR7")
 	}

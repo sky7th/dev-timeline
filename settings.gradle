@@ -6,8 +6,8 @@ pluginManagement {
 
 rootProject.name = 'dev-timeline'
 
-include 'batch'
-include 'core'
-include 'web'
-include 'redis'
-include 'gateway'
+include 'dev-timeline-batch'
+include 'dev-timeline-core'
+include 'dev-timeline-api'
+include 'dev-timeline-chat'
+include 'dev-timeline-gateway'
