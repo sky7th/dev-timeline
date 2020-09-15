@@ -4,7 +4,8 @@ on:
   push:
     branches: [ master ]
     paths:
-    - ['dev-timeline-api/**', 'dev-timeline-core/**']
+      - 'dev-timeline-api/**'
+      - 'dev-timeline-core/**'
     
 env:
   PROJECT_NAME: dev-timeline-api
