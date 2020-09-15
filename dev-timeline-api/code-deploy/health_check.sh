@@ -1,11 +1,11 @@
 #!/bin/bash
 
 # Crawl current connected port of WAS
-INC_PATH='/home/github-actions/dev_timeline_api_url.inc'
-
 TARGET_URL='http://127.0.0.1'
 A_PORT=8081
 B_PORT=8082
+
+INC_PATH='/home/github-actions/dev_timeline_api_url.inc'
 
 CURRENT_PORT=$(cat ${INC_PATH} | grep -Po '[0-9]+' | tail -1)
 TARGET_PORT=0

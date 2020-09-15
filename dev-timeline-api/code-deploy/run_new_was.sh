@@ -1,12 +1,14 @@
 #!/bin/bash
+PROFILE='prod'
+TARGET_URL='http://127.0.0.1'
+A_PORT=8081
+B_PORT=8082
 
 ORIGIN_JAR_PATH='/home/github-actions/dev-timeline-api/deploy/*.jar'
 ORIGIN_PATH='/home/github-actions/dev-timeline-api'
 INC_PATH='/home/github-actions/dev_timeline_api_url.inc'
 
-TARGET_URL='http://127.0.0.1'
-A_PORT=8081
-B_PORT=8082
+
 
 CURRENT_PORT=$(cat ${INC_PATH} | grep -Po '[0-9]+' | tail -1)
 TARGET_PORT=0
@@ -28,6 +30,6 @@ if [ ! -z ${TARGET_PID} ]; then
   sudo kill ${TARGET_PID}
 fi
 
-nohup java -jar -Dserver.port=${TARGET_PORT} ${ORIGIN_JAR_PATH} > /home/github-actions/nohup.out 2>&1 &
+nohup java -jar -Dserver.port=${TARGET_PORT} -Dspring.profiles.active=${PROFILE} ${ORIGIN_JAR_PATH} > ${ORIGIN_PATH}/nohup.out 2>&1 &
 echo "> Now new WAS runs at ${TARGET_PORT}."
 exit 0

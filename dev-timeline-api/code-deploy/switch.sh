@@ -1,13 +1,13 @@
 #!/bin/bash
 
 # Crawl current connected port of WAS
-
-ORIGIN_JAR_PATH='/home/github-actions/dev-timeline-api/deploy/*.jar'
 TARGET_URL='http://127.0.0.1'
-INC_NAME='dev_timeline_api_url'
-INC_PATH='/home/github-actions/dev_timeline_api_url.inc'
 A_PORT=8081
 B_PORT=8082
+
+ORIGIN_JAR_PATH='/home/github-actions/dev-timeline-api/deploy/*.jar'
+INC_NAME='dev_timeline_api_url'
+INC_PATH='/home/github-actions/dev_timeline_api_url.inc'
 
 CURRENT_PORT=$(cat ${INC_PATH}  | grep -Po '[0-9]+' | tail -1)
 TARGET_PORT=0
