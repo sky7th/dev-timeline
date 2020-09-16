@@ -2,11 +2,11 @@ package com.sky7th.devtimeline.batch.service;
 
 import com.sky7th.devtimeline.batch.dto.CrawlingDto;
 import com.sky7th.devtimeline.batch.service.crawling.*;
-import com.sky7th.devtimeline.core.domain.company.CompanyType;
-import com.sky7th.devtimeline.core.domain.companyUrl.CompanyUrl;
-import com.sky7th.devtimeline.core.domain.companyUrl.CompanyUrlRepository;
+import com.sky7th.devtimeline.core.domain.company.domain.CompanyType;
+import com.sky7th.devtimeline.core.domain.company.domain.CompanyUrl;
+import com.sky7th.devtimeline.core.domain.company.domain.CompanyUrlRepository;
 import com.sky7th.devtimeline.batch.dto.CompanyDto;
-import com.sky7th.devtimeline.core.domain.companyUrl.CompanyUrlType;
+import com.sky7th.devtimeline.core.domain.company.domain.CompanyUrlType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

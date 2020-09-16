@@ -1,6 +1,6 @@
-package com.sky7th.devtimeline.api.repository.comment;
+package com.sky7th.devtimeline.api.comment.repository;
 
-import com.sky7th.devtimeline.core.domain.comment.Comment;
+import com.sky7th.devtimeline.core.domain.comment.domain.Comment;
 
 import java.util.List;
 

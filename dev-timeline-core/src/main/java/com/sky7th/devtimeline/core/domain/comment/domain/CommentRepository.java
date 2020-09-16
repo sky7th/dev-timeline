@@ -1,4 +1,4 @@
-package com.sky7th.devtimeline.core.domain.comment;
+package com.sky7th.devtimeline.core.domain.comment.domain;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

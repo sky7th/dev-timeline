@@ -1,13 +1,12 @@
-package com.sky7th.devtimeline.api.repository.comment;
+package com.sky7th.devtimeline.api.comment.repository;
+
+import static com.sky7th.devtimeline.core.domain.comment.domain.QComment.comment;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.sky7th.devtimeline.core.domain.comment.Comment;
-import lombok.RequiredArgsConstructor;
-
+import com.sky7th.devtimeline.core.domain.comment.domain.Comment;
 import java.util.List;
-
-import static com.sky7th.devtimeline.core.domain.comment.QComment.comment;
+import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class CommentWebRepositoryImpl implements CommentWebRepositoryCustom {

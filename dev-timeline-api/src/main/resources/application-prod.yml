@@ -14,10 +14,10 @@ spring:
 #      transaction-isolation: TRANSACTION_READ_UNCOMMITTED
 #      pool-name: pool-timeline
   jpa:
-    database-platform: org.hibernate.dialect.MySQL5Dialect
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     properties.hibernate:
       format_sql: true
-      dialect: org.hibernate.dialect.MySQL5Dialect
+      dialect: org.hibernate.dialect.MySQL5InnoDBDialect
       default_batch_fetch_size: 1000
     show-sql: true
     hibernate:
