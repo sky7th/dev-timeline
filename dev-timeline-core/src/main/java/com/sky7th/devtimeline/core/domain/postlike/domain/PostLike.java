@@ -1,10 +1,8 @@
-package com.sky7th.devtimeline.core.domain.like;
+package com.sky7th.devtimeline.core.domain.postlike.domain;
 
 import com.sky7th.devtimeline.core.domain.common.BaseTimeEntity;
-import com.sky7th.devtimeline.core.domain.post.Post;
-import com.sky7th.devtimeline.core.domain.post.PostType;
-import com.sky7th.devtimeline.core.domain.post.linkpost.LinkPost;
-import com.sky7th.devtimeline.core.domain.user.User;
+import com.sky7th.devtimeline.core.domain.post.domain.Post;
+import com.sky7th.devtimeline.core.domain.user.domain.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,9 +32,13 @@ public class PostLike extends BaseTimeEntity {
     private User user;
 
     @Builder
-    public PostLike(Post post, User user) {
-        this.post = post;
-        this.user = user;
+    public PostLike(Long postId, Long userId) {
+        this.post = new Post(postId);
+        this.user = new User(userId);
+    }
+
+    public boolean isAuthor(Long userId) {
+        return this.user.getId().equals(userId);
     }
 
     public void setUser(User user) {

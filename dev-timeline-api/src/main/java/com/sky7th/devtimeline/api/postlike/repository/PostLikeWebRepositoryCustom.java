@@ -1,4 +1,4 @@
-package com.sky7th.devtimeline.api.repository.Like;
+package com.sky7th.devtimeline.api.postlike.repository;
 
 public interface PostLikeWebRepositoryCustom {
 
