@@ -1,14 +1,19 @@
-package com.sky7th.devtimeline.core.domain.post.recruitpost;
+package com.sky7th.devtimeline.core.domain.recruitpost.domain;
 
 import com.sky7th.devtimeline.core.domain.common.BaseTimeEntity;
-import com.sky7th.devtimeline.core.domain.companyUrl.CompanyUrl;
-import com.sky7th.devtimeline.core.domain.post.Post;
+import com.sky7th.devtimeline.core.domain.company.domain.Company;
+import com.sky7th.devtimeline.core.domain.company.domain.CompanyUrl;
+import java.time.LocalDateTime;
+import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor
@@ -41,6 +46,10 @@ public class RecruitPost extends BaseTimeEntity {
         this.closingDate = closingDate;
         this.contentUrl = contentUrl;
         this.sortDate = sortDate;
+    }
+
+    public Company getCompany() {
+        return this.companyUrl.getCompany();
     }
 
     public void setCompanyUrl(CompanyUrl companyUrl) {

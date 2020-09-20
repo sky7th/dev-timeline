@@ -1,15 +1,13 @@
-package com.sky7th.devtimeline.api.service.dto;
+package com.sky7th.devtimeline.core.domain.recruitpost.dto;
 
-import com.sky7th.devtimeline.core.domain.post.recruitpost.RecruitPost;
+import com.sky7th.devtimeline.core.domain.recruitpost.domain.RecruitPost;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class RecruitPostItem {
 
     private RecruitPost recruitPost;

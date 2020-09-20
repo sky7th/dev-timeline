@@ -1,4 +1,8 @@
-package com.sky7th.devtimeline.api.repository.recruitPost;
+package com.sky7th.devtimeline.api.recruitpost.repository;
+
+import static com.sky7th.devtimeline.core.domain.post.domain.QPost.post;
+import static com.sky7th.devtimeline.core.domain.postlike.domain.QPostLike.postLike;
+import static com.sky7th.devtimeline.core.domain.recruitpost.domain.QRecruitPost.recruitPost;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.ExpressionUtils;
@@ -9,20 +13,14 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.sky7th.devtimeline.core.domain.company.CompanyType;
-import com.sky7th.devtimeline.api.security.UserPrincipal;
-import com.sky7th.devtimeline.api.service.dto.PostSearchForm;
-import com.sky7th.devtimeline.api.service.dto.RecruitPostItem;
-import com.sky7th.devtimeline.api.service.dto.SortOrderType;
+import com.sky7th.devtimeline.core.domain.company.domain.CompanyType;
+import com.sky7th.devtimeline.core.domain.post.dto.PostSearchForm;
+import com.sky7th.devtimeline.core.domain.post.dto.SortOrderType;
+import com.sky7th.devtimeline.core.domain.recruitpost.dto.RecruitPostItem;
+import com.sky7th.devtimeline.core.domain.user.dto.UserContext;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.util.StringUtils;
-
-import java.util.List;
-
-import static com.sky7th.devtimeline.core.domain.like.QPostLike.postLike;
-import static com.sky7th.devtimeline.core.domain.post.linkpost.QLinkPost.linkPost;
-import static com.sky7th.devtimeline.core.domain.post.recruitpost.QRecruitPost.recruitPost;
-import static com.sky7th.devtimeline.core.domain.post.QPost.post;
 
 @RequiredArgsConstructor
 public class RecruitPostWebRepositoryImpl implements RecruitPostWebRepositoryCustom {
@@ -32,8 +30,8 @@ public class RecruitPostWebRepositoryImpl implements RecruitPostWebRepositoryCus
     private NumberPath<Long> likeCount = Expressions.numberPath(Long.class, "likeCount");
 
     @Override
-    public List<RecruitPostItem> findAllWithLikeCountAndIsLikeBySearchForm(PostSearchForm postSearchForm, UserPrincipal userPrincipal) {
-        BooleanExpression likedExpression = getLikedExpression(userPrincipal);
+    public List<RecruitPostItem> findAllWithLikeCountAndIsLikeBySearchForm(PostSearchForm postSearchForm, UserContext userContext) {
+        BooleanExpression likedExpression = getLikedExpression(userContext);
         return queryFactory
                 .select(Projections.fields(RecruitPostItem.class, recruitPost,
                         ExpressionUtils.as(post.id, "postId"),
@@ -48,7 +46,6 @@ public class RecruitPostWebRepositoryImpl implements RecruitPostWebRepositoryCus
                 ))
                 .from(recruitPost)
                 .leftJoin(post).on(post.crawlId.eq(recruitPost.postCrawlId))
-                .leftJoin(recruitPost.companyUrl).fetchJoin()
                 .where(containsTags(postSearchForm.getTags()),
                         inCompany(postSearchForm.getCompanies()),
                         liked(postSearchForm.isLiked(), likedExpression))
@@ -69,8 +66,8 @@ public class RecruitPostWebRepositoryImpl implements RecruitPostWebRepositoryCus
     }
 
     @Override
-    public long countBySearchForm(PostSearchForm postSearchForm, UserPrincipal userPrincipal) {
-        BooleanExpression likedExpression = getLikedExpression(userPrincipal);
+    public long countBySearchForm(PostSearchForm postSearchForm, UserContext userContext) {
+        BooleanExpression likedExpression = getLikedExpression(userContext);
         return queryFactory
                 .selectFrom(recruitPost)
                 .leftJoin(post).on(post.crawlId.eq(recruitPost.postCrawlId))
@@ -106,13 +103,13 @@ public class RecruitPostWebRepositoryImpl implements RecruitPostWebRepositoryCus
         return likedExpression;
     }
 
-    private BooleanExpression getLikedExpression(UserPrincipal userPrincipal) {
-        if (userPrincipal == null) {
+    private BooleanExpression getLikedExpression(UserContext userContext) {
+        if (userContext.getId() == null) {
             return Expressions.asBoolean(true).isFalse();
         }
         return JPAExpressions.select(postLike)
                 .from(postLike)
-                .where(postLike.user.id.eq(userPrincipal.getId())
+                .where(postLike.user.id.eq(userContext.getId())
                         .and(postLike.post.id.eq(post.id)))
                 .exists();
     }
