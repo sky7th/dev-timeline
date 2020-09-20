@@ -1,6 +1,6 @@
 package com.sky7th.devtimeline.core.domain.comment.dto;
 
-import static com.sky7th.devtimeline.core.domain.utils.LocalDateTimeUtils.toStringDate;
+import static com.sky7th.devtimeline.core.utils.LocalDateTimeUtils.toStringDate;
 
 import com.sky7th.devtimeline.core.domain.comment.domain.Comment;
 import com.sky7th.devtimeline.core.domain.user.dto.UserResponseDto;

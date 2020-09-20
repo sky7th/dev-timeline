@@ -1,7 +1,7 @@
 package com.sky7th.devtimeline.core.domain.comment.domain;
 
 import com.sky7th.devtimeline.core.domain.common.BaseTimeEntity;
-import com.sky7th.devtimeline.core.domain.post.Post;
+import com.sky7th.devtimeline.core.domain.post.domain.Post;
 import com.sky7th.devtimeline.core.domain.user.domain.User;
 import javax.persistence.Column;
 import javax.persistence.Entity;
