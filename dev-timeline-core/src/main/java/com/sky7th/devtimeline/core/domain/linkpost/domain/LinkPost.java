@@ -1,8 +1,8 @@
-package com.sky7th.devtimeline.core.domain.post.linkpost;
+package com.sky7th.devtimeline.core.domain.linkpost.domain;
 
 import com.sky7th.devtimeline.core.domain.common.BaseTimeEntity;
-import com.sky7th.devtimeline.core.domain.post.Post;
-import com.sky7th.devtimeline.core.domain.user.User;
+import com.sky7th.devtimeline.core.domain.post.domain.Post;
+import com.sky7th.devtimeline.core.domain.user.domain.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,7 +19,7 @@ public class LinkPost extends BaseTimeEntity {
     private Long id;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "post_crawl_id")
+    @JoinColumn(name = "post_id")
     private Post post;
 
     @OneToOne
@@ -58,4 +58,11 @@ public class LinkPost extends BaseTimeEntity {
         this.linkUrl = linkUrl;
     }
 
+    public boolean isAuthor(Long userId) {
+        return this.user.getId().equals(userId);
+    }
+
+    public Long getPostId() {
+        return this.post.getId();
+    }
 }

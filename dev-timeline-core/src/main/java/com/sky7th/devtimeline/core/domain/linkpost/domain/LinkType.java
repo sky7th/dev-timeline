@@ -1,4 +1,4 @@
-package com.sky7th.devtimeline.core.domain.post.linkpost;
+package com.sky7th.devtimeline.core.domain.linkpost.domain;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

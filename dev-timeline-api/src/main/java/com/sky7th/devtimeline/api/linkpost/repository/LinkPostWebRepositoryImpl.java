@@ -1,4 +1,8 @@
-package com.sky7th.devtimeline.api.repository.LinkPost;
+package com.sky7th.devtimeline.api.linkpost.repository;
+
+import static com.sky7th.devtimeline.core.domain.comment.domain.QComment.comment;
+import static com.sky7th.devtimeline.core.domain.linkpost.domain.QLinkPost.linkPost;
+import static com.sky7th.devtimeline.core.domain.postlike.domain.QPostLike.postLike;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.ExpressionUtils;
@@ -9,22 +13,15 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.sky7th.devtimeline.core.domain.post.linkpost.LinkType;
-import com.sky7th.devtimeline.api.security.UserPrincipal;
-import com.sky7th.devtimeline.api.service.dto.LinkPostItem;
-import com.sky7th.devtimeline.api.service.dto.PostSearchForm;
-import com.sky7th.devtimeline.api.service.dto.SortOrderType;
-import lombok.RequiredArgsConstructor;
-import org.springframework.util.StringUtils;
-
+import com.sky7th.devtimeline.core.domain.linkpost.domain.LinkType;
+import com.sky7th.devtimeline.core.domain.linkpost.dto.LinkPostItem;
+import com.sky7th.devtimeline.core.domain.post.dto.PostSearchForm;
+import com.sky7th.devtimeline.core.domain.post.dto.SortOrderType;
+import com.sky7th.devtimeline.core.domain.user.dto.UserContext;
 import java.util.List;
 import java.util.Optional;
-
-import static com.sky7th.devtimeline.core.domain.like.QPostLike.postLike;
-import static com.sky7th.devtimeline.core.domain.post.linkpost.QLinkPost.linkPost;
-import static com.sky7th.devtimeline.core.domain.comment.QComment.comment;
-import static com.sky7th.devtimeline.core.domain.post.QPost.post;
-import static com.sky7th.devtimeline.core.domain.post.recruitpost.QRecruitPost.recruitPost;
+import lombok.RequiredArgsConstructor;
+import org.springframework.util.StringUtils;
 
 @RequiredArgsConstructor
 public class LinkPostWebRepositoryImpl implements LinkPostWebRepositoryCustom {
@@ -34,8 +31,8 @@ public class LinkPostWebRepositoryImpl implements LinkPostWebRepositoryCustom {
     private NumberPath<Long> likeCount = Expressions.numberPath(Long.class, "likeCount");
 
     @Override
-    public Optional<LinkPostItem> findWithLikeCountAndIsLikeByIdAndUserId(Long postId, UserPrincipal userPrincipal) {
-        BooleanExpression likedExpression = getLikedExpression(userPrincipal);
+    public Optional<LinkPostItem> findWithLikeCountAndIsLikeByIdAndUserId(Long postId, UserContext userContext) {
+        BooleanExpression likedExpression = getLikedExpression(userContext);
         List<LinkPostItem> linkPosts = queryFactory
                 .select(
                     Projections.fields(LinkPostItem.class, linkPost,
@@ -55,6 +52,7 @@ public class LinkPostWebRepositoryImpl implements LinkPostWebRepositoryCustom {
                     )
                 )
                 .from(linkPost)
+                .leftJoin(linkPost.post).fetchJoin()
                 .leftJoin(linkPost.user).fetchJoin()
                 .where(linkPost.post.id.eq(postId))
                 .fetch();
@@ -63,8 +61,8 @@ public class LinkPostWebRepositoryImpl implements LinkPostWebRepositoryCustom {
     }
 
     @Override
-    public List<LinkPostItem> findAllWithLikeCountAndIsLikeBySearchForm(PostSearchForm postSearchForm, UserPrincipal userPrincipal) {
-        BooleanExpression likedExpression = getLikedExpression(userPrincipal);
+    public List<LinkPostItem> findAllWithLikeCountAndIsLikeBySearchForm(PostSearchForm postSearchForm, UserContext userContext) {
+        BooleanExpression likedExpression = getLikedExpression(userContext);
         return queryFactory
                 .select(
                     Projections.fields(LinkPostItem.class, linkPost,
@@ -84,8 +82,8 @@ public class LinkPostWebRepositoryImpl implements LinkPostWebRepositoryCustom {
                     )
                 )
                 .from(linkPost)
+                .leftJoin(linkPost.post).fetchJoin()
                 .leftJoin(linkPost.user).fetchJoin()
-//                .leftJoin(linkPost.tags).fetchJoin()
                 .where(containsTags(postSearchForm.getTags()),
                         inLinkType(postSearchForm.getLinkTypes()),
                         liked(postSearchForm.isLiked(), likedExpression))
@@ -110,8 +108,8 @@ public class LinkPostWebRepositoryImpl implements LinkPostWebRepositoryCustom {
 //    }
 
     @Override
-    public long countBySearchForm(PostSearchForm postSearchForm, UserPrincipal userPrincipal) {
-        BooleanExpression likedExpression = getLikedExpression(userPrincipal);
+    public long countBySearchForm(PostSearchForm postSearchForm, UserContext userContext) {
+        BooleanExpression likedExpression = getLikedExpression(userContext);
         return queryFactory
                 .selectFrom(linkPost)
                 .where(containsTags(postSearchForm.getTags()),
@@ -144,13 +142,13 @@ public class LinkPostWebRepositoryImpl implements LinkPostWebRepositoryCustom {
         return likedExpression;
     }
 
-    private BooleanExpression getLikedExpression(UserPrincipal userPrincipal) {
-        if (userPrincipal == null) {
+    private BooleanExpression getLikedExpression(UserContext userContext) {
+        if (userContext.getId() == null) {
             return Expressions.asBoolean(true).isFalse();
         }
         return JPAExpressions.select(postLike)
                 .from(postLike)
-                .where(postLike.user.id.eq(userPrincipal.getId())
+                .where(postLike.user.id.eq(userContext.getId())
                         .and(postLike.post.id.eq(linkPost.post.id)))
                 .exists();
     }
