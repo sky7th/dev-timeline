@@ -1,4 +1,4 @@
-package com.sky7th.devtimeline.api.exception;
+package com.sky7th.devtimeline.api.security.exception;
 
 import org.springframework.security.core.AuthenticationException;
 

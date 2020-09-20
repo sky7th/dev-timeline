@@ -1,6 +1,6 @@
 package com.sky7th.devtimeline.api.security;
 
-import com.sky7th.devtimeline.core.domain.user.User;
+import com.sky7th.devtimeline.core.domain.user.domain.User;
 import lombok.Builder;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

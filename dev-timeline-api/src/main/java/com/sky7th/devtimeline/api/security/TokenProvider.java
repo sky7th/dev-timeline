@@ -1,18 +1,28 @@
 package com.sky7th.devtimeline.api.security;
 
 import com.sky7th.devtimeline.api.config.AppProperties;
-import io.jsonwebtoken.*;
+import com.sky7th.devtimeline.api.security.exception.InvalidTokenRequestException;
+import com.sky7th.devtimeline.api.user.CustomUserDetails;
+import com.sky7th.devtimeline.core.domain.user.UserRole;
+import com.sky7th.devtimeline.core.domain.user.dto.UserContext;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.SignatureException;
+import io.jsonwebtoken.UnsupportedJwtException;
+import java.time.Instant;
+import java.util.Date;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
-
-import java.util.Date;
 
 @Service
 public class TokenProvider {
 
     private static final Logger logger = LoggerFactory.getLogger(TokenProvider.class);
+    private static final String ROLE = "role";
 
     private AppProperties appProperties;
 
@@ -20,45 +30,55 @@ public class TokenProvider {
         this.appProperties = appProperties;
     }
 
-    public String createToken(Authentication authentication) {
-        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+    public String createToken(CustomUserDetails customUserDetails) {
+        return createToken(customUserDetails.getId(), customUserDetails.getUserRole());
+    }
 
-        Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + appProperties.getAuth().getTokenExpirationMsec());
+    public String createToken(Long id, UserRole userRole) {
+        Claims claims = Jwts.claims().setId(Long.toString(id));
+        claims.put(ROLE, userRole);
+        Instant expiryDate = Instant.now().plusMillis(appProperties.getAuth().getTokenExpirationMsec());
 
         return Jwts.builder()
-                .setSubject(Long.toString(userPrincipal.getId()))
-                .setIssuedAt(new Date())
-                .setExpiration(expiryDate)
+                .setClaims(claims)
+                .setIssuedAt(Date.from(Instant.now()))
+                .setExpiration(Date.from(expiryDate))
                 .signWith(SignatureAlgorithm.HS512, appProperties.getAuth().getTokenSecret())
                 .compact();
     }
 
-    public Long getUserIdFromToken(String token) {
-        Claims claims = Jwts.parser()
-                .setSigningKey(appProperties.getAuth().getTokenSecret())
-                .parseClaimsJws(token)
-                .getBody();
+    public UserContext getUserContextFromToken(String token) {
+        Claims claims = validateToken(token);
+        Long userId = Long.parseLong(claims.getId());
+        UserRole role = UserRole.valueOf(claims.get(ROLE, String.class));
 
-        return Long.parseLong(claims.getSubject());
+        return new UserContext(userId, role);
     }
 
-    public boolean validateToken(String authToken) {
+    public Claims validateToken(String authToken) {
         try {
-            Jwts.parser().setSigningKey(appProperties.getAuth().getTokenSecret()).parseClaimsJws(authToken);
-            return true;
+            return Jwts.parser().setSigningKey(appProperties.getAuth().getTokenSecret()).parseClaimsJws(authToken).getBody();
+
         } catch (SignatureException ex) {
-            logger.error("Invalid JWT signature");
+            logger.error("JWT 서명 확인 불가");
+            throw new InvalidTokenRequestException("JWT", authToken, "Incorrect signature");
+
         } catch (MalformedJwtException ex) {
-            logger.error("Invalid JWT token");
+            logger.error("잘못된 JWT 구성");
+            throw new InvalidTokenRequestException("JWT", authToken, "Malformed jwt token");
+
         } catch (ExpiredJwtException ex) {
-            logger.error("Expired JWT token");
+            logger.error("JWT 유효기간 초과");
+            throw new InvalidTokenRequestException("JWT", authToken, "Token expired. Refresh required");
+
         } catch (UnsupportedJwtException ex) {
-            logger.error("Unsupported JWT token");
+            logger.error("JWT 형식 불일치");
+            throw new InvalidTokenRequestException("JWT", authToken, "Unsupported JWT token");
+
         } catch (IllegalArgumentException ex) {
             logger.error("JWT claims string is empty.");
+            throw new InvalidTokenRequestException("JWT", authToken, "Illegal argument token");
         }
-        return false;
     }
 
 }

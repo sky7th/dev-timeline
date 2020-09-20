@@ -1,7 +1,7 @@
 package com.sky7th.devtimeline.api.security.oauth2.user;
 
 import com.sky7th.devtimeline.core.domain.user.AuthProvider;
-import com.sky7th.devtimeline.api.exception.OAuth2AuthenticationProcessingException;
+import com.sky7th.devtimeline.api.security.exception.OAuth2AuthenticationProcessingException;
 
 import java.util.Map;
 

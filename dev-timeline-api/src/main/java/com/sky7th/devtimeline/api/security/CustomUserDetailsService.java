@@ -1,8 +1,8 @@
 package com.sky7th.devtimeline.api.security;
 
-import com.sky7th.devtimeline.core.domain.user.User;
-import com.sky7th.devtimeline.core.domain.user.UserRepository;
-import com.sky7th.devtimeline.api.exception.ResourceNotFoundException;
+import com.sky7th.devtimeline.core.domain.user.domain.User;
+import com.sky7th.devtimeline.core.domain.user.domain.UserRepository;
+import com.sky7th.devtimeline.api.security.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

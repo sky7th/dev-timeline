@@ -1,12 +1,12 @@
-package com.sky7th.devtimeline.api.config;
+package com.sky7th.devtimeline.api.security;
 
-import com.sky7th.devtimeline.api.security.RestAuthenticationEntryPoint;
-import com.sky7th.devtimeline.api.security.TokenAuthenticationFilter;
 import com.sky7th.devtimeline.api.security.oauth2.CustomOAuth2UserService;
 import com.sky7th.devtimeline.api.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository;
 import com.sky7th.devtimeline.api.security.oauth2.OAuth2AuthenticationFailureHandler;
 import com.sky7th.devtimeline.api.security.oauth2.OAuth2AuthenticationSuccessHandler;
-import com.sky7th.devtimeline.api.security.CustomUserDetailsService;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2ClientProperties;
 import org.springframework.context.annotation.Bean;
@@ -29,10 +29,6 @@ import org.springframework.security.oauth2.client.registration.ClientRegistratio
 import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
 @RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
@@ -43,21 +39,13 @@ import java.util.stream.Collectors;
 )
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    private final TokenAuthenticationFilter tokenAuthenticationFilter;
+    private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
     private final CustomUserDetailsService customUserDetailsService;
     private final CustomOAuth2UserService customOAuth2UserService;
     private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
     private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
     private final OAuth2ClientProperties oAuth2ClientProperties;
-
-    @Bean
-    public TokenAuthenticationFilter tokenAuthenticationFilter() {
-        return new TokenAuthenticationFilter();
-    }
-
-    @Bean
-    public HttpCookieOAuth2AuthorizationRequestRepository cookieAuthorizationRequestRepository() {
-        return new HttpCookieOAuth2AuthorizationRequestRepository();
-    }
 
     @Override
     public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
@@ -79,6 +67,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
+    public OAuth2AuthorizedClientService authorizedClientService() {
+        return new InMemoryOAuth2AuthorizedClientService(clientRegistrationRepository(oAuth2ClientProperties));
+    }
+
+    @Bean
     public ClientRegistrationRepository clientRegistrationRepository(OAuth2ClientProperties oAuth2ClientProperties) {
         List<ClientRegistration> registrations = oAuth2ClientProperties
                 .getRegistration().keySet().stream()
@@ -87,11 +80,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .collect(Collectors.toList());
 
         return new InMemoryClientRegistrationRepository(registrations);
-    }
-
-    @Bean
-    public OAuth2AuthorizedClientService authorizedClientService() {
-        return new InMemoryOAuth2AuthorizedClientService(clientRegistrationRepository(oAuth2ClientProperties));
     }
 
     private ClientRegistration getRegistration(OAuth2ClientProperties clientProperties, String client) {
@@ -146,8 +134,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/api/v1/recruit-posts",
                         "/api/v1/tech-posts",
                         "/api/v1/link-posts/**",
-                        "/api/v1/like/**",
-                        "/api/v1/company/**")
+                        "/api/v1/likes/**",
+                        "/api/v1/companies/**")
                         .permitAll()
                     .antMatchers("/auth/**", "/oauth2/**", "/login**", "/health")
                         .permitAll()
@@ -157,7 +145,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .oauth2Login()
                     .authorizationEndpoint()
                         .baseUri("/oauth2/authorize")
-                        .authorizationRequestRepository(cookieAuthorizationRequestRepository())
+                        .authorizationRequestRepository(httpCookieOAuth2AuthorizationRequestRepository)
                         .and()
                     .redirectionEndpoint()
                         .baseUri("/login/oauth2/code/*")
@@ -170,6 +158,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .successHandler(oAuth2AuthenticationSuccessHandler)
                     .failureHandler(oAuth2AuthenticationFailureHandler);
 
-        http.addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }
 }
