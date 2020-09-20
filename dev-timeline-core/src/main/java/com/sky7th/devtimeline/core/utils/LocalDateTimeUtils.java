@@ -1,4 +1,4 @@
-package com.sky7th.devtimeline.core.domain.utils;
+package com.sky7th.devtimeline.core.utils;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

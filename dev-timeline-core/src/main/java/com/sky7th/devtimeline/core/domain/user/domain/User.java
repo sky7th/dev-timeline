@@ -1,7 +1,9 @@
-package com.sky7th.devtimeline.core.domain.user;
+package com.sky7th.devtimeline.core.domain.user.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sky7th.devtimeline.core.domain.common.BaseTimeEntity;
+import com.sky7th.devtimeline.core.domain.user.AuthProvider;
+import com.sky7th.devtimeline.core.domain.user.UserRole;
 import com.sun.istack.NotNull;
 import lombok.*;
 //import javax.validation.constraints.Email;
@@ -9,6 +11,8 @@ import lombok.*;
 import javax.persistence.*;
 
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Getter
 @Setter
 @Entity
@@ -16,6 +20,8 @@ import javax.persistence.*;
         @UniqueConstraint(columnNames = "email")
 })
 public class User extends BaseTimeEntity {
+
+    public static String DEFAULT_USER_IMAGE_URL = "https://image.flaticon.com/icons/svg/1987/1987936.svg";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,20 +52,19 @@ public class User extends BaseTimeEntity {
 
     private String providerId;
 
-    @Builder
-    public User(Long id, UserRole userRole, String name, String email, String imageUrl, Boolean emailVerified, String password, AuthProvider provider, String providerId) {
-        this.id = id;
-        this.userRole = userRole;
-        this.name = name;
-        this.email = email;
-        this.imageUrl = imageUrl;
-        this.emailVerified = emailVerified;
-        this.password = password;
-        this.provider = provider;
-        this.providerId = providerId;
+    public User(User user) {
+        this.id = user.getId();
+        this.userRole = user.getUserRole();
+        this.name = user.getName();
+        this.email = user.getEmail();
+        this.imageUrl = user.getImageUrl();
+        this.emailVerified = user.getEmailVerified();
+        this.password = user.getPassword();
+        this.provider = user.getProvider();
+        this.providerId = user.getProviderId();
     }
 
-    public String getRole() {
-        return this.userRole.getRole();
+    public User(Long id) {
+        this.id = id;
     }
 }

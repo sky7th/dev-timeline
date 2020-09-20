@@ -1,4 +1,4 @@
-package com.sky7th.devtimeline.api.presentation.api.dto;
+package com.sky7th.devtimeline.core.domain.user.dto;
 
 import lombok.Getter;
 import lombok.Setter;
