@@ -1,10 +1,10 @@
 //package com.sky7th.devtimeline.api.repository.recruitPost;
 //
-//import com.sky7th.devtimeline.core.domain.post.linkpost.LinkPost;
-//import com.sky7th.devtimeline.core.domain.tag.Tag;
-//import com.sky7th.devtimeline.core.domain.tag.TagRepository;
-//import com.sky7th.devtimeline.api.repository.LinkPost.LinkPostWebRepository;
-//import com.sky7th.devtimeline.api.service.dto.PostSearchForm;
+//import com.sky7th.devtimeline.core.domain.post.linkpost.domain.LinkPost;
+//import com.sky7th.devtimeline.core.domain.tag.domain.Tag;
+//import com.sky7th.devtimeline.core.domain.tag.domain.TagRepository;
+//import com.sky7th.devtimeline.api.linkpost.repository.LinkPostWebRepository;
+//import com.sky7th.devtimeline.core.domain.post.dto.PostSearchForm;
 //import org.junit.Test;
 //import org.junit.runner.RunWith;
 //import org.springframework.beans.factory.annotation.Autowired;

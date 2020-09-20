@@ -38,7 +38,7 @@ export default {
                 postId: this.postId,
                 content: this.content
             }
-            this.axios.post(`${process.env.VUE_APP_API}/api/v1/link-posts/comment`, formData)
+            this.axios.post(`${process.env.VUE_APP_API}/api/v1/posts/${this.postId}/comments`, formData)
                 .then(response => {
                     notification.success('댓글을 작성했습니다.');
                     this.handlerAddComment(response.data.data);

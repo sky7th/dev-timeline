@@ -8,9 +8,7 @@
         <li
           v-for="({
             id, 
-            companyLogoUrl,
-            companyTypeName, 
-            companyUrlTypeName, 
+            company, 
             title,
             author,
             date,
@@ -23,7 +21,7 @@
         >
           <Like :isLike="like" :postId="id" :likeCount="likeCount" class="like-wrapper"/>
           <a :href="contentUrl" target="_blank">
-            <img class="logo" :src="companyLogoUrl" alt="">
+            <img class="logo" :src="company.logoUrl" alt="">
             <div class="middle">
               <div class="title">{{ title }}</div>
               <div class="middle-bottom">

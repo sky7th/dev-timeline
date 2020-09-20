@@ -7,9 +7,7 @@
       <li
         v-for="({
           id, 
-          companyLogoUrl,
-          companyTypeName, 
-          companyUrlTypeName, 
+          company,
           title,
           closingDate,
           sortDate,
@@ -18,20 +16,19 @@
           likeCount }) in posts"
         :key="id"
         :class="{
-          naver: companyTypeName==='네이버',
-          kakao: companyTypeName==='카카오'
+          naver: company.name==='네이버',
+          kakao: company.name==='카카오'
         }"
       >
         <Like :isLike="like" :postId="id" :likeCount="likeCount" class="like-wrapper"/>
         <a :href="contentUrl" target="_blank">
           <div style="display: flex;">
-            <img class="logo" :src="companyLogoUrl" alt="">
+            <img class="logo" :src="company.logoUrl" alt="">
             <div style="width: auto; flex: 1;">
-              <div class="company">{{ companyTypeName }}</div>
+              <div class="company">{{ company.name }}</div>
               <div class="date">{{ closingDate }}</div>
             </div>
           </div>
-          <!-- <div>{{ companyUrlTypeName }}</div> -->
           <div class="title">{{ title }}</div>
         </a>
         <NewIcon :date="sortDate" :period="5"/>

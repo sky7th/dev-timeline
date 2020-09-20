@@ -50,7 +50,7 @@ export default {
             loadingElement.style.visibility = 'visible';
 
             let lastCommentId = this.comments.length === 0 ? 1 : this.comments[this.comments.length-1].id;
-            this.axios.get(`${process.env.VUE_APP_API}/api/v1/link-posts/comment?postId=${this.postId}&lastCommentId=${lastCommentId}&limit=${5}`)
+            this.axios.get(`${process.env.VUE_APP_API}/api/v1/posts/${this.postId}/comments?lastCommentId=${lastCommentId}&limit=${5}`)
                 .then(({ data }) => {
                     if (data.data.length) {
                         this.comments = [...this.comments, ...data.data];

@@ -3,16 +3,16 @@
     <ul>
       <li
         v-for="({
-          companyName, 
-          companyType,
+          name, 
+          type,
           logoUrl}) in companyInfos"
-        :key="companyType"
-        :class="{ check: checkedCompanies.indexOf(companyType) != -1 }"
+        :key="type"
+        :class="{ check: checkedCompanies.indexOf(type) != -1 }"
       >
-        <input type="checkbox" :id="companyType" :value="companyType" 
+        <input type="checkbox" :id="type" :value="type" 
           v-model="checkedCompanies"
         >
-        <label class="company-logo" :style="{ 'background-image': `url(${logoUrl})`}" :for="companyType">{{ companyName }}</label>
+        <label class="company-logo" :style="{ 'background-image': `url(${logoUrl})`}" :for="type">{{ name }}</label>
       </li>
     </ul>
   </div>
@@ -49,9 +49,9 @@ export default {
     ...mapActions(['updateCheckedCompanies', 'updatePosts', 'resetOffset']),
     findCompanyByUrlType() {
         let companyUrlType = this.getCompanyUrlTypeFromSelectedMenu(this.selectedMenu);
-        this.axios.get(`${process.env.VUE_APP_API}/api/v1/company?companyUrlType=${companyUrlType}`)
+        this.axios.get(`${process.env.VUE_APP_API}/api/v1/companies?companyUrlType=${companyUrlType}`)
         .then(response => {
-            this.companyInfos = response.data.data;
+            this.companyInfos = response.data.companies;
             
         }).catch(() => {
             notification.warn('기업 리스트를 불러오지 못했습니다.');
