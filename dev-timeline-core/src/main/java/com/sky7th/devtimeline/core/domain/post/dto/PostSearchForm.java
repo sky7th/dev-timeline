@@ -1,17 +1,15 @@
-package com.sky7th.devtimeline.api.service.dto;
+package com.sky7th.devtimeline.core.domain.post.dto;
 
-import com.sky7th.devtimeline.core.domain.company.CompanyType;
-import com.sky7th.devtimeline.core.domain.post.linkpost.LinkType;
+import com.sky7th.devtimeline.core.config.PagingConstant;
+import com.sky7th.devtimeline.core.domain.company.domain.CompanyType;
+import com.sky7th.devtimeline.core.domain.linkpost.domain.LinkType;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.util.StringUtils;
-
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static com.sky7th.devtimeline.api.config.PagingConstant.PAGE_SIZE;
 
 @RequiredArgsConstructor
 @Getter
@@ -19,7 +17,7 @@ import static com.sky7th.devtimeline.api.config.PagingConstant.PAGE_SIZE;
 public class PostSearchForm {
 
     Long offset = 0L;
-    Long limit = PAGE_SIZE;
+    Long limit = PagingConstant.PAGE_SIZE;
     List<String> tags;
     List<String> companies;
     List<String> linkTypes;

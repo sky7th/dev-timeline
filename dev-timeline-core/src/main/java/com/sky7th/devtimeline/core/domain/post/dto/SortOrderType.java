@@ -1,4 +1,4 @@
-package com.sky7th.devtimeline.api.service.dto;
+package com.sky7th.devtimeline.core.domain.post.dto;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
