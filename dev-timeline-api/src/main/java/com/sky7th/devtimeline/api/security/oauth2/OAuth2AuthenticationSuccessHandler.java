@@ -1,23 +1,24 @@
 package com.sky7th.devtimeline.api.security.oauth2;
 
+import static com.sky7th.devtimeline.api.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
+
 import com.sky7th.devtimeline.api.config.AppProperties;
-import com.sky7th.devtimeline.api.exception.BadRequestException;
+import com.sky7th.devtimeline.api.security.exception.BadRequestException;
 import com.sky7th.devtimeline.api.security.TokenProvider;
+import com.sky7th.devtimeline.api.user.CustomUserDetails;
 import com.sky7th.devtimeline.api.util.CookieUtils;
+import java.io.IOException;
+import java.net.URI;
+import java.util.Optional;
+import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
-import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.net.URI;
-import java.util.Optional;
-
-import static com.sky7th.devtimeline.api.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
 
 @Component
 public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
@@ -59,8 +60,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         }
 
         String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
-
-        String token = tokenProvider.createToken(authentication);
+        String token = tokenProvider.createToken((CustomUserDetails) authentication.getPrincipal());
 
         return UriComponentsBuilder.fromUriString(targetUrl)
                 .queryParam("token", token)

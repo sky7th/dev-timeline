@@ -1,6 +1,6 @@
 //package com.sky7th.devtimeline.api.repository.recruitPost;
 //
-//import com.sky7th.devtimeline.api.repository.techPost.TechPostWebRepository;
+//import com.sky7th.devtimeline.api.techpost.repository.TechPostWebRepository;
 //import org.junit.Test;
 //import org.junit.runner.RunWith;
 //import org.springframework.beans.factory.annotation.Autowired;

@@ -1,8 +1,8 @@
 //package com.sky7th.devtimeline.api.repository.recruitPost;
 //
 //import com.querydsl.jpa.impl.JPAQueryFactory;
-//import com.sky7th.devtimeline.core.domain.post.recruitpost.RecruitPost;
-//import com.sky7th.devtimeline.api.service.dto.PostSearchForm;
+//import com.sky7th.devtimeline.core.domain.post.recruitpost.domain.RecruitPost;
+//import com.sky7th.devtimeline.core.domain.post.dto.PostSearchForm;
 //import org.junit.Test;
 //import org.junit.runner.RunWith;
 //import org.springframework.beans.factory.annotation.Autowired;

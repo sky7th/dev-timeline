@@ -105,9 +105,9 @@ export default new Vuex.Store({
       .then(response => {
         if (state.selectedMenu !== updatingMenu)
           return;
-        state.posts = response.data.data.posts
-        state.offset = response.data.data.offset
-        state.postCounts = response.data.data.postCounts
+        state.posts = response.data.posts
+        state.offset = response.data.offset
+        state.postCounts = response.data.searchCount
       })
       .catch(e => {
         console.log('error : ', e)
@@ -129,10 +129,10 @@ export default new Vuex.Store({
       .then(({ data }) => {
         if (state.selectedMenu !== updatingMenu)
           return;
-        if (data.data.posts.length) {
-          state.offset = data.data.offset
-          state.postCounts = data.data.postCounts
-          state.posts.push(...data.data.posts)
+        if (data.posts.length) {
+          state.offset = data.offset
+          state.postCounts = data.searchCount
+          state.posts.push(...data.posts)
           payload.infiniteState.loaded(); 
         } else {
           payload.infiniteState.complete();

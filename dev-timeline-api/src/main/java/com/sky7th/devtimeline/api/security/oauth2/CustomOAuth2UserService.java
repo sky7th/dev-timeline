@@ -1,13 +1,14 @@
 package com.sky7th.devtimeline.api.security.oauth2;
 
-import com.sky7th.devtimeline.core.domain.user.AuthProvider;
-import com.sky7th.devtimeline.core.domain.user.User;
-import com.sky7th.devtimeline.core.domain.user.UserRepository;
-import com.sky7th.devtimeline.core.domain.user.UserRole;
-import com.sky7th.devtimeline.api.exception.OAuth2AuthenticationProcessingException;
-import com.sky7th.devtimeline.api.security.UserPrincipal;
+import com.sky7th.devtimeline.api.security.exception.OAuth2AuthenticationProcessingException;
 import com.sky7th.devtimeline.api.security.oauth2.user.OAuth2UserInfo;
 import com.sky7th.devtimeline.api.security.oauth2.user.OAuth2UserInfoFactory;
+import com.sky7th.devtimeline.api.user.CustomUserDetails;
+import com.sky7th.devtimeline.core.domain.user.AuthProvider;
+import com.sky7th.devtimeline.core.domain.user.UserRole;
+import com.sky7th.devtimeline.core.domain.user.domain.User;
+import com.sky7th.devtimeline.core.domain.user.domain.UserRepository;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.AuthenticationException;
@@ -17,8 +18,6 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -59,7 +58,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             user = registerNewUser(oAuth2UserRequest, oAuth2UserInfo);
         }
 
-        return UserPrincipal.create(user, oAuth2User.getAttributes());
+        return new CustomUserDetails(user, oAuth2User.getAttributes());
     }
 
     private User registerNewUser(OAuth2UserRequest oAuth2UserRequest, OAuth2UserInfo oAuth2UserInfo) {

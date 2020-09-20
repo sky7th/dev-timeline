@@ -1,10 +1,10 @@
 package com.sky7th.devtimeline.batch.dto;
 
 import com.sky7th.devtimeline.batch.utils.DateTimeCustomParser;
-import com.sky7th.devtimeline.core.domain.companyUrl.CompanyUrl;
-import com.sky7th.devtimeline.core.domain.companyUrl.CompanyUrlType;
-import com.sky7th.devtimeline.core.domain.post.recruitpost.RecruitPost;
-import com.sky7th.devtimeline.core.domain.post.techpost.TechPost;
+import com.sky7th.devtimeline.core.domain.company.domain.CompanyUrl;
+import com.sky7th.devtimeline.core.domain.company.domain.CompanyUrlType;
+import com.sky7th.devtimeline.core.domain.recruitpost.domain.RecruitPost;
+import com.sky7th.devtimeline.core.domain.techpost.domain.TechPost;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

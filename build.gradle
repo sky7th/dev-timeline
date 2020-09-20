@@ -55,6 +55,7 @@ project(':dev-timeline-core') {
 		compile 'org.springframework.boot:spring-boot-starter-json'
 		compile 'com.h2database:h2'
 		compile 'mysql:mysql-connector-java'
+		implementation 'org.springframework.boot:spring-boot-starter-validation'
 	}
 }
 

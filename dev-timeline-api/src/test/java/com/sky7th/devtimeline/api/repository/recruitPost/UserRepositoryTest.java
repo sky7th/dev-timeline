@@ -1,7 +1,7 @@
 //package com.sky7th.devtimeline.api.repository.recruitPost;
 //
-//import com.sky7th.devtimeline.core.domain.user.User;
-//import com.sky7th.devtimeline.core.domain.user.UserRepository;
+//import com.sky7th.devtimeline.core.domain.user.domain.User;
+//import com.sky7th.devtimeline.core.domain.user.domain.UserRepository;
 //import org.junit.Test;
 //import org.junit.runner.RunWith;
 //import org.springframework.beans.factory.annotation.Autowired;

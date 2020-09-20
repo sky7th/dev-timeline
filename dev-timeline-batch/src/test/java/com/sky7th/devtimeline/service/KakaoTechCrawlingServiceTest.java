@@ -4,10 +4,10 @@
 //import com.sky7th.devtimeline.batch.dto.CompanyDto;
 //import com.sky7th.devtimeline.batch.dto.CrawlingDto;
 //import com.sky7th.devtimeline.batch.service.crawling.KakaoTechCrawlingService;
-//import com.sky7th.devtimeline.core.domain.company.Company;
-//import com.sky7th.devtimeline.core.domain.company.CompanyType;
-//import com.sky7th.devtimeline.core.domain.companyUrl.CompanyUrl;
-//import com.sky7th.devtimeline.core.domain.companyUrl.CompanyUrlType;
+//import com.sky7th.devtimeline.core.domain.company.domain.Company;
+//import com.sky7th.devtimeline.core.domain.company.domain.CompanyType;
+//import com.sky7th.devtimeline.core.domain.company.domain.CompanyUrl;
+//import com.sky7th.devtimeline.core.domain.company.domain.CompanyUrlType;
 //import org.junit.jupiter.api.Test;
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.boot.test.context.SpringBootTest;
