@@ -1,15 +1,13 @@
-package com.sky7th.devtimeline.api.service.dto;
+package com.sky7th.devtimeline.core.domain.techpost.dto;
 
-import com.sky7th.devtimeline.core.domain.post.techpost.TechPost;
+import com.sky7th.devtimeline.core.domain.techpost.domain.TechPost;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class TechPostItem {
 
     private TechPost techPost;

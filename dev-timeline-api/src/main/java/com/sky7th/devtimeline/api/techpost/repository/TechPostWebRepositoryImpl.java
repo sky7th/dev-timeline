@@ -1,4 +1,8 @@
-package com.sky7th.devtimeline.api.repository.techPost;
+package com.sky7th.devtimeline.api.techpost.repository;
+
+import static com.sky7th.devtimeline.core.domain.post.domain.QPost.post;
+import static com.sky7th.devtimeline.core.domain.postlike.domain.QPostLike.postLike;
+import static com.sky7th.devtimeline.core.domain.techpost.domain.QTechPost.techPost;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.ExpressionUtils;
@@ -9,21 +13,14 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.sky7th.devtimeline.core.domain.company.CompanyType;
-import com.sky7th.devtimeline.api.security.UserPrincipal;
-import com.sky7th.devtimeline.api.service.dto.PostSearchForm;
-import com.sky7th.devtimeline.api.service.dto.SortOrderType;
-import com.sky7th.devtimeline.api.service.dto.TechPostItem;
+import com.sky7th.devtimeline.core.domain.company.domain.CompanyType;
+import com.sky7th.devtimeline.core.domain.post.dto.PostSearchForm;
+import com.sky7th.devtimeline.core.domain.post.dto.SortOrderType;
+import com.sky7th.devtimeline.core.domain.techpost.dto.TechPostItem;
+import com.sky7th.devtimeline.core.domain.user.dto.UserContext;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.util.StringUtils;
-
-import java.util.List;
-
-import static com.sky7th.devtimeline.core.domain.like.QPostLike.postLike;
-import static com.sky7th.devtimeline.core.domain.post.QPost.post;
-import static com.sky7th.devtimeline.core.domain.post.linkpost.QLinkPost.linkPost;
-import static com.sky7th.devtimeline.core.domain.post.recruitpost.QRecruitPost.recruitPost;
-import static com.sky7th.devtimeline.core.domain.post.techpost.QTechPost.techPost;
 
 @RequiredArgsConstructor
 public class TechPostWebRepositoryImpl implements TechPostWebRepositoryCustom {
@@ -34,8 +31,8 @@ public class TechPostWebRepositoryImpl implements TechPostWebRepositoryCustom {
 
 
     @Override
-    public List<TechPostItem> findAllWithLikeCountAndIsLikeBySearchForm(PostSearchForm postSearchForm, UserPrincipal userPrincipal) {
-        BooleanExpression likedExpression = getLikedExpression(userPrincipal);
+    public List<TechPostItem> findAllWithLikeCountAndIsLikeBySearchForm(PostSearchForm postSearchForm, UserContext userContext) {
+        BooleanExpression likedExpression = getLikedExpression(userContext);
         return queryFactory
                 .select(Projections.fields(TechPostItem.class, techPost,
                         ExpressionUtils.as(post.id, "postId"),
@@ -71,8 +68,8 @@ public class TechPostWebRepositoryImpl implements TechPostWebRepositoryCustom {
     }
 
     @Override
-    public long countBySearchForm(PostSearchForm postSearchForm, UserPrincipal userPrincipal) {
-        BooleanExpression likedExpression = getLikedExpression(userPrincipal);
+    public long countBySearchForm(PostSearchForm postSearchForm, UserContext userContext) {
+        BooleanExpression likedExpression = getLikedExpression(userContext);
         return queryFactory
                 .selectFrom(techPost)
                 .leftJoin(post).on(post.crawlId.eq(techPost.postCrawlId))
@@ -108,13 +105,13 @@ public class TechPostWebRepositoryImpl implements TechPostWebRepositoryCustom {
         return likedExpression;
     }
 
-    private BooleanExpression getLikedExpression(UserPrincipal userPrincipal) {
-        if (userPrincipal == null) {
+    private BooleanExpression getLikedExpression(UserContext userContext) {
+        if (userContext.getId() == null) {
             return Expressions.asBoolean(true).isFalse();
         }
         return JPAExpressions.select(postLike)
                 .from(postLike)
-                .where(postLike.user.id.eq(userPrincipal.getId())
+                .where(postLike.user.id.eq(userContext.getId())
                         .and(postLike.post.id.eq(post.id)))
                 .exists();
     }
