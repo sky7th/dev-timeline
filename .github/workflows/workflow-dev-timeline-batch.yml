@@ -1,14 +1,14 @@
-name: DEPLOY DEV-TIMELINE API
+name: DEPLOY DEV-TIMELINE BATCH
 
 on:
   push:
     branches: [ master ]
     paths:
-      - 'dev-timeline-api/**'
+      - 'dev-timeline-batch/**'
       - 'dev-timeline-core/**'
-    
+
 env:
-  PROJECT_NAME: dev-timeline-api
+  PROJECT_NAME: dev-timeline-batch
   BUCKET: dev-timeline-deploy
 
 jobs:

@@ -67,7 +67,6 @@ public class ZumTechCrawlingService implements CompanyCrawlingService {
     public CrawlingDto getCrawlingDto(WebElement element) {
         String date_str = element.findElement(By.cssSelector("time")).getAttribute("datetime");
         String[] dates = date_str.split("T");
-        System.out.println(date_str);
         SimpleDateFormat fm = new SimpleDateFormat("yyyy-MM-dd");
         Date d = fm.parse(dates[0]);
         SimpleDateFormat fm2 = new SimpleDateFormat("yyyy.MM.dd");

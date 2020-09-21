@@ -19,8 +19,11 @@ public class SeleniumConfig {
         System.setProperty("webdriver.chrome.driver", WEB_DRIVER_PATH);
 
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("--window-size=1366,768");
-        options.addArguments("--headless");
+        options.setCapability("ignoreProtectedModeSettings", true);
+        options.addArguments("no-sandbox");
+        options.addArguments("window-size=1366,768");
+        options.addArguments("headless");
+        options.addArguments("disable-dev-shm-usage");
         options.setProxy(null);
         DesiredCapabilities capabilities = DesiredCapabilities.chrome();
         capabilities.setCapability(ChromeOptions.CAPABILITY, options);

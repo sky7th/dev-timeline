@@ -62,15 +62,19 @@ public class CrawlingUtils {
     }
 
     public static void clickMoreBtnUntilTheEnd(WebDriver driver, By moreBtnBy) {
-        while (true) {
+        String display = "block";
+        while (!display.equals("none")) {
+            WebElement btnElement = driver.findElement(moreBtnBy);
+            btnElement.click();
             try {
-                driver.findElement(moreBtnBy).click();
-                Thread.sleep(1000L);
-            } catch (Exception e) {
-                log.error("더보기 끝까지 다 누름");
-                break;
+                Thread.sleep(1500L);
             }
+            catch(InterruptedException e){
+                e.printStackTrace();
+            }
+            display = driver.findElement(By.id("moreDiv")).getCssValue("display");
         }
+        log.error("더보기 끝까지 다 누름");
     }
 
 }

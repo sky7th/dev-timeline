@@ -1,0 +1,29 @@
+spring:
+  profiles: dev
+  datasource:
+    hikari:
+      jdbc-url: jdbc:mysql://localhost:3306/dev_timeline?serverTimezone=Asia/Seoul&createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=UTF-8&characterSetResults=UTF-8&useSSL=true
+      username: xoghk
+      password: dlxoghk
+      driver-class-name: com.mysql.cj.jdbc.Driver
+#      auto-commit: false
+#      connection-test-query: SELECT 1
+#      minimum-idle: 10
+#      maximum-pool-size: 50
+#      transaction-isolation: TRANSACTION_READ_UNCOMMITTED
+#      pool-name: pool-timeline
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5Dialect
+    properties.hibernate:
+      format_sql: true
+      dialect: org.hibernate.dialect.MySQL5Dialect
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    generate-ddl: true
+
+  main:
+    allow-bean-definition-overriding: true
+
+selenium:
+  web-driver-path: C:\\chromedriver\\chromedriver.exe

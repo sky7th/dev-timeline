@@ -70,7 +70,7 @@ public class BatchConfig {
                 .name("jpaPagingItemReader")
                 .entityManagerFactory(entityManagerFactory)
                 .pageSize(CHUNK_SIZE)
-                .queryString("SELECT u FROM company_url u")
+                .queryString("SELECT u FROM CompanyUrl u")
                 .build();
     }
 
@@ -126,7 +126,7 @@ public class BatchConfig {
                 }
             }
 
-            for ( String key : addedPostCountMap.keySet() ) {
+            for (String key : addedPostCountMap.keySet()) {
                 log.info(">>>>>>>> {}: {} 개 새로 추가", key, addedPostCountMap.get(key));
             }
 
