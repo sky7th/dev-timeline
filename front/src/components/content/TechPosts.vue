@@ -21,7 +21,9 @@
         >
           <Like :isLike="like" :postId="id" :likeCount="likeCount" class="like-wrapper"/>
           <a :href="contentUrl" target="_blank">
-            <img class="logo" :src="company.logoUrl" alt="">
+            <div class="logo">
+              <img class="logo-icon" :src="company.logoUrl" alt="">
+            </div>
             <div class="middle">
               <div class="title">{{ title }}</div>
               <div class="middle-bottom">
@@ -113,13 +115,22 @@ export default {
   width: 100%;
 }
 .logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   position: absolute;
   left: -9px;
   top: -6px;
   height: 45px;
-  width: auto;
+  width: 45px;
+  padding: 5px;
   margin-bottom: 5px;
   border-radius: 15px;
+  background-color: white;
+  box-shadow: 0 1px 4px rgba(27,31,35,.1);
+}
+.logo-icon {
+  width: 100%;
 }
 .company {
   text-align: center;
