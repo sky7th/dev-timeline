@@ -70,7 +70,7 @@ public class LinkPostWebRepositoryImpl implements LinkPostWebRepositoryCustom {
         if (sortOrderType == SortOrderType.ASC) {
             return linkPost.createdDate.asc();
         } else if (sortOrderType == SortOrderType.LIKE) {
-            return likeCount.desc();
+            return linkPost.post.likeCount.desc();
         }
         return linkPost.createdDate.desc();
     }
