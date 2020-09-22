@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface LinkPostRepository extends JpaRepository<LinkPost, Long> {
 
-  @Query(value = "SELECT p FROM link_post p WHERE p.post_id = :postId", nativeQuery = true)
+  @Query(value = "SELECT * FROM link_post p WHERE p.post_id = :postId", nativeQuery = true)
   Optional<LinkPost> findByPostId(Long postId);
 
   @Query(value = "DELETE FROM link_post p WHERE p.post_id = :postId", nativeQuery = true)

@@ -74,7 +74,7 @@ public class Post extends BaseTimeEntity {
     }
 
     public void decreaseLikeCount() {
-        this.likeCount += 1;
+        this.likeCount -= 1;
     }
 
     public void updateTags(List<TagRequestDto> tagRequestDtos) {
