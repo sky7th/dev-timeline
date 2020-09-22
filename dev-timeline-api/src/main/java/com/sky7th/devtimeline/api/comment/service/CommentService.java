@@ -33,7 +33,7 @@ public class CommentService {
     }
 
     @PreAuthorize("@commentInternalService.isAuthor(#commentId, #userContext)")
-    public void delete(Long commentId, UserContext userContext) {
-        commentInternalService.delete(commentId);
+    public void delete(Long postId, Long commentId, UserContext userContext) {
+        commentInternalService.delete(postId, commentId);
     }
 }

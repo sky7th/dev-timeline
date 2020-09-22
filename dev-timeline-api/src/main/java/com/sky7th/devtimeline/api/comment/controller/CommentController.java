@@ -25,8 +25,7 @@ public class CommentController {
 
     @GetMapping("/api/v1/posts/{postId}/comments")
     public ResponseEntity<CommentResponseDtos> list(@PathVariable Long postId,
-                                              @RequestParam(value = "lastCommentId") Long lastCommentId,
-                                              @RequestParam(value = "limit") Long limit) {
+        @RequestParam(value = "lastCommentId") Long lastCommentId, @RequestParam(value = "limit") Long limit) {
         return ResponseEntity.ok(commentService.findByOffsetAndLimit(postId, lastCommentId, limit));
     }
 
@@ -36,15 +35,17 @@ public class CommentController {
         return ResponseEntity.ok(commentService.save(postId, requestDto, userContext));
     }
 
-    @PutMapping("/api/v1/comments/{commentId}")
-    public ResponseEntity<CommentResponseDto> update(@PathVariable Long commentId, @RequestBody CommentUpdateRequestDto requestDto,
+    @PutMapping("/api/v1/posts/{postId}/comments/{commentId}")
+    public ResponseEntity<CommentResponseDto> update(@PathVariable Long postId, @PathVariable Long commentId,
+        @RequestBody CommentUpdateRequestDto requestDto,
             UserContext userContext) {
         return ResponseEntity.ok(commentService.update(commentId, requestDto, userContext));
     }
 
-    @DeleteMapping("/api/v1/comments/{commentId}")
-    public ResponseEntity<Void> delete(@PathVariable Long commentId,UserContext userContext) {
-        commentService.delete(commentId, userContext);
+    @DeleteMapping("/api/v1/posts/{postId}/comments/{commentId}")
+    public ResponseEntity<Void> delete(@PathVariable Long postId, @PathVariable Long commentId,
+        UserContext userContext) {
+        commentService.delete(postId, commentId, userContext);
         return ResponseEntity.ok().build();
     }
 }

@@ -5,8 +5,12 @@ import com.sky7th.devtimeline.core.domain.comment.domain.CommentRepository;
 import com.sky7th.devtimeline.core.domain.comment.dto.CommentRequestDto;
 import com.sky7th.devtimeline.core.domain.comment.dto.CommentUpdateRequestDto;
 import com.sky7th.devtimeline.core.domain.comment.exception.NotFoundCommentException;
+import com.sky7th.devtimeline.core.domain.post.domain.Post;
+import com.sky7th.devtimeline.core.domain.post.service.PostInternalService;
+import com.sky7th.devtimeline.core.domain.user.domain.User;
 import com.sky7th.devtimeline.core.domain.user.dto.UserContext;
 import com.sky7th.devtimeline.core.domain.user.exception.MismatchUserException;
+import com.sky7th.devtimeline.core.domain.user.service.UserInternalService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class CommentInternalService {
 
     private final CommentRepository commentRepository;
+    private final PostInternalService postInternalService;
+    private final UserInternalService userInternalService;
 
     @Transactional(readOnly = true)
     public Comment findById(Long id) {
@@ -24,7 +30,10 @@ public class CommentInternalService {
     }
 
     public Comment save(Long postId, CommentRequestDto requestDto, UserContext userContext) {
-        return commentRepository.save(new Comment(postId, userContext.getId(), requestDto.getContent()));
+        Post post = postInternalService.findById(postId);
+        post.increaseCommentCount();
+        User user = userInternalService.findById(userContext.getId());
+        return commentRepository.save(new Comment(post, user, requestDto.getContent()));
     }
 
     public Comment update(Long commentId, CommentUpdateRequestDto requestDto) {
@@ -33,8 +42,10 @@ public class CommentInternalService {
         return comment;
     }
 
-    public void delete(Long id) {
-        Comment comment = findById(id);
+    public void delete(Long postId, Long commentId) {
+        Post post = postInternalService.findById(postId);
+        post.decreaseCommentCount();
+        Comment comment = findById(commentId);
         commentRepository.delete(comment);
     }
 
