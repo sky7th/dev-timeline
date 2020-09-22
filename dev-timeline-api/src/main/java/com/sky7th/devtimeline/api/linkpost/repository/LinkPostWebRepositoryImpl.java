@@ -1,6 +1,5 @@
 package com.sky7th.devtimeline.api.linkpost.repository;
 
-import static com.sky7th.devtimeline.core.domain.comment.domain.QComment.comment;
 import static com.sky7th.devtimeline.core.domain.linkpost.domain.QLinkPost.linkPost;
 import static com.sky7th.devtimeline.core.domain.postlike.domain.QPostLike.postLike;
 
@@ -18,7 +17,6 @@ import com.sky7th.devtimeline.core.domain.linkpost.domain.LinkType;
 import com.sky7th.devtimeline.core.domain.linkpost.dto.LinkPostItem;
 import com.sky7th.devtimeline.core.domain.post.dto.PostSearchForm;
 import com.sky7th.devtimeline.core.domain.post.dto.SortOrderType;
-import com.sky7th.devtimeline.core.domain.user.dto.UserContext;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -36,19 +34,7 @@ public class LinkPostWebRepositoryImpl implements LinkPostWebRepositoryCustom {
         List<LinkPostItem> linkPosts = queryFactory
                 .select(
                     Projections.fields(LinkPostItem.class, linkPost,
-                        ExpressionUtils.as(
-                            getLikedExpression(),
-                            "isLike"),
-                        ExpressionUtils.as(
-                            JPAExpressions.select(postLike.count())
-                                .from(postLike)
-                                .where(postLike.post.id.eq(linkPost.post.id)),
-                            "likeCount"),
-                        ExpressionUtils.as(
-                            JPAExpressions.select(comment.count())
-                                .from(comment)
-                                .where(comment.post.id.eq(linkPost.post.id)),
-                            "commentCount")
+                        ExpressionUtils.as(getLikedExpression(), "isLike")
                     )
                 )
                 .from(linkPost)
@@ -65,19 +51,7 @@ public class LinkPostWebRepositoryImpl implements LinkPostWebRepositoryCustom {
         return queryFactory
                 .select(
                     Projections.fields(LinkPostItem.class, linkPost,
-                        ExpressionUtils.as(
-                            getLikedExpression(),
-                            "isLike"),
-                        ExpressionUtils.as(
-                            JPAExpressions.select(postLike.count())
-                                .from(postLike)
-                                .where(postLike.post.id.eq(linkPost.post.id)),
-                                likeCount),
-                        ExpressionUtils.as(
-                            JPAExpressions.select(comment.count())
-                                .from(comment)
-                                .where(comment.post.id.eq(linkPost.post.id)),
-                            "commentCount")
+                        ExpressionUtils.as(getLikedExpression(), "isLike")
                     )
                 )
                 .from(linkPost)

@@ -33,7 +33,7 @@ public class PostLikeInternalService {
         }
         Post post = postInternalService.findById(postId);
         post.increaseLikeCount();
-        postLikeRepository.save(new PostLike(postId, userContext.getId()));
+        postLikeRepository.save(new PostLike(post, userContext.getId()));
     }
 
     public void delete(Long postId, UserContext userContext) {

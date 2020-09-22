@@ -18,7 +18,6 @@ import com.sky7th.devtimeline.core.domain.company.domain.CompanyType;
 import com.sky7th.devtimeline.core.domain.post.dto.PostSearchForm;
 import com.sky7th.devtimeline.core.domain.post.dto.SortOrderType;
 import com.sky7th.devtimeline.core.domain.techpost.dto.TechPostItem;
-import com.sky7th.devtimeline.core.domain.user.dto.UserContext;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.util.StringUtils;
@@ -36,14 +35,8 @@ public class TechPostWebRepositoryImpl implements TechPostWebRepositoryCustom {
         return queryFactory
                 .select(Projections.fields(TechPostItem.class, techPost,
                         ExpressionUtils.as(post.id, "postId"),
-                        ExpressionUtils.as(
-                            getLikedExpression(),
-                                "isLike"),
-                        ExpressionUtils.as(
-                                JPAExpressions.select(postLike.count())
-                                        .from(postLike)
-                                        .where(postLike.post.id.eq(post.id)),
-                                likeCount)
+                        ExpressionUtils.as(post.likeCount, "likeCount"),
+                        ExpressionUtils.as(getLikedExpression(), "isLike")
                 ))
                 .from(techPost)
                 .leftJoin(post).on(post.crawlId.eq(techPost.postCrawlId))

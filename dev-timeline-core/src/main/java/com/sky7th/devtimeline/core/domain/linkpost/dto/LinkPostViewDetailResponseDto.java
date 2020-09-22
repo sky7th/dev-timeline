@@ -40,8 +40,8 @@ public class LinkPostViewDetailResponseDto {
             .tags(TagResponseDto.of(linkPostItem.getLinkPost().getPost().getTags()))
             .linkUrl(linkPostItem.getLinkPost().getLinkUrl())
             .createdDate(toStringDate(linkPostItem.getLinkPost().getCreatedDate(), "yyyy-MM-dd HH:mm:ss"))
-            .likeCount(linkPostItem.getLikeCount())
-            .commentCount(linkPostItem.getCommentCount())
+            .likeCount(linkPostItem.getLinkPost().getPost().getLikeCount())
+            .commentCount(linkPostItem.getLinkPost().getPost().getCommentCount())
             .isLike(linkPostItem.getIsLike())
             .comments(CommentResponseDto.of(linkPostItem.getComments()))
             .build();

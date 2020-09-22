@@ -18,7 +18,6 @@ import com.sky7th.devtimeline.core.domain.company.domain.CompanyType;
 import com.sky7th.devtimeline.core.domain.post.dto.PostSearchForm;
 import com.sky7th.devtimeline.core.domain.post.dto.SortOrderType;
 import com.sky7th.devtimeline.core.domain.recruitpost.dto.RecruitPostItem;
-import com.sky7th.devtimeline.core.domain.user.dto.UserContext;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.util.StringUtils;
@@ -35,14 +34,8 @@ public class RecruitPostWebRepositoryImpl implements RecruitPostWebRepositoryCus
         return queryFactory
                 .select(Projections.fields(RecruitPostItem.class, recruitPost,
                         ExpressionUtils.as(post.id, "postId"),
-                        ExpressionUtils.as(
-                            getLikedExpression(),
-                                "isLike"),
-                        ExpressionUtils.as(
-                                JPAExpressions.select(postLike.count())
-                                        .from(postLike)
-                                        .where(postLike.post.id.eq(post.id)),
-                                likeCount)
+                        ExpressionUtils.as(post.likeCount, "likeCount"),
+                        ExpressionUtils.as(getLikedExpression(), "isLike")
                 ))
                 .from(recruitPost)
                 .leftJoin(post).on(post.crawlId.eq(recruitPost.postCrawlId))

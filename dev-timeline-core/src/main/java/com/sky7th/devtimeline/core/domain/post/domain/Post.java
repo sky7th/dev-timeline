@@ -37,10 +37,10 @@ public class Post extends BaseTimeEntity {
     private PostType postType;
 
     @Column(columnDefinition = "integer(11) default 0")
-    private Integer likeCount;
+    private Long likeCount;
 
     @Column(columnDefinition = "integer(11) default 0")
-    private Integer commentCount;
+    private Long commentCount;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "post")
     private List<Tag> tags = new ArrayList<>();
@@ -52,7 +52,7 @@ public class Post extends BaseTimeEntity {
     private List<Comment> comments = new ArrayList<>();
 
     @Builder
-    public Post(Long id, String crawlId, PostType postType, Integer likeCount, Integer commentCount) {
+    public Post(Long id, String crawlId, PostType postType, Long likeCount, Long commentCount) {
         this.id = id;
         this.crawlId = crawlId;
         this.postType = postType;
@@ -75,6 +75,14 @@ public class Post extends BaseTimeEntity {
 
     public void decreaseLikeCount() {
         this.likeCount -= 1;
+    }
+
+    public void increaseCommentCount() {
+        this.commentCount += 1;
+    }
+
+    public void decreaseCommentCount() {
+        this.commentCount -= 1;
     }
 
     public void updateTags(List<TagRequestDto> tagRequestDtos) {

@@ -1,5 +1,7 @@
 package com.sky7th.devtimeline.api.linkpost.service;
 
+import static com.sky7th.devtimeline.core.config.PagingConstant.COMMENT_PAGE_SIZE;
+
 import com.sky7th.devtimeline.api.comment.repository.CommentWebRepository;
 import com.sky7th.devtimeline.api.linkpost.repository.LinkPostWebRepository;
 import com.sky7th.devtimeline.api.security.exception.UnauthorizedException;
@@ -38,7 +40,7 @@ public class LinkPostService {
     public LinkPostViewDetailResponseDto findOne(Long postId) {
         LinkPostItem linkPostItem = linkPostWebRepository.findWithLikeCountAndIsLikeByIdAndUserId(postId)
                 .orElseThrow(NotFoundPostException::new);
-        linkPostItem.setComments(commentWebRepository.findFromLastCommentIdToLimit(postId, null, 5L));
+        linkPostItem.setComments(commentWebRepository.findFromLastCommentIdToLimit(postId, null, COMMENT_PAGE_SIZE));
 
         return LinkPostViewDetailResponseDto.of(linkPostItem);
     }
