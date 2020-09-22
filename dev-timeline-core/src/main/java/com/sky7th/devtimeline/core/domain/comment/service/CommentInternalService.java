@@ -38,10 +38,11 @@ public class CommentInternalService {
         commentRepository.delete(comment);
     }
 
-    public void isAuthor(Long commentId, UserContext userContext) {
+    public boolean isAuthor(Long commentId, UserContext userContext) {
         Comment comment = findById(commentId);
         if (!comment.isAuthor(userContext.getId())) {
             throw new MismatchUserException();
         }
+        return true;
     }
 }

@@ -42,10 +42,11 @@ public class LinkPostInternalService {
         linkPostRepository.deleteByPostId(postId);
     }
 
-    public void isAuthor(Long postId, UserContext userContext) {
+    public boolean isAuthor(Long postId, UserContext userContext) {
         LinkPost linkPost = findByPostId(postId);
         if (!linkPost.isAuthor(userContext.getId())) {
             throw new MismatchUserException();
         }
+        return true;
     }
 }

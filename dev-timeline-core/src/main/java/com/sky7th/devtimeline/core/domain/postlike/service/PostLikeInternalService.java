@@ -27,7 +27,8 @@ public class PostLikeInternalService {
     }
 
     public void save(Long postId, UserContext userContext) {
-        if (postLikeRepository.existsByPostIdAndUserId(postId, userContext.getId())) {
+        PostLike postLike = postLikeRepository.findByPostIdAndUserId(postId, userContext.getId()).orElse(null);
+        if (postLike != null) {
             throw new UserAlreadyLikePostException();
         }
         Post post = postInternalService.findById(postId);
@@ -42,10 +43,11 @@ public class PostLikeInternalService {
         postLikeRepository.delete(postLike);
     }
 
-    public void isAuthor(Long postId, UserContext userContext) {
+    public boolean isAuthor(Long postId, UserContext userContext) {
         PostLike postLike = findByPostIdAndUserId(postId, userContext.getId());
         if (!postLike.isAuthor(userContext.getId())) {
             throw new MismatchUserException();
         }
+        return true;
     }
 }
