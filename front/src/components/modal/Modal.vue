@@ -86,7 +86,7 @@ export default {
   max-width: 96%;
   opacity: 1;
   background-color: #fff;
-  padding: 0px 4px 15px 10px;
+  padding: 0px 4px 21px 10px;
   border-radius: 3px;
   box-shadow: 0 1px 2px 0 rgba(9,30,66,0.25), 0 0 1px 0 rgba(9,30,66,0.31);
   animation: superman 0.51s ease-in-out;

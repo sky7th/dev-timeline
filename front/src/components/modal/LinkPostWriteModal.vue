@@ -70,7 +70,7 @@ export default {
     BlueButton
   },  
   computed: {
-    ...mapGetters(['postState', 'post']),
+    ...mapGetters(['postState', 'post', 'posts']),
     isStateUpdate() {
       return this.postState === Constant.UPDATE;
     }
@@ -90,12 +90,15 @@ export default {
       }
       if (this.isStateUpdate) {
         this.axios.put(`${process.env.VUE_APP_API}/api/v1/link-posts/${this.linkPost.id}`, this.linkPost)
-        .then(() => {
+        .then(({ data }) => {
           notification.success('글 수정이 완료되었습니다.');
-          this.post.title = this.linkPost.title;
-          this.post.linkUrl = this.linkPost.linkUrl;
-          this.post.tags = this.linkPost.tags;
-          this.post.content = this.linkPost.content;
+          this.post = data;
+          let inListpost = this.posts.find(v => v.id === this.post.id);
+          inListpost.title = data.title;
+          inListpost.linkUrl = data.linkUrl;
+          inListpost.tags = data.tags;
+          inListpost.content = data.content;
+        
           this.handlerClosePopup();
         }).catch(() => {
           notification.warn('글 수정에 실패했습니다.');
