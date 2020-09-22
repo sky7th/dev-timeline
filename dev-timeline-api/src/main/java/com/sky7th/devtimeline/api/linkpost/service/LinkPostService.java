@@ -27,23 +27,22 @@ public class LinkPostService {
     private final LinkPostInternalService linkPostInternalService;
 
     @Transactional(readOnly = true)
-    public LinkPostViewResponseDtos findBySearchForm(PostSearchForm postSearchForm, UserContext userContext) {
-        List<LinkPostItem> linkPostItems = linkPostWebRepository.findAllWithLikeCountAndIsLikeBySearchForm(postSearchForm, userContext);
-        long recruitPostCounts = linkPostWebRepository.countBySearchForm(postSearchForm, userContext);
+    public LinkPostViewResponseDtos findBySearchForm(PostSearchForm postSearchForm) {
+        List<LinkPostItem> linkPostItems = linkPostWebRepository.findAllWithLikeCountAndIsLikeBySearchForm(postSearchForm);
+        long recruitPostCounts = linkPostWebRepository.countBySearchForm(postSearchForm);
 
         return LinkPostViewResponseDtos.of(linkPostItems, recruitPostCounts);
     }
 
     @Transactional(readOnly = true)
-    public LinkPostViewDetailResponseDto findOne(Long postId, UserContext userContext) {
-        LinkPostItem linkPostItem = linkPostWebRepository.findWithLikeCountAndIsLikeByIdAndUserId(postId, userContext)
+    public LinkPostViewDetailResponseDto findOne(Long postId) {
+        LinkPostItem linkPostItem = linkPostWebRepository.findWithLikeCountAndIsLikeByIdAndUserId(postId)
                 .orElseThrow(NotFoundPostException::new);
         linkPostItem.setComments(commentWebRepository.findFromLastCommentIdToLimit(postId, null, 5L));
 
         return LinkPostViewDetailResponseDto.of(linkPostItem);
     }
 
-    @PreAuthorize("@authService.isLogin(#userContext)")
     public LinkPostResponseDto save(LinkPostRequestDto requestDto, UserContext userContext) {
         return LinkPostResponseDto.of(linkPostInternalService.save(requestDto, userContext));
     }

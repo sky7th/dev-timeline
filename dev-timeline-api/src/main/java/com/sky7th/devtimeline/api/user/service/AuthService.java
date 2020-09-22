@@ -1,11 +1,9 @@
 package com.sky7th.devtimeline.api.user.service;
 
 import com.sky7th.devtimeline.api.security.TokenProvider;
-import com.sky7th.devtimeline.api.security.exception.NotLoginException;
 import com.sky7th.devtimeline.api.security.exception.UserLoginException;
 import com.sky7th.devtimeline.api.user.CustomUserDetails;
 import com.sky7th.devtimeline.core.domain.user.dto.AuthResponseDto;
-import com.sky7th.devtimeline.core.domain.user.dto.UserContext;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -34,11 +32,5 @@ public class AuthService {
 
   public AuthResponseDto createJwtToken(CustomUserDetails customUserDetails) {
     return new AuthResponseDto(tokenProvider.createToken(customUserDetails));
-  }
-
-  public void isLogin(UserContext userContext) {
-    if (userContext.getId() == null) {
-      throw new NotLoginException();
-    }
   }
 }

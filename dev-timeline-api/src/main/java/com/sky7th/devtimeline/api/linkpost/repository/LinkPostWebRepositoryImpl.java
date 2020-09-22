@@ -13,6 +13,7 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.sky7th.devtimeline.api.security.SecurityContextSupport;
 import com.sky7th.devtimeline.core.domain.linkpost.domain.LinkType;
 import com.sky7th.devtimeline.core.domain.linkpost.dto.LinkPostItem;
 import com.sky7th.devtimeline.core.domain.post.dto.PostSearchForm;
@@ -31,13 +32,12 @@ public class LinkPostWebRepositoryImpl implements LinkPostWebRepositoryCustom {
     private NumberPath<Long> likeCount = Expressions.numberPath(Long.class, "likeCount");
 
     @Override
-    public Optional<LinkPostItem> findWithLikeCountAndIsLikeByIdAndUserId(Long postId, UserContext userContext) {
-        BooleanExpression likedExpression = getLikedExpression(userContext);
+    public Optional<LinkPostItem> findWithLikeCountAndIsLikeByIdAndUserId(Long postId) {
         List<LinkPostItem> linkPosts = queryFactory
                 .select(
                     Projections.fields(LinkPostItem.class, linkPost,
                         ExpressionUtils.as(
-                                likedExpression,
+                            getLikedExpression(),
                             "isLike"),
                         ExpressionUtils.as(
                             JPAExpressions.select(postLike.count())
@@ -61,13 +61,12 @@ public class LinkPostWebRepositoryImpl implements LinkPostWebRepositoryCustom {
     }
 
     @Override
-    public List<LinkPostItem> findAllWithLikeCountAndIsLikeBySearchForm(PostSearchForm postSearchForm, UserContext userContext) {
-        BooleanExpression likedExpression = getLikedExpression(userContext);
+    public List<LinkPostItem> findAllWithLikeCountAndIsLikeBySearchForm(PostSearchForm postSearchForm) {
         return queryFactory
                 .select(
                     Projections.fields(LinkPostItem.class, linkPost,
                         ExpressionUtils.as(
-                                likedExpression,
+                            getLikedExpression(),
                             "isLike"),
                         ExpressionUtils.as(
                             JPAExpressions.select(postLike.count())
@@ -86,7 +85,7 @@ public class LinkPostWebRepositoryImpl implements LinkPostWebRepositoryCustom {
                 .leftJoin(linkPost.user).fetchJoin()
                 .where(containsTags(postSearchForm.getTags()),
                         inLinkType(postSearchForm.getLinkTypes()),
-                        liked(postSearchForm.isLiked(), likedExpression))
+                        liked(postSearchForm.isLiked()))
                 .offset(postSearchForm.getOffset())
                 .limit(postSearchForm.getLimit())
                 .orderBy(sortOrder(SortOrderType.valueOf(postSearchForm.getSortOrderType())))
@@ -108,12 +107,11 @@ public class LinkPostWebRepositoryImpl implements LinkPostWebRepositoryCustom {
 //    }
 
     @Override
-    public long countBySearchForm(PostSearchForm postSearchForm, UserContext userContext) {
-        BooleanExpression likedExpression = getLikedExpression(userContext);
+    public long countBySearchForm(PostSearchForm postSearchForm) {
         return queryFactory
                 .selectFrom(linkPost)
                 .where(containsTags(postSearchForm.getTags()),
-                        liked(postSearchForm.isLiked(), likedExpression))
+                        liked(postSearchForm.isLiked()))
                 .fetchCount();
     }
 
@@ -135,20 +133,21 @@ public class LinkPostWebRepositoryImpl implements LinkPostWebRepositoryCustom {
         return linkPost.linkType.in(linkTypes);
     }
 
-    private BooleanExpression liked(boolean liked, BooleanExpression likedExpression) {
+    private BooleanExpression liked(boolean liked) {
         if (!liked) {
             return null;
         }
-        return likedExpression;
+        return getLikedExpression();
     }
 
-    private BooleanExpression getLikedExpression(UserContext userContext) {
-        if (userContext.getId() == null) {
+    private BooleanExpression getLikedExpression() {
+        if (SecurityContextSupport.isNotLogined()) {
             return Expressions.asBoolean(true).isFalse();
         }
+
         return JPAExpressions.select(postLike)
                 .from(postLike)
-                .where(postLike.user.id.eq(userContext.getId())
+                .where(postLike.user.id.eq(SecurityContextSupport.getUserContext().getId())
                         .and(postLike.post.id.eq(linkPost.post.id)))
                 .exists();
     }

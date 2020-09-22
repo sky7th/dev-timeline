@@ -23,7 +23,6 @@ public class CommentService {
         return CommentResponseDtos.of(commentWebRepository.findFromLastCommentIdToLimit(postId, lastCommentId, limit));
     }
 
-    @PreAuthorize("@authService.isLogin(#userContext)")
     public CommentResponseDto save(Long postId, CommentRequestDto requestDto, UserContext userContext) {
         return CommentResponseDto.of(commentInternalService.save(postId, requestDto, userContext));
     }

@@ -13,6 +13,7 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.sky7th.devtimeline.api.security.SecurityContextSupport;
 import com.sky7th.devtimeline.core.domain.company.domain.CompanyType;
 import com.sky7th.devtimeline.core.domain.post.dto.PostSearchForm;
 import com.sky7th.devtimeline.core.domain.post.dto.SortOrderType;
@@ -31,13 +32,12 @@ public class TechPostWebRepositoryImpl implements TechPostWebRepositoryCustom {
 
 
     @Override
-    public List<TechPostItem> findAllWithLikeCountAndIsLikeBySearchForm(PostSearchForm postSearchForm, UserContext userContext) {
-        BooleanExpression likedExpression = getLikedExpression(userContext);
+    public List<TechPostItem> findAllWithLikeCountAndIsLikeBySearchForm(PostSearchForm postSearchForm) {
         return queryFactory
                 .select(Projections.fields(TechPostItem.class, techPost,
                         ExpressionUtils.as(post.id, "postId"),
                         ExpressionUtils.as(
-                                likedExpression,
+                            getLikedExpression(),
                                 "isLike"),
                         ExpressionUtils.as(
                                 JPAExpressions.select(postLike.count())
@@ -50,7 +50,7 @@ public class TechPostWebRepositoryImpl implements TechPostWebRepositoryCustom {
                 .leftJoin(techPost.companyUrl).fetchJoin()
                 .where(containsTags(postSearchForm.getTags()),
                         inCompany(postSearchForm.getCompanies()),
-                        liked(postSearchForm.isLiked(), likedExpression))
+                        liked(postSearchForm.isLiked()))
                 .offset(postSearchForm.getOffset())
                 .limit(postSearchForm.getLimit())
                 .orderBy(sortOrder(SortOrderType.valueOf(postSearchForm.getSortOrderType())),
@@ -68,15 +68,14 @@ public class TechPostWebRepositoryImpl implements TechPostWebRepositoryCustom {
     }
 
     @Override
-    public long countBySearchForm(PostSearchForm postSearchForm, UserContext userContext) {
-        BooleanExpression likedExpression = getLikedExpression(userContext);
+    public long countBySearchForm(PostSearchForm postSearchForm) {
         return queryFactory
                 .selectFrom(techPost)
                 .leftJoin(post).on(post.crawlId.eq(techPost.postCrawlId))
                 .leftJoin(techPost.companyUrl).fetchJoin()
                 .where(containsTags(postSearchForm.getTags()),
                         inCompany(postSearchForm.getCompanies()),
-                        liked(postSearchForm.isLiked(), likedExpression))
+                        liked(postSearchForm.isLiked()))
                 .fetchCount();
     }
 
@@ -98,20 +97,21 @@ public class TechPostWebRepositoryImpl implements TechPostWebRepositoryCustom {
         return techPost.companyUrl.company.companyType.in(companies);
     }
 
-    private BooleanExpression liked(boolean liked, BooleanExpression likedExpression) {
+    private BooleanExpression liked(boolean liked) {
         if (!liked) {
             return null;
         }
-        return likedExpression;
+        return getLikedExpression();
     }
 
-    private BooleanExpression getLikedExpression(UserContext userContext) {
-        if (userContext.getId() == null) {
+    private BooleanExpression getLikedExpression() {
+        if (SecurityContextSupport.isNotLogined()) {
             return Expressions.asBoolean(true).isFalse();
         }
+
         return JPAExpressions.select(postLike)
                 .from(postLike)
-                .where(postLike.user.id.eq(userContext.getId())
+                .where(postLike.user.id.eq(SecurityContextSupport.getUserContext().getId())
                         .and(postLike.post.id.eq(post.id)))
                 .exists();
     }

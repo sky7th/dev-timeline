@@ -12,7 +12,6 @@ public class PostLikeService {
 
     private final PostLikeInternalService postLikeInternalService;
 
-    @PreAuthorize("@authService.isLogin(#userContext)")
     public void save(Long postId, UserContext userContext) {
         postLikeInternalService.save(postId, userContext);
     }

@@ -4,7 +4,6 @@ import com.sky7th.devtimeline.api.techpost.repository.TechPostWebRepository;
 import com.sky7th.devtimeline.core.domain.post.dto.PostSearchForm;
 import com.sky7th.devtimeline.core.domain.techpost.dto.TechPostItem;
 import com.sky7th.devtimeline.core.domain.techpost.dto.TechPostViewResponseDtos;
-import com.sky7th.devtimeline.core.domain.user.dto.UserContext;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,9 +16,9 @@ public class TechPostService {
     private final TechPostWebRepository techPostWebRepository;
 
     @Transactional(readOnly = true)
-    public TechPostViewResponseDtos findBySearchForm(PostSearchForm postSearchForm, UserContext userContext) {
-        List<TechPostItem> techPosts = techPostWebRepository.findAllWithLikeCountAndIsLikeBySearchForm(postSearchForm, userContext);
-        long techPostCounts = techPostWebRepository.countBySearchForm(postSearchForm, userContext);
+    public TechPostViewResponseDtos findBySearchForm(PostSearchForm postSearchForm) {
+        List<TechPostItem> techPosts = techPostWebRepository.findAllWithLikeCountAndIsLikeBySearchForm(postSearchForm);
+        long techPostCounts = techPostWebRepository.countBySearchForm(postSearchForm);
 
         return TechPostViewResponseDtos.of(techPosts, techPostCounts);
     }
