@@ -3,6 +3,6 @@ package com.sky7th.devtimeline.api.security.exception;
 public class NotLoginException extends RuntimeException {
 
   public NotLoginException() {
-    super("유저가 로그인되어 있지 않습니다.");
+    super("로그인이 필요합니다.");
   }
 }

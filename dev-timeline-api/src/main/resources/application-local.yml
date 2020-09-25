@@ -45,3 +45,12 @@ app:
       - http://localhost:3000/oauth2/redirect
       - myandroidapp://oauth2/redirect
       - myiosapp://oauth2/redirect
+
+logging:
+  level:
+    root: INFO
+    dev-timeline-api: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+  file:
+    path: C://logs/spring-boot-log/dev-timeline-api
