@@ -5,7 +5,6 @@ import com.sky7th.devtimeline.core.domain.post.dto.PostPageResponseDto;
 import com.sky7th.devtimeline.core.domain.post.dto.PostSearchForm;
 import com.sky7th.devtimeline.core.domain.techpost.dto.TechPostViewResponseDto;
 import com.sky7th.devtimeline.core.domain.techpost.dto.TechPostViewResponseDtos;
-import com.sky7th.devtimeline.core.domain.user.dto.UserContext;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,9 +20,8 @@ public class TechPostController {
     private final TechPostService techPostService;
 
     @GetMapping("/api/v1/tech-posts")
-    public ResponseEntity<PostPageResponseDto<TechPostViewResponseDto>> list(
-        @Valid PostSearchForm searchForm, UserContext userContext) {
-        TechPostViewResponseDtos responseDtos = techPostService.findBySearchForm(searchForm, userContext);
+    public ResponseEntity<PostPageResponseDto<TechPostViewResponseDto>> list(@Valid PostSearchForm searchForm) {
+        TechPostViewResponseDtos responseDtos = techPostService.findBySearchForm(searchForm);
 
         return ResponseEntity.ok(new PostPageResponseDto<>(
             responseDtos.getTechPostDtos(), responseDtos.getSearchCount(), searchForm.getOffset()));

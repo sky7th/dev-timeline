@@ -18,7 +18,7 @@ spring:
     properties.hibernate:
       dialect: org.hibernate.dialect.MySQL5InnoDBDialect
       default_batch_fetch_size: 1000
-    show-sql: true
+#    show-sql: true
     hibernate:
       ddl-auto: update
     generate-ddl: true
@@ -60,3 +60,12 @@ app:
       - http://localhost:3000/oauth2/redirect
       - myandroidapp://oauth2/redirect
       - myiosapp://oauth2/redirect
+
+logging:
+  level:
+    root: INFO
+    com.sky7th.devtimeline: DEBUG
+#    org.hibernate.SQL: DEBUG
+#    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+  file:
+    path: C://logs/spring-boot-log/dev-timeline-api

@@ -1,5 +1,7 @@
 package com.sky7th.devtimeline.api.linkpost.service;
 
+import static com.sky7th.devtimeline.core.config.PagingConstant.COMMENT_PAGE_SIZE;
+
 import com.sky7th.devtimeline.api.comment.repository.CommentWebRepository;
 import com.sky7th.devtimeline.api.linkpost.repository.LinkPostWebRepository;
 import com.sky7th.devtimeline.api.security.exception.UnauthorizedException;
@@ -27,23 +29,22 @@ public class LinkPostService {
     private final LinkPostInternalService linkPostInternalService;
 
     @Transactional(readOnly = true)
-    public LinkPostViewResponseDtos findBySearchForm(PostSearchForm postSearchForm, UserContext userContext) {
-        List<LinkPostItem> linkPostItems = linkPostWebRepository.findAllWithLikeCountAndIsLikeBySearchForm(postSearchForm, userContext);
-        long recruitPostCounts = linkPostWebRepository.countBySearchForm(postSearchForm, userContext);
+    public LinkPostViewResponseDtos findBySearchForm(PostSearchForm postSearchForm) {
+        List<LinkPostItem> linkPostItems = linkPostWebRepository.findAllWithLikeCountAndIsLikeBySearchForm(postSearchForm);
+        long recruitPostCounts = linkPostWebRepository.countBySearchForm(postSearchForm);
 
         return LinkPostViewResponseDtos.of(linkPostItems, recruitPostCounts);
     }
 
     @Transactional(readOnly = true)
-    public LinkPostViewDetailResponseDto findOne(Long postId, UserContext userContext) {
-        LinkPostItem linkPostItem = linkPostWebRepository.findWithLikeCountAndIsLikeByIdAndUserId(postId, userContext)
+    public LinkPostViewDetailResponseDto findOne(Long postId) {
+        LinkPostItem linkPostItem = linkPostWebRepository.findWithLikeCountAndIsLikeByIdAndUserId(postId)
                 .orElseThrow(NotFoundPostException::new);
-        linkPostItem.setComments(commentWebRepository.findFromLastCommentIdToLimit(postId, null, 5L));
+        linkPostItem.setComments(commentWebRepository.findFromLastCommentIdToLimit(postId, null, COMMENT_PAGE_SIZE));
 
         return LinkPostViewDetailResponseDto.of(linkPostItem);
     }
 
-    @PreAuthorize("@authService.isLogin(#userContext)")
     public LinkPostResponseDto save(LinkPostRequestDto requestDto, UserContext userContext) {
         return LinkPostResponseDto.of(linkPostInternalService.save(requestDto, userContext));
     }

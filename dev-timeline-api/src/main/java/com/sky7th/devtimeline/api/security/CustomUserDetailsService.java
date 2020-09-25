@@ -1,5 +1,6 @@
 package com.sky7th.devtimeline.api.security;
 
+import com.sky7th.devtimeline.api.user.CustomUserDetails;
 import com.sky7th.devtimeline.core.domain.user.domain.User;
 import com.sky7th.devtimeline.core.domain.user.domain.UserRepository;
 import com.sky7th.devtimeline.api.security.exception.ResourceNotFoundException;
@@ -24,8 +25,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .orElseThrow(() ->
                         new UsernameNotFoundException("가입된 이메일이 아닙니다 : " + email)
                 );
-
-        return UserPrincipal.create(user);
+        return new CustomUserDetails(user);
     }
 
     @Transactional
@@ -34,7 +34,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                 () -> new ResourceNotFoundException("User", "id", id)
         );
 
-        return UserPrincipal.create(user);
+        return new CustomUserDetails(user);
     }
 
 }

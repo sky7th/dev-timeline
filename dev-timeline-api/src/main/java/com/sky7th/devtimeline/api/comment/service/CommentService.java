@@ -23,7 +23,6 @@ public class CommentService {
         return CommentResponseDtos.of(commentWebRepository.findFromLastCommentIdToLimit(postId, lastCommentId, limit));
     }
 
-    @PreAuthorize("@authService.isLogin(#userContext)")
     public CommentResponseDto save(Long postId, CommentRequestDto requestDto, UserContext userContext) {
         return CommentResponseDto.of(commentInternalService.save(postId, requestDto, userContext));
     }
@@ -34,7 +33,7 @@ public class CommentService {
     }
 
     @PreAuthorize("@commentInternalService.isAuthor(#commentId, #userContext)")
-    public void delete(Long commentId, UserContext userContext) {
-        commentInternalService.delete(commentId);
+    public void delete(Long postId, Long commentId, UserContext userContext) {
+        commentInternalService.delete(postId, commentId);
     }
 }

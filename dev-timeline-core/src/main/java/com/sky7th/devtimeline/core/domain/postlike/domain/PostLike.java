@@ -32,8 +32,8 @@ public class PostLike extends BaseTimeEntity {
     private User user;
 
     @Builder
-    public PostLike(Long postId, Long userId) {
-        this.post = new Post(postId);
+    public PostLike(Post post, Long userId) {
+        this.post = post;
         this.user = new User(userId);
     }
 

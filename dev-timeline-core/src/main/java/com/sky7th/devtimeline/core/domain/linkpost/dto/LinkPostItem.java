@@ -13,9 +13,7 @@ import lombok.NoArgsConstructor;
 public class LinkPostItem {
 
     private LinkPost linkPost;
-    private Long likeCount;
     private Boolean isLike;
-    private Long commentCount;
     private List<Comment> comments;
 
     public void setComments(List<Comment> comments) {

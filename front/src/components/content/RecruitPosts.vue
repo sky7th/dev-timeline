@@ -22,13 +22,10 @@
       >
         <Like :isLike="like" :postId="id" :likeCount="likeCount" class="like-wrapper"/>
         <a :href="contentUrl" target="_blank">
-          <div style="display: flex;">
-            <img class="logo" :src="company.logoUrl" alt="">
+          <img class="logo" :src="company.logoUrl" alt="">
             <div style="width: auto; flex: 1;">
-              <div class="company">{{ company.name }}</div>
               <div class="date">{{ closingDate }}</div>
             </div>
-          </div>
           <div class="title">{{ title }}</div>
         </a>
         <NewIcon :date="sortDate" :period="5"/>
@@ -124,12 +121,12 @@ export default {
 }
 .recruit-posts ul li a{
   width: 100%;
+  margin-top: -11px;
 }
 .logo {
-  height: 50px;
-  width: 50px;
+  height: 60px;
+  width: 60px;
   border-radius: 8px;
-  margin: 0 0 15px 0;
 }
 .company {
   font-weight: bold;
@@ -147,6 +144,8 @@ export default {
   font-weight: bold;
   font-size: 14px;
   color: #3f4543;
+  margin-bottom: 10px;
+  margin-top: -9px;
 }
 .naver {
   background-color: rgb(239, 255, 239);

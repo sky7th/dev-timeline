@@ -27,8 +27,8 @@ public class LinkPostRequestDto {
     public static LinkPost toEntity(LinkPostRequestDto requestDto, User user) {
         LinkPost linkPost = LinkPost.builder()
                 .post(Post.builder()
-                    .likeCount(0)
-                    .commentCount(0)
+                    .likeCount(0L)
+                    .commentCount(0L)
                     .postType(PostType.LINK_POST)
                     .build())
                 .title(requestDto.getTitle())

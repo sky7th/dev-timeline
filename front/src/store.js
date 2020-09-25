@@ -95,7 +95,7 @@ export default new Vuex.Store({
     updatePosts: state => {
       let updatingMenu = state.selectedMenu;
       state.isLoadingContent = true;
-      axios.get('http://127.0.0.1:8080/api/v1/'+state.selectedMenu+'?'
+      axios.get(`${process.env.VUE_APP_API}/api/v1/`+state.selectedMenu+'?'
                 + getOffsetQuery(state.offset)
                 + getLimitQuery(Constant.POST_LIMIT)
                 + getCheckedCompaniesQuery(state.checkedCompanies)
@@ -119,7 +119,7 @@ export default new Vuex.Store({
     insertPosts: (state, payload) => {
       let updatingMenu = state.selectedMenu;
       // state.isLoadingContent = true;
-      axios.get('http://127.0.0.1:8080/api/v1/'+state.selectedMenu+'?'
+      axios.get(`${process.env.VUE_APP_API}/api/v1/`+state.selectedMenu+'?'
                 + getOffsetQuery(state.offset)
                 + getLimitQuery(Constant.POST_LIMIT)
                 + getCheckedCompaniesQuery(state.checkedCompanies)

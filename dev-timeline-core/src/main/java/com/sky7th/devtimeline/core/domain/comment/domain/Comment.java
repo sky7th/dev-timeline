@@ -36,9 +36,9 @@ public class Comment extends BaseTimeEntity {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 
-    public Comment(Long postId, Long userId, String content) {
-        this.post = new Post(postId);
-        this.user = new User(userId);
+    public Comment(Post post, User user, String content) {
+        this.post = post;
+        this.user = user;
         this.content = content;
     }
 

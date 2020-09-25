@@ -27,7 +27,7 @@ export default {
   methods: {
     doLike() {
       event.stopPropagation();
-      this.axios.post(`${process.env.VUE_APP_API}/api/v1/like`, { postId: this.postId })
+      this.axios.post(`${process.env.VUE_APP_API}/api/v1/posts/${this.postId}/likes/`)
       .then(() => {
         var post = this.posts.find(v => v.id === this.postId);
         post.like = true;
@@ -40,7 +40,7 @@ export default {
     },
     cancelLike() {
       event.stopPropagation();
-      this.axios.delete(`${process.env.VUE_APP_API}/api/v1/like/${this.postId}`)
+      this.axios.delete(`${process.env.VUE_APP_API}/api/v1/posts/${this.postId}/likes/`)
       .then(() => {
         var post = this.posts.find(v => v.id === this.postId);
         post.like = false;

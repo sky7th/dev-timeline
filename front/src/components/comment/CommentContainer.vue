@@ -22,7 +22,7 @@ import { scrollFetch } from '@/utils/scrollFetch.js';
 
 export default {
     mounted() {
-        scrollFetch(() => this.addComments(), document.querySelector('.modal .wrapper'));
+        scrollFetch(() => this.insertComments(), document.querySelector('.modal > .wrapper'));
     },
     data: () => ({
         lastCommentId: 0
@@ -44,7 +44,7 @@ export default {
             if (idx > -1) 
                 this.comments.splice(idx, 1)
         },
-        addComments() {
+        insertComments() {
             let loadingElement = document.querySelector('.loading');
             loadingElement.style.display = 'block';
             loadingElement.style.visibility = 'visible';
@@ -52,8 +52,8 @@ export default {
             let lastCommentId = this.comments.length === 0 ? 1 : this.comments[this.comments.length-1].id;
             this.axios.get(`${process.env.VUE_APP_API}/api/v1/posts/${this.postId}/comments?lastCommentId=${lastCommentId}&limit=${5}`)
                 .then(({ data }) => {
-                    if (data.data.length) {
-                        this.comments = [...this.comments, ...data.data];
+                    if (data.comments.length) {
+                        this.comments = [...this.comments, ...data.comments];
                     } else {
                         loadingElement.style.visibility = 'hidden';
                     }

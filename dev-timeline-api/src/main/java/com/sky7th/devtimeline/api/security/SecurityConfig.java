@@ -137,6 +137,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/api/v1/recruit-posts",
                         "/api/v1/tech-posts",
                         "/api/v1/link-posts/**",
+                        "/api/v1/posts/**",
                         "/api/v1/likes/**",
                         "/api/v1/companies/**")
                         .permitAll()

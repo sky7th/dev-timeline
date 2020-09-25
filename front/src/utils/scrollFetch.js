@@ -8,7 +8,7 @@ function scrollFetch(fetchData, element) {
             var dh = element.scrollHeight;
             var dch = element.clientHeight;
             var dct = element.scrollTop;
-            
+
             if (dh - (dch + dct) > 1) return;
             fetchData();
         }, 700);

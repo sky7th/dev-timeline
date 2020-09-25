@@ -29,18 +29,16 @@ public class LinkPostController {
     private final LinkPostService linkPostService;
 
     @GetMapping("/api/v1/link-posts")
-    public ResponseEntity<PostPageResponseDto<LinkPostViewResponseDto>> list(
-        @Valid PostSearchForm searchForm, UserContext userContext) {
-        LinkPostViewResponseDtos linkPostView = linkPostService.findBySearchForm(searchForm, userContext);
+    public ResponseEntity<PostPageResponseDto<LinkPostViewResponseDto>> list(@Valid PostSearchForm searchForm) {
+        LinkPostViewResponseDtos linkPostView = linkPostService.findBySearchForm(searchForm);
 
         return ResponseEntity.ok(new PostPageResponseDto<>(
             linkPostView.getLinkPosts(), linkPostView.getSearchCount(), searchForm.getOffset()));
     }
 
     @GetMapping("/api/v1/link-posts/{postId}")
-    public ResponseEntity<LinkPostViewDetailResponseDto> show(@PathVariable Long postId,
-        UserContext userContext) {
-        return ResponseEntity.ok(linkPostService.findOne(postId, userContext));
+    public ResponseEntity<LinkPostViewDetailResponseDto> show(@PathVariable Long postId) {
+        return ResponseEntity.ok(linkPostService.findOne(postId));
     }
 
     @PostMapping("/api/v1/link-posts")

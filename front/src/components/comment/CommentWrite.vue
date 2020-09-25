@@ -41,7 +41,7 @@ export default {
             this.axios.post(`${process.env.VUE_APP_API}/api/v1/posts/${this.postId}/comments`, formData)
                 .then(response => {
                     notification.success('댓글을 작성했습니다.');
-                    this.handlerAddComment(response.data.data);
+                    this.handlerAddComment(response.data);
                     let post = this.posts.find(v => v.id === this.post.id);
                     post.commentCount += 1;
                     this.post.commentCount += 1;
