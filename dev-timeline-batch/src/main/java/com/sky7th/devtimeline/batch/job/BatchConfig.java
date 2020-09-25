@@ -104,8 +104,8 @@ public class BatchConfig {
                     if (!postKeySet.contains(crawlingDto.getCrawlId())) {
                         Post post = Post.builder()
                                 .crawlId(crawlingDto.getCrawlId())
-                                .likeCount(0)
-                                .commentCount(0)
+                                .likeCount(0L)
+                                .commentCount(0L)
                                 .build();
                         if (crawlingDto.isCompanyUrlType(CompanyUrlType.RECRUIT)) {
                             post.setPostType(PostType.RECRUIT_POST);
