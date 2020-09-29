@@ -22,7 +22,7 @@ public class LinkPost extends BaseTimeEntity {
     @JoinColumn(name = "post_id")
     private Post post;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -60,6 +60,14 @@ public class LinkPost extends BaseTimeEntity {
 
     public boolean isAuthor(Long userId) {
         return this.user.getId().equals(userId);
+    }
+
+    public void delete() {
+        this.post.delete();
+    }
+
+    public boolean isDeleted() {
+        return this.post.getDeleteYn();
     }
 
     public Long getPostId() {
