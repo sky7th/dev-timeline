@@ -34,4 +34,7 @@ sudo service nginx reload
 
 echo "> Nginx reloaded."
 
-sudo fuser -k -n tcp ${CURRENT_PORT}
+CURRENT_PID=$(lsof -Fp -i TCP:${CURRENT_PORT} | grep -Po 'p[0-9]+' | grep -Po '[0-9]+')
+sudo kill ${CURRENT_PID}
+
+echo "> Current Port Killed."

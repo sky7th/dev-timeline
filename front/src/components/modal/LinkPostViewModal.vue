@@ -267,5 +267,11 @@ export default {
     visibility: hidden;
     height: 13px;
   }
+  .comment-icon {
+      margin-left: 50px;
+  }
+  .post-container-btn {
+    font-size: 17px;
+  }
 }
 </style>
