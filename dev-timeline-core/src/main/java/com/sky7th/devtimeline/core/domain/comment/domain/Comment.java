@@ -29,7 +29,7 @@ public class Comment extends BaseTimeEntity {
     @JoinColumn(name = "post_id", foreignKey = @ForeignKey(name = "fk_comment_post"))
     private Post post;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 

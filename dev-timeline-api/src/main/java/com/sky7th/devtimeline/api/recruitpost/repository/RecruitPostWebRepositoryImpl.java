@@ -1,5 +1,7 @@
 package com.sky7th.devtimeline.api.recruitpost.repository;
 
+import static com.sky7th.devtimeline.core.domain.company.domain.QCompany.company;
+import static com.sky7th.devtimeline.core.domain.company.domain.QCompanyUrl.companyUrl;
 import static com.sky7th.devtimeline.core.domain.post.domain.QPost.post;
 import static com.sky7th.devtimeline.core.domain.postlike.domain.QPostLike.postLike;
 import static com.sky7th.devtimeline.core.domain.recruitpost.domain.QRecruitPost.recruitPost;
@@ -39,23 +41,26 @@ public class RecruitPostWebRepositoryImpl implements RecruitPostWebRepositoryCus
                 ))
                 .from(recruitPost)
                 .leftJoin(post).on(post.crawlId.eq(recruitPost.postCrawlId))
+                .leftJoin(recruitPost.companyUrl, companyUrl).fetchJoin()
+                .leftJoin(companyUrl.company, company).fetchJoin()
                 .where(containsTags(postSearchForm.getTags()),
                         inCompany(postSearchForm.getCompanies()),
                         liked(postSearchForm.isLiked()))
                 .offset(postSearchForm.getOffset())
                 .limit(postSearchForm.getLimit())
-                .orderBy(sortOrder(SortOrderType.valueOf(postSearchForm.getSortOrderType())),
-                        recruitPost.id.desc())
+                .orderBy(sortOrder(SortOrderType.valueOf(postSearchForm.getSortOrderType())))
                 .fetch();
     }
 
-    private OrderSpecifier sortOrder(SortOrderType sortOrderType) {
+    private OrderSpecifier[] sortOrder(SortOrderType sortOrderType) {
         if (sortOrderType == SortOrderType.ASC) {
-            return recruitPost.sortDate.asc();
+            return new OrderSpecifier[] {recruitPost.sortDate.asc()};
+
         } else if (sortOrderType == SortOrderType.LIKE) {
-            return likeCount.desc();
+            return new OrderSpecifier[] {likeCount.desc(), recruitPost.sortDate.desc()};
         }
-        return recruitPost.sortDate.desc();
+
+        return new OrderSpecifier[] {recruitPost.sortDate.desc()};
     }
 
     @Override
@@ -63,7 +68,8 @@ public class RecruitPostWebRepositoryImpl implements RecruitPostWebRepositoryCus
         return queryFactory
                 .selectFrom(recruitPost)
                 .leftJoin(post).on(post.crawlId.eq(recruitPost.postCrawlId))
-                .leftJoin(recruitPost.companyUrl).fetchJoin()
+                .leftJoin(recruitPost.companyUrl, companyUrl).fetchJoin()
+                .leftJoin(companyUrl.company, company).fetchJoin()
                 .where(containsTags(postSearchForm.getTags()),
                         inCompany(postSearchForm.getCompanies()),
                         liked(postSearchForm.isLiked()))

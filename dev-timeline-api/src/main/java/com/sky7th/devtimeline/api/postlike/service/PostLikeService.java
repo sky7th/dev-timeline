@@ -3,7 +3,6 @@ package com.sky7th.devtimeline.api.postlike.service;
 import com.sky7th.devtimeline.core.domain.postlike.service.PostLikeInternalService;
 import com.sky7th.devtimeline.core.domain.user.dto.UserContext;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
@@ -16,7 +15,6 @@ public class PostLikeService {
         postLikeInternalService.save(postId, userContext);
     }
 
-    @PreAuthorize("@postLikeInternalService.isAuthor(#postId, #userContext)")
     public void delete(Long postId, UserContext userContext) {
         postLikeInternalService.delete(postId, userContext);
     }

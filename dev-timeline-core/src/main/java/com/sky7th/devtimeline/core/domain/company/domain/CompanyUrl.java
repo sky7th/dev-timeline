@@ -17,7 +17,7 @@ public class CompanyUrl extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="company_id", foreignKey = @ForeignKey(name = "fk_url_company"))
     private Company company;
 

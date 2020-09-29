@@ -107,7 +107,9 @@ export default new Vuex.Store({
           return;
         state.posts = response.data.posts
         state.offset = response.data.offset
-        state.postCounts = response.data.searchCount
+        if (response.data.searchCount) {
+          state.postCounts = response.data.searchCount
+        }
       })
       .catch(e => {
         console.log('error : ', e)
@@ -131,7 +133,9 @@ export default new Vuex.Store({
           return;
         if (data.posts.length) {
           state.offset = data.offset
-          state.postCounts = data.searchCount
+          if (data.searchCount) {
+            state.postCounts = data.searchCount
+          }
           state.posts.push(...data.posts)
           payload.infiniteState.loaded(); 
         } else {

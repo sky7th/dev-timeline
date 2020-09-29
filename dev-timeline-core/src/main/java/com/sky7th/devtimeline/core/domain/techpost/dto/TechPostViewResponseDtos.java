@@ -13,9 +13,9 @@ import lombok.ToString;
 public class TechPostViewResponseDtos {
 
     private List<TechPostViewResponseDto> techPostDtos;
-    private long searchCount;
+    private Long searchCount;
 
-    public static TechPostViewResponseDtos of(List<TechPostItem> techPostItems, long searchCount) {
+    public static TechPostViewResponseDtos of(List<TechPostItem> techPostItems, Long searchCount) {
         return new TechPostViewResponseDtos(TechPostViewResponseDto.of(techPostItems), searchCount);
     }
 }

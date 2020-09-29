@@ -9,7 +9,6 @@ import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sky7th.devtimeline.api.security.SecurityContextSupport;
@@ -26,8 +25,6 @@ import org.springframework.util.StringUtils;
 public class LinkPostWebRepositoryImpl implements LinkPostWebRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
-
-    private NumberPath<Long> likeCount = Expressions.numberPath(Long.class, "likeCount");
 
     @Override
     public Optional<LinkPostItem> findWithLikeCountAndIsLikeByIdAndUserId(Long postId) {
@@ -59,20 +56,24 @@ public class LinkPostWebRepositoryImpl implements LinkPostWebRepositoryCustom {
                 .leftJoin(linkPost.user).fetchJoin()
                 .where(containsTags(postSearchForm.getTags()),
                         inLinkType(postSearchForm.getLinkTypes()),
-                        liked(postSearchForm.isLiked()))
+                        liked(postSearchForm.isLiked()),
+                        linkPost.post.deleteYn.isFalse()
+                )
                 .offset(postSearchForm.getOffset())
                 .limit(postSearchForm.getLimit())
                 .orderBy(sortOrder(SortOrderType.valueOf(postSearchForm.getSortOrderType())))
                 .fetch();
     }
 
-    private OrderSpecifier sortOrder(SortOrderType sortOrderType) {
+    private OrderSpecifier[] sortOrder(SortOrderType sortOrderType) {
         if (sortOrderType == SortOrderType.ASC) {
-            return linkPost.createdDate.asc();
+            return new OrderSpecifier[] {linkPost.createdDate.asc()};
+
         } else if (sortOrderType == SortOrderType.LIKE) {
-            return linkPost.post.likeCount.desc();
+            return new OrderSpecifier[] {linkPost.post.likeCount.desc(), linkPost.createdDate.desc()};
         }
-        return linkPost.createdDate.desc();
+        
+        return new OrderSpecifier[] {linkPost.createdDate.desc()};
     }
 
 //    public static <T> Predicate<T> distinctByKey(Function<? super T, Object> keyExtractor) {
@@ -84,8 +85,10 @@ public class LinkPostWebRepositoryImpl implements LinkPostWebRepositoryCustom {
     public long countBySearchForm(PostSearchForm postSearchForm) {
         return queryFactory
                 .selectFrom(linkPost)
+                .leftJoin(linkPost.post).fetchJoin()
                 .where(containsTags(postSearchForm.getTags()),
-                        liked(postSearchForm.isLiked()))
+                        liked(postSearchForm.isLiked()),
+                        linkPost.post.deleteYn.isFalse())
                 .fetchCount();
     }
 

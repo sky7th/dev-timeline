@@ -42,28 +42,42 @@
         </li>
       </ul>
     </div>
-    <PagingBar v-if="postCounts > 0"/>
+    <infinite-loading class="infinite-message" @infinite="handlerInfinite" ref="infiniteLoading" spinner="waveDots">
+      <div slot="no-more">
+        <ScrollUp/>
+      </div>
+      <div slot="no-results">
+        <ScrollUp/>
+      </div>
+    </infinite-loading>
   </div>
 </template>
 
 <script>
 import CompanyList from '@/components/company/CompanyList';
 import CountBar from '@/components/search/CountBar';
-import PagingBar from '@/components/search/PagingBar';
 import Like from '@/components/like/Like';
 import NewIcon from '@/components/common/NewIcon'
 import SortButton from '@/components/sortButton/SortButton'
 import { mapGetters, mapActions } from "vuex";
 import { timeForToday } from '@/utils/time';
+import InfiniteLoading from 'vue-infinite-loading';
 
 export default {
   components: {
     CompanyList,
     CountBar,
-    PagingBar,
     Like,
     NewIcon,
-    SortButton
+    SortButton,
+    InfiniteLoading
+  },
+  watch: {
+    posts() {
+      if (this.$refs.infiniteLoading) {
+        this.$refs.infiniteLoading.stateChanger.reset(); 
+      }
+    }
   },
   created() {
     this.updatePosts()
@@ -72,10 +86,13 @@ export default {
     ...mapGetters(['posts', 'postCounts'])
   },
   methods: {
-    ...mapActions(['updatePosts']),
+    ...mapActions(['updatePosts', 'insertPosts']),
     timeForToday(createdDate) {
         return timeForToday(createdDate);
-    }
+    },
+    handlerInfinite($state) {
+      this.insertPosts({ infiniteState: $state });
+    },
   }
 }
 </script>
@@ -91,14 +108,14 @@ export default {
 .tech-posts ul {
   text-align: center;
   padding: 15px 10px;
-  width: 900px;
+  width: 1200px;
 }
 .tech-posts ul li {
   display: inline-flex;
   position: relative;
   background-color: white;
   padding: 7px 17px 7px;
-  margin: 8px 10px;
+  margin: 9px 20px;
   border-radius: 10px;
   width: 350px;
   max-width: 550px;

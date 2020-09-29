@@ -1,5 +1,7 @@
 package com.sky7th.devtimeline.api.techpost.repository;
 
+import static com.sky7th.devtimeline.core.domain.company.domain.QCompany.company;
+import static com.sky7th.devtimeline.core.domain.company.domain.QCompanyUrl.companyUrl;
 import static com.sky7th.devtimeline.core.domain.post.domain.QPost.post;
 import static com.sky7th.devtimeline.core.domain.postlike.domain.QPostLike.postLike;
 import static com.sky7th.devtimeline.core.domain.techpost.domain.QTechPost.techPost;
@@ -40,24 +42,26 @@ public class TechPostWebRepositoryImpl implements TechPostWebRepositoryCustom {
                 ))
                 .from(techPost)
                 .leftJoin(post).on(post.crawlId.eq(techPost.postCrawlId))
-                .leftJoin(techPost.companyUrl).fetchJoin()
+                .leftJoin(techPost.companyUrl, companyUrl).fetchJoin()
+                .leftJoin(companyUrl.company, company).fetchJoin()
                 .where(containsTags(postSearchForm.getTags()),
                         inCompany(postSearchForm.getCompanies()),
                         liked(postSearchForm.isLiked()))
                 .offset(postSearchForm.getOffset())
                 .limit(postSearchForm.getLimit())
-                .orderBy(sortOrder(SortOrderType.valueOf(postSearchForm.getSortOrderType())),
-                        techPost.id.desc())
+                .orderBy(sortOrder(SortOrderType.valueOf(postSearchForm.getSortOrderType())))
                 .fetch();
     }
 
-    private OrderSpecifier sortOrder(SortOrderType sortOrderType) {
+    private OrderSpecifier[] sortOrder(SortOrderType sortOrderType) {
         if (sortOrderType == SortOrderType.ASC) {
-            return techPost.sortDate.asc();
+            return new OrderSpecifier[] {techPost.sortDate.asc()};
+
         } else if (sortOrderType == SortOrderType.LIKE) {
-            return likeCount.desc();
+            return new OrderSpecifier[] {likeCount.desc(), techPost.sortDate.desc()};
         }
-        return techPost.sortDate.desc();
+
+        return new OrderSpecifier[] {techPost.sortDate.desc()};
     }
 
     @Override
@@ -65,7 +69,8 @@ public class TechPostWebRepositoryImpl implements TechPostWebRepositoryCustom {
         return queryFactory
                 .selectFrom(techPost)
                 .leftJoin(post).on(post.crawlId.eq(techPost.postCrawlId))
-                .leftJoin(techPost.companyUrl).fetchJoin()
+                .leftJoin(techPost.companyUrl, companyUrl).fetchJoin()
+                .leftJoin(companyUrl.company, company).fetchJoin()
                 .where(containsTags(postSearchForm.getTags()),
                         inCompany(postSearchForm.getCompanies()),
                         liked(postSearchForm.isLiked()))

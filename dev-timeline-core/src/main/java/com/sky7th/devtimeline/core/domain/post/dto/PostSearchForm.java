@@ -36,6 +36,10 @@ public class PostSearchForm {
         this.sortOrderType = sortOrderType;
     }
 
+    public boolean isFirstLoad() {
+        return this.offset == 0L;
+    }
+
     @Override
     public String toString() {
         return "PostSearchForm{" +

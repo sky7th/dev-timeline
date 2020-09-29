@@ -18,7 +18,10 @@ public class TechPostService {
     @Transactional(readOnly = true)
     public TechPostViewResponseDtos findBySearchForm(PostSearchForm postSearchForm) {
         List<TechPostItem> techPosts = techPostWebRepository.findAllWithLikeCountAndIsLikeBySearchForm(postSearchForm);
-        long techPostCounts = techPostWebRepository.countBySearchForm(postSearchForm);
+        Long techPostCounts = null;
+        if (postSearchForm.isFirstLoad()) {
+            techPostCounts = techPostWebRepository.countBySearchForm(postSearchForm);
+        }
 
         return TechPostViewResponseDtos.of(techPosts, techPostCounts);
     }

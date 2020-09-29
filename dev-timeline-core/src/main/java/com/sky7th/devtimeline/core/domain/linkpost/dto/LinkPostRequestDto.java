@@ -3,7 +3,6 @@ package com.sky7th.devtimeline.core.domain.linkpost.dto;
 import com.sky7th.devtimeline.core.domain.linkpost.domain.LinkPost;
 import com.sky7th.devtimeline.core.domain.post.domain.Post;
 import com.sky7th.devtimeline.core.domain.post.domain.PostType;
-import com.sky7th.devtimeline.core.domain.tag.domain.Tag;
 import com.sky7th.devtimeline.core.domain.tag.dto.TagRequestDto;
 import com.sky7th.devtimeline.core.domain.user.domain.User;
 import java.util.List;
@@ -25,20 +24,12 @@ public class LinkPostRequestDto {
     private String linkUrl;
 
     public static LinkPost toEntity(LinkPostRequestDto requestDto, User user) {
-        LinkPost linkPost = LinkPost.builder()
-                .post(Post.builder()
-                    .likeCount(0L)
-                    .commentCount(0L)
-                    .postType(PostType.LINK_POST)
-                    .build())
+        return LinkPost.builder()
+                .post(new Post(PostType.LINK_POST, TagRequestDto.toEntities(requestDto.tags, user)))
                 .title(requestDto.getTitle())
                 .content(requestDto.getContent())
                 .linkUrl(requestDto.getLinkUrl())
                 .user(user)
                 .build();
-        List<Tag> tags = TagRequestDto.toEntities(requestDto.tags);
-        tags.forEach(linkPost.getPost()::addTag);
-
-        return linkPost;
     }
 }

@@ -13,9 +13,9 @@ import lombok.ToString;
 public class RecruitPostViewResponseDtos {
 
     private List<RecruitPostViewResponseDto> recruitPosts;
-    private long searchCount;
+    private Long searchCount;
 
-    public static RecruitPostViewResponseDtos of(List<RecruitPostItem> recruitPostItems, long searchCount) {
+    public static RecruitPostViewResponseDtos of(List<RecruitPostItem> recruitPostItems, Long searchCount) {
         return new RecruitPostViewResponseDtos(RecruitPostViewResponseDto.of(recruitPostItems), searchCount);
     }
 }

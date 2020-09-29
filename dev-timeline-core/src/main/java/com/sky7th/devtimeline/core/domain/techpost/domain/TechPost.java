@@ -6,6 +6,7 @@ import com.sky7th.devtimeline.core.domain.company.domain.CompanyUrl;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -30,7 +31,7 @@ public class TechPost extends BaseTimeEntity {
 //    private Post post;
     private String postCrawlId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="company_url_id", foreignKey = @ForeignKey(name = "fk_tech_post_company_url"))
     private CompanyUrl companyUrl;
 
