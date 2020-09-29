@@ -4,9 +4,10 @@ import com.sky7th.devtimeline.core.domain.comment.domain.Comment;
 import com.sky7th.devtimeline.core.domain.common.BaseTimeEntity;
 import com.sky7th.devtimeline.core.domain.postlike.domain.PostLike;
 import com.sky7th.devtimeline.core.domain.tag.domain.Tag;
-import com.sky7th.devtimeline.core.domain.tag.dto.TagRequestDto;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -42,8 +43,11 @@ public class Post extends BaseTimeEntity {
     @Column(columnDefinition = "integer(11) default 0")
     private Long commentCount;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "post")
-    private List<Tag> tags = new ArrayList<>();
+    @Column(columnDefinition = "tinyint(1) default 0")
+    private Boolean deleteYn;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "post", orphanRemoval = true)
+    private Set<Tag> tags = new LinkedHashSet<>();
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "post")
     private List<PostLike> postLikes = new ArrayList<>();
@@ -51,13 +55,18 @@ public class Post extends BaseTimeEntity {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "post")
     private List<Comment> comments = new ArrayList<>();
 
+    public Post(PostType postType, List<Tag> tags) {
+        this(null, null, postType, 0L, 0L, tags);
+    }
+
     @Builder
-    public Post(Long id, String crawlId, PostType postType, Long likeCount, Long commentCount) {
+    public Post(Long id, String crawlId, PostType postType, Long likeCount, Long commentCount, List<Tag> tags) {
         this.id = id;
         this.crawlId = crawlId;
         this.postType = postType;
         this.likeCount = likeCount;
         this.commentCount = commentCount;
+        tags.forEach(this::addTag);
     }
 
     public Post(Long id) {
@@ -65,8 +74,8 @@ public class Post extends BaseTimeEntity {
     }
 
     public void addTag(Tag tag) {
+        tag.setPost(this);
         this.tags.add(tag);
-        tag.setLinkPost(this);
     }
 
     public void increaseLikeCount() {
@@ -85,26 +94,20 @@ public class Post extends BaseTimeEntity {
         this.commentCount -= 1;
     }
 
-    public void updateTags(List<TagRequestDto> tagRequestDtos) {
-        List<Tag> toBeDeletedTags = getToBeDeletedTags(tagRequestDtos);
-        toBeDeletedTags.forEach(this.tags::remove);
-        addTags(tagRequestDtos);
+    public void updateTags(List<Tag> requestTags) {
+        deleteTagsNotContainedIn(requestTags);
+        requestTags.forEach(this::addTag);
     }
 
-    private List<Tag> getToBeDeletedTags(List<TagRequestDto> tagRequestDtos) {
-        List<Long> tagItemIds = tagRequestDtos.stream()
-            .map(TagRequestDto::getId).collect(Collectors.toList());
-
-        return tags.stream()
-            .filter(tag -> !tagItemIds.contains(tag.getId()))
+    private void deleteTagsNotContainedIn(List<Tag> requestTags) {
+        List<Tag> toBeDeletedTags = tags.stream()
+            .filter(tag -> !requestTags.contains(tag))
             .collect(Collectors.toList());
+        toBeDeletedTags.forEach(this.tags::remove);
     }
 
-    private void addTags(List<TagRequestDto> tagRequestDtos) {
-        tagRequestDtos.stream()
-            .filter(tagDto -> tagDto.getId() == null)
-            .map(TagRequestDto::toEntity)
-            .forEach(this::addTag);
+    public void delete() {
+        this.deleteYn = true;
     }
 
     public void setPostType(PostType postType) {

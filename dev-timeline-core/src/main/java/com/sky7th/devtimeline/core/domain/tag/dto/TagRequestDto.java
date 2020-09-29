@@ -1,6 +1,7 @@
 package com.sky7th.devtimeline.core.domain.tag.dto;
 
 import com.sky7th.devtimeline.core.domain.tag.domain.Tag;
+import com.sky7th.devtimeline.core.domain.user.domain.User;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
@@ -17,14 +18,17 @@ public class TagRequestDto {
     private Long id;
     private String name;
 
-    public static Tag toEntity(TagRequestDto requestDto) {
+    public static Tag toEntity(TagRequestDto requestDto, User user) {
         return Tag.builder()
             .id(requestDto.getId())
+            .user(user)
             .name(requestDto.getName())
             .build();
     }
 
-    public static List<Tag> toEntities(List<TagRequestDto> requestDtos) {
-        return requestDtos.stream().map(TagRequestDto::toEntity).collect(Collectors.toList());
+    public static List<Tag> toEntities(List<TagRequestDto> requestDtos, User user) {
+        return requestDtos.stream()
+            .map(requestDto -> TagRequestDto.toEntity(requestDto, user))
+            .collect(Collectors.toList());
     }
 }
