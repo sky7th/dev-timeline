@@ -18,7 +18,10 @@ public class RecruitPostService {
     @Transactional(readOnly = true)
     public RecruitPostViewResponseDtos findBySearchForm(PostSearchForm postSearchForm) {
         List<RecruitPostItem> recruitPosts = recruitPostWebRepository.findAllWithLikeCountAndIsLikeBySearchForm(postSearchForm);
-        long recruitPostCounts = recruitPostWebRepository.countBySearchForm(postSearchForm);
+        Long recruitPostCounts = null;
+        if (postSearchForm.isFirstLoad()) {
+            recruitPostCounts = recruitPostWebRepository.countBySearchForm(postSearchForm);
+        }
 
         return RecruitPostViewResponseDtos.of(recruitPosts, recruitPostCounts);
     }

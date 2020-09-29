@@ -5,14 +5,14 @@ import static com.sky7th.devtimeline.core.config.PagingConstant.COMMENT_PAGE_SIZ
 import com.sky7th.devtimeline.api.comment.repository.CommentWebRepository;
 import com.sky7th.devtimeline.api.linkpost.repository.LinkPostWebRepository;
 import com.sky7th.devtimeline.api.security.exception.UnauthorizedException;
-import com.sky7th.devtimeline.core.domain.linkpost.dto.LinkPostViewDetailResponseDto;
 import com.sky7th.devtimeline.core.domain.linkpost.dto.LinkPostItem;
 import com.sky7th.devtimeline.core.domain.linkpost.dto.LinkPostRequestDto;
 import com.sky7th.devtimeline.core.domain.linkpost.dto.LinkPostResponseDto;
+import com.sky7th.devtimeline.core.domain.linkpost.dto.LinkPostViewDetailResponseDto;
 import com.sky7th.devtimeline.core.domain.linkpost.dto.LinkPostViewResponseDtos;
+import com.sky7th.devtimeline.core.domain.linkpost.service.LinkPostInternalService;
 import com.sky7th.devtimeline.core.domain.post.dto.PostSearchForm;
 import com.sky7th.devtimeline.core.domain.post.exception.NotFoundPostException;
-import com.sky7th.devtimeline.core.domain.linkpost.service.LinkPostInternalService;
 import com.sky7th.devtimeline.core.domain.user.dto.UserContext;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +31,10 @@ public class LinkPostService {
     @Transactional(readOnly = true)
     public LinkPostViewResponseDtos findBySearchForm(PostSearchForm postSearchForm) {
         List<LinkPostItem> linkPostItems = linkPostWebRepository.findAllWithLikeCountAndIsLikeBySearchForm(postSearchForm);
-        long recruitPostCounts = linkPostWebRepository.countBySearchForm(postSearchForm);
+        Long recruitPostCounts = null;
+        if (postSearchForm.isFirstLoad()) {
+            recruitPostCounts = linkPostWebRepository.countBySearchForm(postSearchForm);
+        }
 
         return LinkPostViewResponseDtos.of(linkPostItems, recruitPostCounts);
     }
@@ -40,6 +43,7 @@ public class LinkPostService {
     public LinkPostViewDetailResponseDto findOne(Long postId) {
         LinkPostItem linkPostItem = linkPostWebRepository.findWithLikeCountAndIsLikeByIdAndUserId(postId)
                 .orElseThrow(NotFoundPostException::new);
+
         linkPostItem.setComments(commentWebRepository.findFromLastCommentIdToLimit(postId, null, COMMENT_PAGE_SIZE));
 
         return LinkPostViewDetailResponseDto.of(linkPostItem);

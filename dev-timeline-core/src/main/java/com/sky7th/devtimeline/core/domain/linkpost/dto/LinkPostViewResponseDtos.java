@@ -13,9 +13,9 @@ import lombok.ToString;
 public class LinkPostViewResponseDtos {
 
     private List<LinkPostViewResponseDto> linkPosts;
-    private long searchCount;
+    private Long searchCount;
 
-    public static LinkPostViewResponseDtos of(List<LinkPostItem> linkPostItems, long searchCount) {
+    public static LinkPostViewResponseDtos of(List<LinkPostItem> linkPostItems, Long searchCount) {
         return new LinkPostViewResponseDtos(LinkPostViewResponseDto.of(linkPostItems), searchCount);
     }
 }
