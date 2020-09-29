@@ -3,57 +3,59 @@
     <FixedTagBar/>
     <CountBar style="margin-bottom: 11px;"/>
     <SortButton/>
-    <ul>
-      <li
-        v-for="({
-          id, 
-          title,
-          linkUrl,
-          tags,
-          user,
-          createdDate,
-          likeCount,
-          commentCount,
-          like}) in posts"
-        :key="id"
-        @click="handlerOnModalState(id)"
-      >
-        <a class="post-container" target="_blank">
-          <div class="middle">
-            <div class="tags">
-              <span class="tag" v-for="({ id, name }) in tags" :key="id">#{{ name }}</span>
-            </div>
-            <div class="title">{{ title }}</div>
-            <div class="middle-bottom">
-              <div class="author-container">
-                <img class="img-author" :src="user.imageUrl" alt="">
-                <div class="author">{{ user.name }}</div>
+    <div class="content-container">
+      <ul>
+        <li
+          v-for="({
+            id, 
+            title,
+            linkUrl,
+            tags,
+            user,
+            createdDate,
+            likeCount,
+            commentCount,
+            like}) in posts"
+          :key="id"
+          @click="handlerOnModalState(id)"
+        >
+          <a class="post-container" target="_blank">
+            <div class="middle">
+              <div class="tags">
+                <span class="tag" v-for="({ id, name }) in tags" :key="id">#{{ name }}</span>
               </div>
-              <div class="between">|</div>
-              <div class="date">{{ timeForToday(createdDate) }}</div>
+              <div class="title">{{ title }}</div>
+              <div class="middle-bottom">
+                <div class="author-container">
+                  <img class="img-author" :src="user.imageUrl" alt="">
+                  <div class="author">{{ user.name }}</div>
+                </div>
+                <div class="between">|</div>
+                <div class="date">{{ timeForToday(createdDate) }}</div>
+              </div>
+            </div>
+          </a>
+          <Like :isLike="like" :postId="id" :likeCount="likeCount" class="like-wrapper"/>
+          <div class="post-container-btn comment-icon">
+            <div class="like">
+              <div class="btn-comment">
+                <font-awesome-icon :icon="['far', 'comment']"/>
+              </div>
+              <span class="like-count">{{ commentCount }}</span>
             </div>
           </div>
-        </a>
-        <Like :isLike="like" :postId="id" :likeCount="likeCount" class="like-wrapper"/>
-        <div class="post-container-btn comment-icon">
-          <div class="like">
-            <div class="btn-comment">
-              <font-awesome-icon :icon="['far', 'comment']"/>
-            </div>
-            <span class="like-count">{{ commentCount }}</span>
-          </div>
-        </div>
-        <NewIcon :date="createdDate" :period="2" class="new-icon"/>
-      </li>
-    </ul>
+          <NewIcon :date="createdDate" :period="2" class="new-icon"/>
+        </li>
+      </ul>
+    </div>
     <infinite-loading class="infinite-message" @infinite="handlerInfinite" ref="infiniteLoading"  spinner="waveDots">
-      <div slot="no-more">
-        <ScrollUp/>
-      </div>
-      <div slot="no-results">
-        <ScrollUp/>
-      </div>
-    </infinite-loading>
+        <div slot="no-more">
+          <ScrollUp/>
+        </div>
+        <div slot="no-results">
+          <ScrollUp/>
+        </div>
+      </infinite-loading>
   </div>
 </template>
 
@@ -86,7 +88,7 @@ export default {
     SortButton
   },
   computed: {
-    ...mapGetters(['posts', 'currentUser'])
+    ...mapGetters(['posts'])
   },
   watch: {
     posts() {
@@ -119,6 +121,12 @@ export default {
 </script>
 
 <style scoped>
+.content-container {
+  text-align: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
 .link-posts {
   animation: fadeIn 0.3s ease-in-out;
 }
@@ -132,16 +140,17 @@ export default {
   transition: opacity .2s;
   opacity: 0.7;
 }
-.link-posts > ul {
+.link-posts ul {
   text-align: center;
   padding: 10px 20px;
+  width: 1200px;
 }
-.link-posts > ul > li {
+.link-posts ul li {
   position: relative;
-  width: 300px;
+  width: 335px;
   display: inline-flex;
   justify-content: flex-end;
-  margin: 15px;
+  margin: 10px 20px;
   background-color: white;
   margin-bottom: 15px;
   border-radius: 10px;
@@ -149,7 +158,7 @@ export default {
   animation: fadeIn 0.3s ease-in-out;
   box-shadow: 0 1px 2px 0 rgba(9,30,66,0.25), 0 0 1px 0 rgba(9,30,66,0.31);
 }
-.link-posts > ul > li:hover {
+.link-posts ul li:hover {
   box-shadow: 0 1px 4px rgba(27,31,35,.3);
   transition: background-color .2s;
   background-color: #f4f4f4;
@@ -289,12 +298,26 @@ export default {
   text-align: end;
 }
 @media screen and (max-width: 480px) {
-    .link-posts > ul {
+    .link-posts ul {
         padding: 10px 10px;
+        width: 100%;
     }
-    .link-posts > ul > li {
+    .link-posts ul li {
         width: 100%;
         margin: 0 0 15px 0;
+    }
+    .like-count {
+      margin-left: 4px;
+      font-size: 13px;
+    }
+    .post-container-btn {
+      font-size: 17px;
+    }
+    .like-wrapper {
+      bottom: 9px;
+    }
+    .comment-icon {
+      margin-left: 50px;
     }
 }
 </style>

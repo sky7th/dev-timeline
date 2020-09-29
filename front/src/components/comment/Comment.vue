@@ -52,7 +52,7 @@ export default {
             if (!confirm('댓글을 삭제할까요?')) {
                 return;
             }
-            this.axios.delete(`${process.env.VUE_APP_API}/api/v1/posts/${this.comment.id}/comments/${this.comment.id}`)
+            this.axios.delete(`${process.env.VUE_APP_API}/api/v1/posts/${this.post.id}/comments/${this.comment.id}`)
                 .then(() => {
                     notification.success('댓글을 삭제했습니다.');
                     this.handlerRemoveComment(this.comment.id);

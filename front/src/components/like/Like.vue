@@ -80,4 +80,12 @@ export default {
   color: #ff5784
 }
 
+@media screen and (max-width: 480px) {
+  .post-like {
+    font-size: 17px;
+  }
+  .like-count {
+    font-size: 13px;
+  }
+}
 </style>
