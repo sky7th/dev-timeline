@@ -49,18 +49,19 @@ public class TechPostWebRepositoryImpl implements TechPostWebRepositoryCustom {
                         liked(postSearchForm.isLiked()))
                 .offset(postSearchForm.getOffset())
                 .limit(postSearchForm.getLimit())
-                .orderBy(sortOrder(SortOrderType.valueOf(postSearchForm.getSortOrderType())),
-                        techPost.id.desc())
+                .orderBy(sortOrder(SortOrderType.valueOf(postSearchForm.getSortOrderType())))
                 .fetch();
     }
 
-    private OrderSpecifier sortOrder(SortOrderType sortOrderType) {
+    private OrderSpecifier[] sortOrder(SortOrderType sortOrderType) {
         if (sortOrderType == SortOrderType.ASC) {
-            return techPost.sortDate.asc();
+            return new OrderSpecifier[] {techPost.sortDate.asc()};
+
         } else if (sortOrderType == SortOrderType.LIKE) {
-            return likeCount.desc();
+            return new OrderSpecifier[] {likeCount.desc(), techPost.sortDate.desc()};
         }
-        return techPost.sortDate.desc();
+
+        return new OrderSpecifier[] {techPost.sortDate.desc()};
     }
 
     @Override

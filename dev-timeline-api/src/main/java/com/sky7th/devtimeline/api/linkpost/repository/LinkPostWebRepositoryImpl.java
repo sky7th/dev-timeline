@@ -65,13 +65,15 @@ public class LinkPostWebRepositoryImpl implements LinkPostWebRepositoryCustom {
                 .fetch();
     }
 
-    private OrderSpecifier sortOrder(SortOrderType sortOrderType) {
+    private OrderSpecifier[] sortOrder(SortOrderType sortOrderType) {
         if (sortOrderType == SortOrderType.ASC) {
-            return linkPost.createdDate.asc();
+            return new OrderSpecifier[] {linkPost.createdDate.asc()};
+
         } else if (sortOrderType == SortOrderType.LIKE) {
-            return linkPost.post.likeCount.desc();
+            return new OrderSpecifier[] {linkPost.post.likeCount.desc(), linkPost.createdDate.desc()};
         }
-        return linkPost.createdDate.desc();
+        
+        return new OrderSpecifier[] {linkPost.createdDate.desc()};
     }
 
 //    public static <T> Predicate<T> distinctByKey(Function<? super T, Object> keyExtractor) {
