@@ -259,7 +259,7 @@ export default {
 .post-container-btn {
   position: absolute;
   display: flex;
-  bottom: 10px;
+  bottom: 9px;
   left: 15px;
   color: #7a7a7a;
   font-size: 14px;

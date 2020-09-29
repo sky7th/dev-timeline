@@ -46,8 +46,13 @@ export default {
   mounted() {
     window.onkeyup = () => {
         if (event.keyCode == 27) {
-            this.closePopupInDelay();
+          this.closePopupInDelay();
         }
+    },
+    window.history.pushState(null, '', location.href),
+    window.onpopstate = () => {
+      history.go(1);
+      this.closePopupInDelay();
     }
   },
   computed: {
@@ -82,7 +87,7 @@ export default {
   border-radius: 7px;
   transform: translate(-50%, -50%);
   max-height: 90%;
-  width: 500px;
+  width: 600px;
   max-width: 96%;
   opacity: 1;
   background-color: #fff;

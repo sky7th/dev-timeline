@@ -43,8 +43,8 @@ public class Post extends BaseTimeEntity {
     @Column(columnDefinition = "integer(11) default 0")
     private Long commentCount;
 
-    @Column(columnDefinition = "tinyint(1) default 0")
-    private Boolean deleteYn;
+    @Column(columnDefinition = "boolean default false")
+    private Boolean deleteYn = false;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "post", orphanRemoval = true)
     private Set<Tag> tags = new LinkedHashSet<>();

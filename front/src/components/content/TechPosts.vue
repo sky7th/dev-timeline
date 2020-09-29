@@ -217,7 +217,7 @@ export default {
   margin: 0 17px;
 }
 .like-wrapper {
-  bottom: 5px;
+  bottom: 9px;
   left: 12px;
 }
 .new-icon {
