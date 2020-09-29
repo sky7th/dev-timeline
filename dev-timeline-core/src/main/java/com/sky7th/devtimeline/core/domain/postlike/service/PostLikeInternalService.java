@@ -7,7 +7,6 @@ import com.sky7th.devtimeline.core.domain.postlike.domain.PostLikeRepository;
 import com.sky7th.devtimeline.core.domain.postlike.exception.NotFoundPostLikeException;
 import com.sky7th.devtimeline.core.domain.postlike.exception.UserAlreadyLikePostException;
 import com.sky7th.devtimeline.core.domain.user.dto.UserContext;
-import com.sky7th.devtimeline.core.domain.user.exception.MismatchUserException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,17 +36,8 @@ public class PostLikeInternalService {
     }
 
     public void delete(Long postId, UserContext userContext) {
-        Post post = postInternalService.findById(postId);
-        post.decreaseLikeCount();
         PostLike postLike = findByPostIdAndUserId(postId, userContext.getId());
+        postLike.getPost().decreaseLikeCount();
         postLikeRepository.delete(postLike);
-    }
-
-    public boolean isAuthor(Long postId, UserContext userContext) {
-        PostLike postLike = findByPostIdAndUserId(postId, userContext.getId());
-        if (!postLike.isAuthor(userContext.getId())) {
-            throw new MismatchUserException();
-        }
-        return true;
     }
 }
