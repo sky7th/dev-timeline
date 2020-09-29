@@ -18,7 +18,7 @@ spring:
     properties.hibernate:
       dialect: org.hibernate.dialect.MySQL5InnoDBDialect
       default_batch_fetch_size: 1000
-#    show-sql: true
+    show-sql: true
     hibernate:
       ddl-auto: update
     generate-ddl: true
