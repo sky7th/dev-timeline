@@ -18,7 +18,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sky7th.devtimeline.api.security.SecurityContextSupport;
 import com.sky7th.devtimeline.core.domain.company.domain.CompanyType;
 import com.sky7th.devtimeline.core.domain.post.dto.PostSearchForm;
-import com.sky7th.devtimeline.core.domain.post.dto.SortOrderType;
+import com.sky7th.devtimeline.core.domain.post.dto.PostSearchForm.OrderType;
 import com.sky7th.devtimeline.core.domain.techpost.dto.TechPostItem;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -49,15 +49,15 @@ public class TechPostWebRepositoryImpl implements TechPostWebRepositoryCustom {
                         liked(postSearchForm.isLiked()))
                 .offset(postSearchForm.getOffset())
                 .limit(postSearchForm.getLimit())
-                .orderBy(sortOrder(SortOrderType.valueOf(postSearchForm.getSortOrderType())))
+                .orderBy(sortOrder(postSearchForm.getOrderType()))
                 .fetch();
     }
 
-    private OrderSpecifier[] sortOrder(SortOrderType sortOrderType) {
-        if (sortOrderType == SortOrderType.ASC) {
+    private OrderSpecifier[] sortOrder(OrderType orderType) {
+        if (orderType == OrderType.ASC) {
             return new OrderSpecifier[] {techPost.sortDate.asc()};
 
-        } else if (sortOrderType == SortOrderType.LIKE) {
+        } else if (orderType == OrderType.LIKE) {
             return new OrderSpecifier[] {likeCount.desc(), techPost.sortDate.desc()};
         }
 

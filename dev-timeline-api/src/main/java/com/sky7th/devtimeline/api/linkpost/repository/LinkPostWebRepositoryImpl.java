@@ -15,7 +15,8 @@ import com.sky7th.devtimeline.api.security.SecurityContextSupport;
 import com.sky7th.devtimeline.core.domain.linkpost.domain.LinkType;
 import com.sky7th.devtimeline.core.domain.linkpost.dto.LinkPostItem;
 import com.sky7th.devtimeline.core.domain.post.dto.PostSearchForm;
-import com.sky7th.devtimeline.core.domain.post.dto.SortOrderType;
+import com.sky7th.devtimeline.core.domain.post.dto.PostSearchForm.FilterType;
+import com.sky7th.devtimeline.core.domain.post.dto.PostSearchForm.OrderType;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -56,20 +57,20 @@ public class LinkPostWebRepositoryImpl implements LinkPostWebRepositoryCustom {
                 .leftJoin(linkPost.user).fetchJoin()
                 .where(containsTags(postSearchForm.getTags()),
                         inLinkType(postSearchForm.getLinkTypes()),
-                        liked(postSearchForm.isLiked()),
+                        filter(postSearchForm.isLiked(), postSearchForm.getFilterType()),
                         linkPost.post.deleteYn.isFalse()
                 )
                 .offset(postSearchForm.getOffset())
                 .limit(postSearchForm.getLimit())
-                .orderBy(sortOrder(SortOrderType.valueOf(postSearchForm.getSortOrderType())))
+                .orderBy(sortOrder(postSearchForm.getOrderType()))
                 .fetch();
     }
 
-    private OrderSpecifier[] sortOrder(SortOrderType sortOrderType) {
-        if (sortOrderType == SortOrderType.ASC) {
+    private OrderSpecifier[] sortOrder(OrderType orderType) {
+        if (orderType == OrderType.ASC) {
             return new OrderSpecifier[] {linkPost.createdDate.asc()};
 
-        } else if (sortOrderType == SortOrderType.LIKE) {
+        } else if (orderType == OrderType.LIKE) {
             return new OrderSpecifier[] {linkPost.post.likeCount.desc(), linkPost.createdDate.desc()};
         }
         
@@ -87,7 +88,7 @@ public class LinkPostWebRepositoryImpl implements LinkPostWebRepositoryCustom {
                 .selectFrom(linkPost)
                 .leftJoin(linkPost.post).fetchJoin()
                 .where(containsTags(postSearchForm.getTags()),
-                        liked(postSearchForm.isLiked()),
+                        filter(postSearchForm.isLiked(), postSearchForm.getFilterType()),
                         linkPost.post.deleteYn.isFalse())
                 .fetchCount();
     }
@@ -110,11 +111,21 @@ public class LinkPostWebRepositoryImpl implements LinkPostWebRepositoryCustom {
         return linkPost.linkType.in(linkTypes);
     }
 
-    private BooleanExpression liked(boolean liked) {
+    private BooleanExpression filter(boolean liked, FilterType filterType) {
         if (!liked) {
             return null;
         }
+        if (filterType == FilterType.ALL) {
+            return getOnlyMyPostExpression().or(getLikedExpression());
+        }
+        if (filterType == FilterType.MY_POST) {
+            return getOnlyMyPostExpression();
+        }
         return getLikedExpression();
+    }
+
+    private BooleanExpression getOnlyMyPostExpression() {
+        return linkPost.user.id.eq(SecurityContextSupport.getUserContext().getId());
     }
 
     private BooleanExpression getLikedExpression() {
@@ -125,7 +136,7 @@ public class LinkPostWebRepositoryImpl implements LinkPostWebRepositoryCustom {
         return JPAExpressions.select(postLike)
                 .from(postLike)
                 .where(postLike.user.id.eq(SecurityContextSupport.getUserContext().getId())
-                        .and(postLike.post.id.eq(linkPost.post.id)))
+                    .and(postLike.post.id.eq(linkPost.post.id)))
                 .exists();
     }
 }
