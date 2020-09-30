@@ -31,10 +31,7 @@ echo "> Now Nginx proxies to ${TARGET_PORT}."
 
 # Reload nginx
 sudo service nginx reload
-
 echo "> Nginx reloaded."
 
-CURRENT_PID=$(lsof -Fp -i TCP:${CURRENT_PORT} | grep -Po 'p[0-9]+' | grep -Po '[0-9]+')
-sudo kill ${CURRENT_PID}
-
+sudo fuser -k -n tcp ${CURRENT_PORT}
 echo "> Current Port Killed."

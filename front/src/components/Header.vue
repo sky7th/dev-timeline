@@ -67,11 +67,11 @@ export default {
     },
     onClickMyAccount() {
       event.stopPropagation();
-      console.log('내 정보');
+      alert('준비중 입니다 :^)')
     },
     onClickMyFollow() {
       event.stopPropagation();
-      console.log('내 친구');
+      alert('준비중 입니다 :^)')
     },
     onClickMyLike() {
       event.stopPropagation();

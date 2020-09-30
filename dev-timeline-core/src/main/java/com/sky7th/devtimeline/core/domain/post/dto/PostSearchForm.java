@@ -15,6 +15,8 @@ import org.springframework.util.StringUtils;
 @Getter
 @Setter
 public class PostSearchForm {
+    public enum FilterType { ALL, MY_POST, LIKED }
+    public enum OrderType { DESC, ASC, LIKE }
 
     Long offset = 0L;
     Long limit = PagingConstant.PAGE_SIZE;
@@ -22,18 +24,20 @@ public class PostSearchForm {
     List<String> companies;
     List<String> linkTypes;
     boolean liked;
-    String sortOrderType;
+    OrderType orderType;
+    FilterType filterType;
 
     @Builder
     public PostSearchForm(Long offset, Long limit, List<String> tags, List<String> companies, List<String> linkTypes,
-                          boolean liked, String sortOrderType) {
+                          boolean liked, OrderType orderType, FilterType filterType) {
         this.offset = offset;
         this.limit = limit;
         this.tags = tags;
         this.companies = companies;
         this.linkTypes = linkTypes;
         this.liked = liked;
-        this.sortOrderType = sortOrderType;
+        this.orderType = orderType;
+        this.filterType = filterType;
     }
 
     public boolean isFirstLoad() {

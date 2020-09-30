@@ -42,7 +42,8 @@ export default {
 .fixed-tag-bar > ul {
   font-weight: 300;
   line-height: 1.8rem;
-  padding: 10px 5px;
+  padding: 20px 10px;
+  text-align: center;
 }
 .fixed-tag-bar > ul > li {
     display: inline-block;

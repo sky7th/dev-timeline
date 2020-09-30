@@ -2,35 +2,41 @@
   <div class="recruit-posts">
     <CompanyList/>
     <CountBar/>
-    <SortButton/>
-    <ul>
-      <li
-        v-for="({
-          id, 
-          company,
-          title,
-          closingDate,
-          sortDate,
-          contentUrl,
-          like,
-          likeCount }) in posts"
-        :key="id"
-        :class="{
-          naver: company.name==='네이버',
-          kakao: company.name==='카카오'
-        }"
-      >
-        <Like :isLike="like" :postId="id" :likeCount="likeCount" class="like-wrapper"/>
-        <a :href="contentUrl" target="_blank">
-          <img class="logo" :src="company.logoUrl" alt="">
-            <div style="width: auto; flex: 1;">
-              <div class="date">{{ closingDate }}</div>
-            </div>
-          <div class="title">{{ title }}</div>
-        </a>
-        <NewIcon :date="sortDate" :period="5"/>
-      </li>
-    </ul>
+    <div class="filter-button">
+      <div class="filter-button-wrapper">
+        <FilterButton :typeMap=orderTypeMap :type=sortOrder :updateType=updateSortOrder />  
+      </div> 
+    </div>
+    <div class="content-container">
+      <ul>
+        <li
+          v-for="({
+            id, 
+            company,
+            title,
+            closingDate,
+            sortDate,
+            contentUrl,
+            like,
+            likeCount }) in posts"
+          :key="id"
+          :class="{
+            naver: company.name==='네이버',
+            kakao: company.name==='카카오'
+          }"
+        >
+          <Like :isLike="like" :postId="id" :likeCount="likeCount" class="like-wrapper"/>
+          <a :href="contentUrl" target="_blank">
+            <img class="logo" :src="company.logoUrl" alt="">
+              <div style="width: auto; flex: 1;">
+                <div class="date">{{ closingDate }}</div>
+              </div>
+            <div class="title">{{ title }}</div>
+          </a>
+          <NewIcon :date="sortDate" :period="5"/>
+        </li>
+      </ul>
+    </div>
     <infinite-loading class="infinite-message" @infinite="handlerInfinite" ref="infiniteLoading" spinner="waveDots">
       <div slot="no-more">
         <ScrollUp/>
@@ -48,9 +54,9 @@ import CountBar from '@/components/search/CountBar';
 import ScrollUp from '@/components/common/ScrollUp'
 import NewIcon from '@/components/common/NewIcon'
 import Like from '@/components/like/Like'
-import SortButton from '@/components/sortButton/SortButton'
 import { mapGetters, mapActions } from "vuex";
 import InfiniteLoading from 'vue-infinite-loading';
+import FilterButton from '@/components/sortButton/FilterButton'
 
 export default {
   components: {
@@ -60,8 +66,15 @@ export default {
     ScrollUp,
     Like,
     NewIcon,
-    SortButton
+    FilterButton
   },
+  data: () => ({
+      orderTypeMap: {
+        'LIKE': '인기 순',
+        'DESC': '최신 순',
+        'ASC': '오래된 순'
+      },
+  }),
   watch: {
     posts() {
       if (this.$refs.infiniteLoading) {
@@ -70,10 +83,10 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['posts'])
+    ...mapGetters(['posts', 'sortOrder'])
   },
   methods: {
-    ...mapActions(['insertPosts']),
+    ...mapActions(['insertPosts', 'updateSortOrder']),
     handlerInfinite($state) {
       this.insertPosts({ infiniteState: $state })
     }
@@ -82,9 +95,16 @@ export default {
 </script>
 
 <style scoped>
+.content-container {
+  text-align: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
 .recruit-posts ul {
   padding: 3px 20px;
   text-align: center;
+  width: 1500px;
 }
 .recruit-posts ul li {
   padding: 20px 20px;
@@ -172,6 +192,20 @@ export default {
   top: 15px;
   right: 19px;
 }
+.filter-button {
+  text-align: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+.filter-button-wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  text-align: center;
+  padding: 10px 20px 0 20px;
+  width: 1460px;
+}
 @media screen and (max-width: 380px) { 
     .recruit-posts ul {
         padding: 3px 0px;
@@ -179,6 +213,10 @@ export default {
     .recruit-posts ul li {
         width: 90%;
         margin: 7px 5px;
+    }
+    .filter-button-wrapper {
+      text-align: right;
+      padding-right: 18px;
     }
 }
 </style>
