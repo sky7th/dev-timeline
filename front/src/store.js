@@ -32,7 +32,8 @@ var getTagsQuery = (tags) => {
 }
 var getOffsetQuery = (offset) => '&offset=' + offset;
 var getLimitQuery = (limit) => '&limit=' + limit;
-var getSortOrderQuery = (sortOrder) => '&sortOrderType=' + sortOrder;
+var getSortOrderQuery = (sortOrder) => '&orderType=' + sortOrder;
+var getFilterTypeQuery = (filterType) => '&filterType=' + filterType;
 
 export default new Vuex.Store({
   plugins: [initUser],
@@ -47,6 +48,7 @@ export default new Vuex.Store({
     offset: 0,
     tags: [],
     sortOrder: 'DESC',
+    filterType: 'ALL',
     postCounts: 0,
     chatRooms: [],
     selectedChatRooms: [],
@@ -70,6 +72,7 @@ export default new Vuex.Store({
     offset: state => state.offset,
     tags: state => state.tags,
     sortOrder: state => state.sortOrder,
+    filterType: state => state.filterType,
     postCounts: state => state.postCounts,
     chatRooms: state => state.chatRooms,
     selectedChatRooms: state => state.selectedChatRooms,
@@ -95,16 +98,20 @@ export default new Vuex.Store({
     updatePosts: state => {
       let updatingMenu = state.selectedMenu;
       state.isLoadingContent = true;
+
       axios.get(`${process.env.VUE_APP_API}/api/v1/`+state.selectedMenu+'?'
                 + getOffsetQuery(state.offset)
                 + getLimitQuery(Constant.POST_LIMIT)
                 + getCheckedCompaniesQuery(state.checkedCompanies)
                 + getTagsQuery(state.tags)
                 + '&liked='+ (state.isClickedMyLike ? 'true' : 'false')
-                + getSortOrderQuery(state.sortOrder))
+                + getSortOrderQuery(state.sortOrder)
+                + getFilterTypeQuery(state.filterType)
+                + '&onlyMyPost='+ (state.isClickedMyPost ? 'true' : 'false'))
       .then(response => {
-        if (state.selectedMenu !== updatingMenu)
+        if (state.selectedMenu !== updatingMenu) {
           return;
+        }
         state.posts = response.data.posts
         state.offset = response.data.offset
         if (response.data.searchCount) {
@@ -120,16 +127,19 @@ export default new Vuex.Store({
     },
     insertPosts: (state, payload) => {
       let updatingMenu = state.selectedMenu;
-      // state.isLoadingContent = true;
+      const updatingCheckedCompanies = state.checkedCompanies.join();
+
       axios.get(`${process.env.VUE_APP_API}/api/v1/`+state.selectedMenu+'?'
                 + getOffsetQuery(state.offset)
                 + getLimitQuery(Constant.POST_LIMIT)
                 + getCheckedCompaniesQuery(state.checkedCompanies)
                 + getTagsQuery(state.tags)
                 + '&liked='+ (state.isClickedMyLike ? 'true' : 'false')
-                + getSortOrderQuery(state.sortOrder))
+                + getSortOrderQuery(state.sortOrder)
+                + getFilterTypeQuery(state.filterType)
+                + '&onlyMyPost='+ (state.isClickedMyPost ? 'true' : 'false'))
       .then(({ data }) => {
-        if (state.selectedMenu !== updatingMenu)
+        if (state.selectedMenu !== updatingMenu || state.checkedCompanies.join() != updatingCheckedCompanies)
           return;
         if (data.posts.length) {
           state.offset = data.offset
@@ -160,6 +170,7 @@ export default new Vuex.Store({
     },
     removeAllTag: state => state.tags = [],
     updateSortOrder: (state, payload) => state.sortOrder = payload,
+    updateFilterType: (state, payload) => state.filterType = payload,
     updateSelectedMenu: (state, payload) => state.selectedMenu = payload.selectedMenu,
     resetAll: state => {
       state.selectedMenu = 'recruit-posts';
@@ -170,6 +181,7 @@ export default new Vuex.Store({
       state.postCounts = 0;
       state.modalState = false;
       state.sortOrder = 'DESC';
+      state.filterType = 'ALL';
     },
     updatePostCounts: (state, payload) => state.postCounts = payload.postCounts,
     updateChatRooms: (state, payload) => state.chatRooms = payload,
@@ -201,6 +213,7 @@ export default new Vuex.Store({
     removeTag: (context, payload) => context.commit('removeTag', { id: payload.id }),
     removeAllTag: context => context.commit('removeAllTag'),
     updateSortOrder: (context, payload) => context.commit('updateSortOrder', payload),
+    updateFilterType: (context, payload) => context.commit('updateFilterType', payload),
     updateSelectedMenu: (context, payload) => context.commit('updateSelectedMenu', { selectedMenu: payload.selectedMenu }),
     resetAll: context => context.commit('resetAll'),
     updatePostCounts: (context, payload) => context.commit('postCounts', { postCounts: payload.postCounts }),

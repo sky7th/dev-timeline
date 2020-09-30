@@ -64,8 +64,8 @@ export default {
   box-shadow: 0 8px 24px rgba(149,157,165,.2);
 }
 .click-menu-list {
-  font-size: 14px;
-  line-height: 1.5;
+  font-size: 14.5px;
+  line-height: 1.7;
 }
 .click-menu-item:hover {
   background-color: #2d92f1;
@@ -81,5 +81,11 @@ export default {
 }
 .click-menu-item div:hover {
   color: white;
+}
+@media screen and (max-width: 480px) {
+  .click-menu-list {
+    font-size: 14.5px;
+    line-height: 1.8;
+  }
 }
 </style>

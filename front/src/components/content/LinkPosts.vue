@@ -2,7 +2,12 @@
   <div class="link-posts">
     <FixedTagBar/>
     <CountBar style="margin-bottom: 11px;"/>
-    <SortButton/>
+    <div class="filter-button">
+      <div class="filter-button-wrapper">
+        <FilterButton v-if="this.isClickedMyLike" :typeMap=filterTypeMap :type=filterType :updateType=updateFilterType />
+        <FilterButton :typeMap=orderTypeMap :type=sortOrder :updateType=updateSortOrder />    
+      </div>
+    </div>
     <div class="content-container">
       <ul>
         <li
@@ -65,7 +70,7 @@ import FixedTagBar from '@/components/search/FixedTagBar';
 import ScrollUp from '@/components/common/ScrollUp'
 import Like from '@/components/like/Like'
 import NewIcon from '@/components/common/NewIcon'
-import SortButton from '@/components/sortButton/SortButton'
+import FilterButton from '@/components/sortButton/FilterButton'
 import { mapGetters, mapActions } from "vuex";
 import InfiniteLoading from 'vue-infinite-loading';
 import Constant from '@/constant/Constant';
@@ -85,10 +90,22 @@ export default {
     ScrollUp,
     Like,
     NewIcon,
-    SortButton
+    FilterButton
   },
+  data: () => ({
+      filterTypeMap: {
+        'ALL': '모든 글',
+        'MY_POST': '내가 쓴 글',
+        'LIKED': '좋아요 한 글'
+      },
+      orderTypeMap: {
+        'LIKE': '인기 순',
+        'DESC': '최신 순',
+        'ASC': '오래된 순'
+      },
+  }),
   computed: {
-    ...mapGetters(['posts'])
+    ...mapGetters(['posts', 'isClickedMyLike', 'filterType', 'sortOrder'])
   },
   watch: {
     posts() {
@@ -98,7 +115,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['insertPosts', 'onModalState', 'resetOffset', 'updatePosts', 'updatePostState', 'updatePost', 'updateModalContent']),
+    ...mapActions(['insertPosts', 'onModalState', 'resetOffset', 'updatePosts', 'updatePostState', 'updatePost', 'updateModalContent', 'updateFilterType', 'updateSortOrder']),
     handlerInfinite($state) {
       this.insertPosts({ infiniteState: $state });
     },
@@ -297,6 +314,20 @@ export default {
   top: 10px;
   text-align: end;
 }
+.filter-button {
+  text-align: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+.filter-button-wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  text-align: center;
+  padding: 10px 20px 0 20px;
+  width: 1125px;
+}
 @media screen and (max-width: 480px) {
     .link-posts ul {
         padding: 10px 10px;
@@ -318,6 +349,10 @@ export default {
     }
     .comment-icon {
       margin-left: 50px;
+    }
+    .filter-button-wrapper {
+      text-align: right;
+      padding-right: 11px;
     }
 }
 </style>

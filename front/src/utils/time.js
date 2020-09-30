@@ -25,9 +25,15 @@ export function timeForToday(value) {
 
     const betweenTimeMonth = Math.floor(betweenTime / 60 / 24 / 7 / 4);
     if (betweenTimeMonth < 12) {
-        return `${betweenTimeMonth}달 전`;
+        return `${betweenTimeMonth}개월 전`;
+    }
+    const betweenTimeYear = Math.floor(betweenTimeMonth / 12);
+    const betweenTimeRemainderMonth = Math.floor(betweenTimeMonth % 12);
+
+    if (betweenTimeRemainderMonth === 0) {
+      return `${betweenTimeYear}년 전`;
     }
 
-    // return `${Math.floor(betweenTimeMonth / 12)}년 전`;
-    return value;
+    return `${betweenTimeYear}년 ${betweenTimeRemainderMonth}개월 전`;
+
 }

@@ -2,7 +2,11 @@
   <div class="tech-posts">
     <CompanyList/>
     <CountBar/>
-    <SortButton/>
+    <div class="filter-button">
+      <div class="filter-button-wrapper">
+        <FilterButton :typeMap=orderTypeMap :type=sortOrder :updateType=updateSortOrder />  
+      </div> 
+    </div>
     <div class="content-container">
       <ul>
         <li
@@ -58,10 +62,10 @@ import CompanyList from '@/components/company/CompanyList';
 import CountBar from '@/components/search/CountBar';
 import Like from '@/components/like/Like';
 import NewIcon from '@/components/common/NewIcon'
-import SortButton from '@/components/sortButton/SortButton'
 import { mapGetters, mapActions } from "vuex";
 import { timeForToday } from '@/utils/time';
 import InfiniteLoading from 'vue-infinite-loading';
+import FilterButton from '@/components/sortButton/FilterButton'
 
 export default {
   components: {
@@ -69,9 +73,16 @@ export default {
     CountBar,
     Like,
     NewIcon,
-    SortButton,
-    InfiniteLoading
+    InfiniteLoading,
+    FilterButton
   },
+  data: () => ({
+      orderTypeMap: {
+        'LIKE': '인기 순',
+        'DESC': '최신 순',
+        'ASC': '오래된 순'
+      },
+  }),
   watch: {
     posts() {
       if (this.$refs.infiniteLoading) {
@@ -83,10 +94,10 @@ export default {
     this.updatePosts()
   },
   computed: {
-    ...mapGetters(['posts', 'postCounts'])
+    ...mapGetters(['posts', 'postCounts', 'sortOrder'])
   },
   methods: {
-    ...mapActions(['updatePosts', 'insertPosts']),
+    ...mapActions(['updatePosts', 'insertPosts', 'updateSortOrder']),
     timeForToday(createdDate) {
         return timeForToday(createdDate);
     },
@@ -107,7 +118,7 @@ export default {
 
 .tech-posts ul {
   text-align: center;
-  padding: 15px 10px;
+  padding: 10px 10px;
   width: 1200px;
 }
 .tech-posts ul li {
@@ -225,6 +236,20 @@ export default {
   top: 5px;
   text-align: end;
 }
+.filter-button {
+  text-align: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+.filter-button-wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  text-align: center;
+  padding: 10px 20px 0 20px;
+  width: 1170px;
+}
 @media screen and (max-width: 480px) {
     .tech-posts ul {
         padding: 15px 10px;
@@ -253,6 +278,10 @@ export default {
     }
     .author, .date {
       font-size: 13px;
+    }
+    .filter-button-wrapper {
+      text-align: right;
+      padding-right: 18px;
     }
 }
 </style>
