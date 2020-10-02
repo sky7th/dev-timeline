@@ -91,7 +91,7 @@ export default {
   margin-bottom: 15px;
   border-radius: 10px;
   min-height: 40px;
-  width: 270px;
+  width: 300px;
   box-shadow: 0 1px 4px rgba(27,31,35,.2);
 }
 .social-login a:hover {
@@ -100,7 +100,7 @@ export default {
 .social-login a div {
   flex: 1;
   text-align: center;
-  font-size: 15px;
+  font-size: 14px;
   color: #5a5a5a;
 }
 .login-container {
@@ -114,9 +114,8 @@ export default {
   align-items: center;
   background: #fff;
   border-radius: 3px;
-  box-shadow: 0 1px 2px 0 rgba(9,30,66,0.25), 0 0 1px 0 rgba(9,30,66,0.31);
   width: 500px;
-  padding: 35px 35px;
+  padding: 25px 35px;
 }
 .login-content form {
   display: flex;
@@ -153,13 +152,14 @@ export default {
 }
 .form {
   display: block;
-  height: 41px;
+  height: 38px;
   width: 300px;
   border: 1px solid #bababa;
   border-radius: 3px;
-  box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.2) inset;
-  margin-bottom: 10px;
+  box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.2) inset;
+  margin-bottom: 12px;
   padding: 0 11px;
+  font-size: 14px;
 }
 .btn-login {
   height: 38px;
@@ -184,16 +184,19 @@ export default {
   cursor: pointer;
 }
 .login-title {
-  font-size: 30px;
+  font-size: 28px;
   font-weight: bold;
   color: #4E5763;
   margin-top: 0;
-  margin-bottom: 45px;
+  margin-bottom: 30px;
 }
 .main-link {
   margin-top: 30px;
   color: rgba(0, 0, 0, 0.65);
   font-size: 15px;
   cursor: pointer;
+}
+input::placeholder {
+  font-size: 14px;
 }
 </style>

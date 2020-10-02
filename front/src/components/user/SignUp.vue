@@ -74,9 +74,8 @@ export default {
   align-items: center;
   background: #fff;
   border-radius: 3px;
-  box-shadow: 0 1px 2px 0 rgba(9,30,66,0.25), 0 0 1px 0 rgba(9,30,66,0.31);
   width: 500px;
-  padding: 35px 35px;
+  padding: 25px 35px 37px 35px;
 }
 .signup-content form {
   display: flex;
@@ -86,13 +85,14 @@ export default {
 }
 .form {
   display: block;
-  height: 41px;
+  height: 38px;
   width: 300px;
   border: 1px solid #bababa;
   border-radius: 3px;
-  box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.2) inset;
-  margin-bottom: 10px;
+  box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.2) inset;
+  margin-bottom: 12px;
   padding: 0 11px;
+  font-size: 14px;
 }
 .btn-signup {
   height: 38px;
@@ -117,10 +117,13 @@ export default {
   cursor: pointer;
 }
 .signup-title {
-  font-size: 30px;
+  font-size: 28px;
   font-weight: bold;
   color: #4E5763;
   margin-top: 0;
-  margin-bottom: 45px;
+  margin-bottom: 30px;
+}
+input::placeholder {
+  font-size: 14px;
 }
 </style>
