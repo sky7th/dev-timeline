@@ -7,19 +7,28 @@
 <script>
 import "@/assets/css/styles.css";
 import notification from './libs/notification';
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 
 export default {
   created(){
     this.getUserDetails();
+  },
+  computed: {
+    ...mapGetters(['currentUser'])
   },
   methods: {
     ...mapActions(['setUserDetail']),
     async getUserDetails() {
       try {
         const token = this.$store.getters.token;
-        if (token==null || token==='null' || token ==='')
+        if (token===null || token==='null' || token ==='') {
+          if (this.currentUser !== null) {
+            notification.success("토큰이 만료되었습니다. 다시 로그인해주세요", () => {
+              this.logout();
+            });
+          }
           return;
+        }
 
         const response = await this.axios.get(`/user/me`);
         if (response.status === 200) {
