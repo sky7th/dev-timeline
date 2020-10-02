@@ -1,22 +1,21 @@
 package com.sky7th.devtimeline.chat.controller;
 
-import com.sky7th.devtimeline.chat.model.ChatMessage;
-import com.sky7th.devtimeline.chat.repository.ChatRoomRepository;
-import com.sky7th.devtimeline.chat.service.ChatService;
+import com.sky7th.devtimeline.chat.service.ChatMessageService;
+import com.sky7th.devtimeline.chat.service.ChatPubSubService;
+import com.sky7th.devtimeline.chat.service.dto.ChatMessageRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
-@Controller
+@RestController
 public class ChatController {
 
-    private final ChatRoomRepository chatRoomRepository;
-    private final ChatService chatService;
+  private final ChatPubSubService chatPubSubService;
+  private final ChatMessageService chatMessageService;
 
-    @MessageMapping("/chat/message")
-    public void message(ChatMessage message) {
-        message.setUserCount(chatRoomRepository.getUserCount(message.getRoomId()));
-        chatService.sendChatMessage(message);
-    }
+  @MessageMapping("/rooms/message")
+  public void pushMessage(ChatMessageRequestDto requestDto) {
+    chatPubSubService.pushMessage(chatMessageService.save(requestDto));
+  }
 }
