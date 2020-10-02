@@ -1,26 +1,33 @@
 package com.sky7th.devtimeline.chat.model;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import java.io.Serializable;
-import java.util.UUID;
+import java.util.HashSet;
+import java.util.Set;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.redis.core.RedisHash;
 
+@NoArgsConstructor
 @Getter
-@Setter
+@RedisHash(value = "chat_room")
 public class ChatRoom implements Serializable {
 
-    private static final long serialVersionUID = 6494678977089006639L;
-
-    private String roomId;
+    @Id
+    private String id;
     private String name;
-    private long userCount;
+    private Set<Long> chatUserIds = new HashSet<>();
 
-    public static ChatRoom create(String name) {
-        ChatRoom chatRoom = new ChatRoom();
-        chatRoom.roomId = UUID.randomUUID().toString();
-        chatRoom.name = name;
-        return chatRoom;
+    public ChatRoom(String name) {
+        this(null, name);
     }
 
+    public ChatRoom(String id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    public int getUserCount() {
+        return this.chatUserIds.size();
+    }
 }
