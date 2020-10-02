@@ -23,6 +23,8 @@ public class TokenProvider {
 
     private static final Logger logger = LoggerFactory.getLogger(TokenProvider.class);
     private static final String ROLE = "role";
+    private static final String NAME = "name";
+    private static final String IMAGE_URL = "imageUrl";
 
     private AppProperties appProperties;
 
@@ -31,12 +33,10 @@ public class TokenProvider {
     }
 
     public String createToken(CustomUserDetails customUserDetails) {
-        return createToken(customUserDetails.getId(), customUserDetails.getUserRole());
-    }
-
-    public String createToken(Long id, UserRole userRole) {
-        Claims claims = Jwts.claims().setId(Long.toString(id));
-        claims.put(ROLE, userRole);
+        Claims claims = Jwts.claims().setId(Long.toString(customUserDetails.getId()));
+        claims.put(ROLE, customUserDetails.getUserRole());
+        claims.put(NAME, customUserDetails.getName());
+        claims.put(IMAGE_URL, customUserDetails.getImageUrl());
         Instant expiryDate = Instant.now().plusMillis(appProperties.getAuth().getTokenExpirationMsec());
 
         return Jwts.builder()

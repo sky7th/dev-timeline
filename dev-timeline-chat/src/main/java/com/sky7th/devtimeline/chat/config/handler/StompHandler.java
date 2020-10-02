@@ -1,10 +1,12 @@
 package com.sky7th.devtimeline.chat.config.handler;
 
-import com.sky7th.devtimeline.chat.model.ChatMessage;
-import com.sky7th.devtimeline.chat.model.ChatSender;
-import com.sky7th.devtimeline.chat.repository.ChatRoomRepository;
-import com.sky7th.devtimeline.chat.service.ChatService;
-import com.sky7th.devtimeline.chat.service.TokenProvider;
+import static org.springframework.messaging.simp.stomp.StompCommand.DISCONNECT;
+import static org.springframework.messaging.simp.stomp.StompCommand.SUBSCRIBE;
+import static org.springframework.messaging.simp.stomp.StompCommand.UNSUBSCRIBE;
+
+import com.sky7th.devtimeline.chat.config.security.TokenValidator;
+import com.sky7th.devtimeline.chat.service.ChatUserService;
+import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.Message;
@@ -13,60 +15,44 @@ import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.stereotype.Component;
-
-import java.util.Optional;
+import org.springframework.util.StringUtils;
 
 @Slf4j
 @RequiredArgsConstructor
 @Component
 public class StompHandler implements ChannelInterceptor {
 
-    private final ChatRoomRepository chatRoomRepository;
-    private final ChatService chatService;
-    private final TokenProvider tokenProvider;
+    private final TokenValidator tokenProvider;
+    private final ChatUserService chatUserService;
 
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
+        final StompCommand command = accessor.getCommand();
+        String token = getJwtFromAccessor(accessor);
+        Claims claims = tokenProvider.validateToken(token);
+        Long userId = Long.parseLong(claims.getId());
+        String roomId = accessor.getFirstNativeHeader("id");
 
+        if (command == SUBSCRIBE) {
+            chatUserService.enter(roomId, userId, claims);
 
-        if (StompCommand.CONNECT == accessor.getCommand()) {
-            String token = accessor.getFirstNativeHeader("token");
-            log.info("CONNECT {}", token);
-            tokenProvider.validateToken(token);
+        } else if (command == UNSUBSCRIBE) {
+            chatUserService.exit(roomId, userId);
 
-        } else if (StompCommand.SUBSCRIBE == accessor.getCommand()) {
-            String roomId = chatService.getRoomId(Optional.ofNullable((String) message.getHeaders().get("simpDestination")).orElse("InvalidRoomId"));
-            String sessionId = (String) message.getHeaders().get("simpSessionId");
-
-            chatRoomRepository.setUserEnterInfo(sessionId, roomId);
-            chatRoomRepository.plusUserCount(roomId);
-
-//            String name = "aa";
-//            chatService.sendChatMessage(ChatMessage.builder()
-//                    .type(ChatMessage.MessageType.ENTER)
-//                    .roomId(roomId)
-//                    .sender(ChatSender.builder().name(name).build())
-//                    .build());
-            log.info("SUBSCRIBED {}, {}", sessionId, roomId);
-
-        } else if (StompCommand.DISCONNECT == accessor.getCommand()) {
-            String sessionId = (String) message.getHeaders().get("simpSessionId");
-            String roomId = chatRoomRepository.getUserEnterRoomId(sessionId);
-
-            chatRoomRepository.minusUserCount(roomId);
-
-            String name = "한 명이";
-            chatService.sendChatMessage(ChatMessage.builder()
-                    .type(ChatMessage.MessageType.QUIT)
-                    .roomId(roomId)
-                    .sender(ChatSender.builder().name(name).build())
-                    .build());
-
-            chatRoomRepository.removeUserEnterInfo(sessionId);
-            log.info("DISCONNECTED {}, {}", sessionId, roomId);
+        } else if (command == DISCONNECT) {
+            chatUserService.disconnect(userId);
         }
+
         return message;
     }
 
+    private String getJwtFromAccessor(StompHeaderAccessor accessor) {
+        String tokenRequestHeaderPrefix = "Bearer ";
+        String bearerToken = accessor.getFirstNativeHeader("Authorization");
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(tokenRequestHeaderPrefix)) {
+            return bearerToken.replace(tokenRequestHeaderPrefix, "");
+        }
+        return null;
+    }
 }
