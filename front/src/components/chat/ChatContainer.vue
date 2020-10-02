@@ -1,10 +1,10 @@
 <template>
   <div class="chat-container">
     <ChatBottom
-      :selectedChatRoom="selectedChatRoom"
-      :userCount="userCount"
+      :room="room"
       @changeChatOpenState="changeChatOpenState"/>
     <ChatRoom 
+      :room="room"
       :class="{ 'chat-hidden': !isChatOpen }"
       @updateUserCount="updateUserCount"/>
   </div>
@@ -18,9 +18,10 @@ import ChatRoom from '@/components/chat/ChatRoom';
 
 export default {
   props: {
-    selectedChatRoom: { type: Object, default: () => ({
-      roomId: '',
-      name: ''
+    room: { type: Object, default: () => ({
+      id: '',
+      name: '',
+      userCount: 0
     })}
   },
   components: {
@@ -29,8 +30,7 @@ export default {
   },
   data() {
     return {
-      isChatOpen: true,
-      userCount: 0
+      isChatOpen: true
     }
   },
   methods: {
@@ -41,7 +41,7 @@ export default {
         this.isChatOpen = false
     },
     updateUserCount(userCount) {
-      this.userCount = userCount
+      this.room.userCount = userCount
     }
   }
 }
@@ -51,7 +51,7 @@ export default {
 .chat-container {
   display: flex;
   max-width: 350px;
-  height: auto;
+  height: 0px;
   flex:1;
   flex-direction: column;
   justify-content: flex-end;

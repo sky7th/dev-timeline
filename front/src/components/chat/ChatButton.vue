@@ -1,7 +1,7 @@
 <template>
   <div class="chat-button">
     <notifications group="notify" position="bottom center"/>
-    <button class="list-group-item list-group-item-action" v-on:click="enterRoom(chatRoomName)">
+    <button class="list-group-item list-group-item-action" v-on:click="enterRoom()">
       <div style="margin-bottom: 3px;">{{ convertNameSelectedChatRoom() }}</div>
       <div>채팅방</div>
     </button>
@@ -19,64 +19,33 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['selectedMenu', 'currentUser', 'chatRooms', 'selectedChatRooms']),
+    ...mapGetters(['selectedMenu', 'currentUser', 'chatRooms', 'selectedChatRooms', 'isOnChatRooms']),
     chatRoomName() {
       return this.selectedMenu;
     } 
   },
   methods: {
-    ...mapActions(['updateChatRooms', 'insertSelectedChatRooms']),
+    ...mapActions(['updateChatRooms', 'insertSelectedChatRooms', 'updateIsOnChatRooms']),
     async findRooms() {
       const response = await this.axios.get(`${process.env.VUE_APP_CHAT_API}/chat/rooms`)
         .catch(e => {
           if (e.message === 'Network Error')
             notification.warn('채팅 서버가 꺼져있습니다.');
         })
-      return response.data.map(room => { return { roomId: room.roomId, name: room.name }});
+      return response.data;
     },
-    findRoomByName(name) {
-      return this.chatRooms.find(chatRoom => chatRoom.name === name);
-    },
-    async createRoom(name) {
-      var params = new URLSearchParams();
-      params.append("name", name);
-      const response = await this.axios.post(`${process.env.VUE_APP_CHAT_API}/chat/rooms`, params);
 
-      return { roomId: response.data.roomId, name: response.data.name };
-    },
-    async enterRoom(name) {
-      if (this.currentUser === null) {
-        notification.warn('로그인 후 이용 가능합니다.');
-        return;
-      }
-      if (this.chatRooms.length === 0) {
+    async enterRoom() {
+      if (!this.isOnChatRooms) {
         const rooms = await this.findRooms();
         this.updateChatRooms(rooms);
-      }
-      
-      this.chatRoom = this.findRoomByName(name);
+        this.updateIsOnChatRooms(true);
 
-      if (this.chatRoom === undefined) {
-        this.chatRoom = await this.createRoom(this.selectedMenu);
-      }
-
-      if (this.chatRoom === '') {
-        notification.warn('채팅방이 생성되지 않았습니다.')
-      }
-      
-      this.insertSelectedChatRooms(this.chatRoom);
-
-      var sender = {
-        id: this.currentUser.id,
-        name: this.currentUser.name,
-        imageUrl: this.currentUser.imageUrl
-      };
-
-      if(sender.id != "" || sender.id != null || sender.id != undefined) {
-          localStorage.setItem('wschat.sender', JSON.stringify(sender));
-          localStorage.setItem('wschat.roomId', JSON.stringify(this.chatRoom));
+      } else {
+        this.updateIsOnChatRooms(false);
       }
     },
+
     convertNameSelectedChatRoom() {
       if (this.selectedMenu === 'recruit-posts')
         return '채용';
