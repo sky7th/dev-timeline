@@ -6,12 +6,12 @@
     <LinkPosts v-else-if="selectedMenu==='link-posts'"/>
 
     <SideButton v-if="isMenuPossibleWrite && currentUser!=null" @event="handlerOnModalState" style="bottom: 14%;"/>
-    <ChatButton v-if="isBtnVisible"/>
+    <ChatButton/>
+    <ChatRooms/>
     <div class="chat-bottoms-wrapper">
       <ChatContainer 
-        :selectedChatRoom="selectedChatRoom" 
-        v-for="(selectedChatRoom) in selectedChatRooms" 
-        :key="selectedChatRoom.name"/>
+        v-for="(room) in selectedChatRooms" 
+        :key="room.id" :room=room />
     </div>
     <LoadingContent v-if="isLoadingContent"/>
   </div>
@@ -27,6 +27,7 @@ import ChatButton from '@/components/chat/ChatButton';
 import SideButton from '@/components/common/button/SideButton';
 import Constant from '@/constant/Constant'
 import LoadingContent from '@/components/content/LoadingContent'
+import ChatRooms from '@/components/chat/ChatRooms'
 
 import { mapGetters, mapActions } from "vuex";
 
@@ -39,17 +40,18 @@ export default {
     ChatContainer,
     ChatButton,
     SideButton,
-    LoadingContent
+    LoadingContent,
+    ChatRooms
   },
   computed: {
-    ...mapGetters(['selectedMenu', 'selectedChatRooms', 'selectedChatRooms', 'modalState', 'currentUser', 'isLoadingContent']),
-    isBtnVisible() {
-      var rooms = this.selectedChatRooms.filter(selectedChatRoom => selectedChatRoom.name === this.selectedMenu)
-      if (rooms.length === 0)
-        return true;
-      else
-        return false; 
-    },
+    ...mapGetters(['selectedMenu', 'selectedChatRooms', 'modalState', 'currentUser', 'isLoadingContent']),
+    // isBtnVisible() {
+    //   var rooms = this.selectedChatRooms.filter(selectedChatRoom => selectedChatRoom.name === this.selectedMenu)
+    //   if (rooms.length === 0)
+    //     return true;
+    //   else
+    //     return false; 
+    // },
     isMenuPossibleWrite() {
       if (this.selectedMenu === 'link-posts') 
         return true;

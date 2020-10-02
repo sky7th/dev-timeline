@@ -1,7 +1,7 @@
 <template>
   <div class="chat-room" v-cloak>
-    <button class="btn-close" @click="disconnect">x</button>
-    <ChatMessageList v-if="connected" :messages="messages"/>
+    <button class="btn-close" @click="unsubscribe">x</button>
+    <ChatMessageList v-if="chatConnect.connected" :messages="messages"/>
     <div class="no-connect-wrapper" v-else>
       <div class="no-connect-message">연결되지 않았습니다.</div>
       <div class="re-connect" @click="reConnect">다시 연결</div>
@@ -19,7 +19,6 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import SockJS from 'sockjs-client';
-import Stomp from 'stomp-websocket';
 import notification from '../../libs/notification';
 import ChatMessageList from '@/components/chat/ChatMessageList';
 
@@ -30,27 +29,29 @@ export default {
     ChatMessageList
   },
   props: {
-    isChatOpen: { type: Boolean, default: true }
+    isChatOpen: { type: Boolean, default: true },
+    room: { type: Object, default: () => ({
+      id: '',
+      name: '',
+      userCount: 0
+    })}
   },
   data() {
     return {
-      room: {},
       sender: '',
       message: '',
       messages: [],
-      connected: false
+      subscribeObject: null
     }
   },
   computed: {
-    ...mapGetters(['currentUser', 'token'])
+    ...mapGetters(['currentUser', 'token', 'currentUser', 'chatConnect', 'selectedChatRooms'])
   },
   created() {
-    this.room = JSON.parse(localStorage.getItem('wschat.roomId'));
-    this.sender = JSON.parse(localStorage.getItem('wschat.sender'));
-    this.connect();
+    this.subscribe();
   },
   methods: {
-    ...mapActions(['removeSelectedChatRoom']),
+    ...mapActions(['removeSelectedChatRoom', 'updateChatConnect']),
     sendMessage(event) {
       event.preventDefault();
       if (event.keyCode == 13 && event.shiftKey) {
@@ -65,55 +66,76 @@ export default {
         return;
       }
         
-      if (!this.ws || !this.ws.connected) {
-        this.connected = false;
+      if (!this.chatConnect.ws || !this.chatConnect.ws.connected) {
+        this.chatConnect.connected = false;
         return;
       }
-      this.ws.send(`/pub/chat/message`, { token: this.token }, JSON.stringify({
-        type:'TALK', roomId: this.room.roomId, sender: this.sender, message: this.message
+      this.chatConnect.ws.send(`/pub/rooms/message`, {}, JSON.stringify({
+        type:'TALK', sender: this.currentUser, message: this.message, roomId: this.room.id
       }));
       this.message = '';
     },
+
     recvMessage(recv) {
       this.handlerUpdateUserCount(recv.userCount)
       this.messages.push({"type":recv.type, "sender":recv.sender, "message":recv.message,
         "createdDate": recv.createdDate});
     },
-    connect() {
-      this.connected = true;
-      this.sock = new SockJS(`${process.env.VUE_APP_CHAT_API}/ws-stomp`);
-      this.ws = Stomp.over(this.sock);
-      this.reconnect = 0;
 
-      this.ws.connect({ token: this.token }, () => {
-        this.ws.subscribe(`/sub/chat/room/${this.room.roomId}`, (message) => {
-          var recv = JSON.parse(message.body);
-          this.recvMessage(recv);
+    subscribe() {
+      if (!this.chatConnect.connected) {
+        const sock = new SockJS(`${process.env.VUE_APP_CHAT_API}/ws-stomp`);
+        this.updateChatConnect({
+          connected: true,
+          sock: sock,
+          ws: this.Stomp.over(sock, { Authorization: `Bearer ${this.token}` }),
+          reconnect: 0
         });
-        this.ws.send(`/pub/chat/message`, { token: this.token }, JSON.stringify({
-        type:'TALK', roomId: this.room.roomId, sender: { id: null, name: 'NOTICE', imageUrl: null }, message: this.sender.name + ' 님이 들어왔습니다.'
-      }));
-      }, () => {
-        this.connected = false;
-        notification.warn('연결에 실패했습니다.');
-
-        // if (this.reconnect++ < 5) {
-        //   setTimeout(() => {
-        //     this.sock = new SockJS(`${process.env.VUE_APP_CHAT_API}/ws-stomp`);
-        //     this.ws = Stomp.over(this.sock);
-        //     this.connect();
-        //   }, 10 * 1000);
-        // }
-      });
-    },
-    disconnect() {
-      if (this.ws) {
-        this.ws.disconnect();
-        this.removeSelectedChatRoom(this.room.roomId);
+        this.chatConnect.ws.connect({}, this.connectSuccessCallback, this.connectFailCallback);
+      } else {
+        this.connectSuccessCallback();
       }
     },
+
+    connectSuccessCallback() {
+      this.subscribeObject = this.chatConnect.ws.subscribe(`/sub/chat/rooms/${this.room.id}`, (message) => {
+        var recv = JSON.parse(message.body);
+        this.recvMessage(recv);
+      }, { id: this.room.id });
+
+      this.chatConnect.ws.send(`/pub/rooms/message`, {}, JSON.stringify({
+        type:'ENTER', sender: this.currentUser, message: this.message, roomId: this.room.id
+      }));
+    },
+
+    connectFailCallback() {
+      this.chatConnect.connected = false;
+      notification.warn('연결에 실패했습니다.');
+    },
+
+    unsubscribe() {
+      if (this.selectedChatRooms.length === 0) {
+        return;
+      }
+
+      this.removeSelectedChatRoom(this.room.id);
+
+      if (this.chatConnect.connected) {
+        this.subscribeObject.unsubscribe(this.room.id, {});
+        this.chatConnect.ws.send(`/pub/rooms/message`, {}, JSON.stringify({
+          type:'QUIT', sender: this.currentUser, message: this.message, roomId: this.room.id
+        }));
+
+        if (this.selectedChatRooms.length === 0) {
+          this.chatConnect.ws.disconnect(() => {
+            this.chatConnect.connected = false;
+          }, {});
+        }
+      }
+      
+    },
     reConnect() {
-      this.connect();
+      this.subscribe();
     },
     handlerUpdateUserCount(userCount) {
       this.$emit('updateUserCount', userCount)
@@ -156,6 +178,7 @@ export default {
   background-color: #eaeaea;
   top: -25px;
   cursor: pointer;
+  z-index: 1;
 }
 .btn-close:hover {
   background-color: #aaaaaa;
