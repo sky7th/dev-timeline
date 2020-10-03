@@ -130,10 +130,9 @@ export default new Vuex.Store({
         if (state.selectedMenu !== updatingMenu) {
           return;
         }
-        console.log(response.data);
         state.posts = response.data.posts
         state.offset = response.data.offset
-        if (response.data.searchCount) {
+        if (response.data.searchCount != null) {
           state.postCounts = response.data.searchCount
         }
       })

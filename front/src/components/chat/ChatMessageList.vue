@@ -36,7 +36,7 @@ export default {
   methods: {
     scrollDown() {
       let element = this.$refs.messageList;
-      if (Math.abs(element.scrollTop + element.clientHeight - element.scrollHeight) < 60) {
+      if (Math.abs(element.scrollTop + element.clientHeight - element.scrollHeight) < 400) {
         element.scrollTop = element.scrollHeight;
       }
     },

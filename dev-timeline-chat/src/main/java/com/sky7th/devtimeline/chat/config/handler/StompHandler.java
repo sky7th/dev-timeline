@@ -8,6 +8,7 @@ import static org.springframework.messaging.simp.stomp.StompCommand.UNSUBSCRIBE;
 import com.sky7th.devtimeline.chat.config.security.TokenValidator;
 import com.sky7th.devtimeline.chat.config.security.UserContext;
 import com.sky7th.devtimeline.chat.model.ChatMessage;
+import com.sky7th.devtimeline.chat.model.ChatMessage.MessageType;
 import com.sky7th.devtimeline.chat.model.ChatRoom;
 import com.sky7th.devtimeline.chat.service.ChatMessageService;
 import com.sky7th.devtimeline.chat.service.ChatRoomService;
@@ -54,15 +55,25 @@ public class StompHandler implements ChannelInterceptor {
 
         if (command == CONNECT) {
             chatUserService.save(sessionId, userContext);
+        }
 
-        } else if (command == SUBSCRIBE) {
-            ChatRoom chatRoom = chatRoomService.enter(roomId, sessionId, userContext.getId());
-            ChatMessage chatMessage = ChatMessage.enterMessage(userContext, chatRoom);
-            pushMessage(chatMessageService.save(chatMessage));
+        ChatRoom chatRoom = null;
+        ChatMessage chatMessage = null;
 
-        } else if (command == UNSUBSCRIBE) {
-            ChatRoom chatRoom = chatRoomService.exit(roomId, sessionId, userContext.getId());
-            ChatMessage chatMessage = ChatMessage.exitMessage(userContext, chatRoom);
+        if (command == SUBSCRIBE) {
+            chatRoom = chatRoomService.enter(roomId, sessionId, userContext.getId());
+            chatMessage = ChatMessage.enterMessage(userContext, chatRoom);
+        }
+
+        if (command == UNSUBSCRIBE) {
+            chatRoom = chatRoomService.exit(roomId, sessionId, userContext.getId());
+            chatMessage = ChatMessage.exitMessage(userContext, chatRoom);
+        }
+
+        if ((command == SUBSCRIBE || command == UNSUBSCRIBE)) {
+            if (isOpenedMultipleBrowser(chatRoom, userContext)) {
+                chatMessage.setType(MessageType.MULTIPLE);
+            }
             pushMessage(chatMessageService.save(chatMessage));
         }
 
@@ -71,6 +82,10 @@ public class StompHandler implements ChannelInterceptor {
 
     private boolean isDisconnectedByClosingTheBrowser(String token, StompCommand command) {
         return token == null && command == DISCONNECT;
+    }
+
+    private boolean isOpenedMultipleBrowser(ChatRoom chatRoom, UserContext userContext) {
+        return chatRoom.getChatUserSessionCountMap().get(userContext.getId()) != 1;
     }
 
     private String getJwtFromAccessor(StompHeaderAccessor accessor) {

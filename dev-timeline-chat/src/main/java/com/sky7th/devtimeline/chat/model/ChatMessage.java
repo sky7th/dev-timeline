@@ -20,7 +20,7 @@ public class ChatMessage implements Serializable {
     public static final SimpleDateFormat format = new SimpleDateFormat ( "yyyy-MM-dd HH:mm:ss");
 
     public enum MessageType {
-        ENTER, TALK, QUIT
+        ENTER, TALK, QUIT, MULTIPLE
     }
 
     @Id

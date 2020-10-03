@@ -23,19 +23,21 @@ export default {
   },
   methods: {    
     ...mapActions(['insertSelectedChatRooms']),
+
     enter(roodId) {
-      console.log(this.currentUser);
       if (this.currentUser == null || this.currentUser == undefined) {
         notification.warn('로그인 후 이용 가능합니다.');
         return;
       }
       
       this.chatRoom = this.findRoom(roodId);
+
       if (this.chatRoom != null) {
         this.insertSelectedChatRooms(this.chatRoom);
         // localStorage.setItem('wschat.room', JSON.stringify(this.chatRoom));
       }
     },
+
     findRoom(roomId) {
       if (this.selectedChatRooms.find(chatRoom => chatRoom.id === roomId)) {
         notification.warn('이미 참여중인 채팅방 입니다.');

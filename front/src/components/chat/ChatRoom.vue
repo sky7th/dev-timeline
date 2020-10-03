@@ -81,7 +81,10 @@ export default {
 
     recvMessage(recv) {
       console.log(recv);
-      this.handlerUpdateUserCount(recv.userCount)
+      this.handlerUpdateUserCount(recv.userCount);
+      if (recv.type === 'MULTIPLE') {
+        return;
+      }
       this.messages.push({"type":recv.type, "sender":recv.sender, "message":recv.message,
         "createdDate": recv.createdDate});
     },
