@@ -1,7 +1,6 @@
 package com.sky7th.devtimeline.chat.service;
 
 import com.sky7th.devtimeline.chat.model.ChatMessage;
-import com.sky7th.devtimeline.chat.model.ChatMessage.MessageType;
 import com.sky7th.devtimeline.chat.model.ChatRoom;
 import com.sky7th.devtimeline.chat.repository.ChatMessageRepository;
 import com.sky7th.devtimeline.chat.service.dto.ChatMessageRequestDto;
@@ -22,19 +21,13 @@ public class ChatMessageService {
     return chatMessageRepository.findFirst30ByRoomId(roomId);
   }
 
+  public ChatMessage save(ChatMessage chatMessage) {
+    return chatMessageRepository.save(chatMessage);
+  }
+
   public ChatMessage save(ChatMessageRequestDto requestDto) {
     ChatRoom chatRoom = chatRoomService.findById(requestDto.getRoomId());
-
-    ChatMessage chatMessage;
-    if (MessageType.ENTER.equals(requestDto.getType())) {
-      chatMessage = ChatMessageRequestDto.toEnterMessageEntity(requestDto, chatRoom.getUserCount());
-
-    } else if (MessageType.QUIT.equals(requestDto.getType())) {
-      chatMessage = ChatMessageRequestDto.toExitMessageEntity(requestDto, chatRoom.getUserCount());
-
-    } else {
-      chatMessage = ChatMessageRequestDto.toTalkMessageEntity(requestDto, chatRoom.getUserCount());
-    }
+    ChatMessage chatMessage = ChatMessageRequestDto.toTalkMessageEntity(requestDto, chatRoom.getUserCount());
 
     return chatMessageRepository.save(chatMessage);
   }

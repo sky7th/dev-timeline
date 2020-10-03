@@ -32,7 +32,7 @@ public class ChatRoomService {
     return chatRoomRepository.save(new ChatRoom(roomName));
   }
 
-  public void enter(String roomId, String sessionId, Long userId) {
+  public ChatRoom enter(String roomId, String sessionId, Long userId) {
     ChatRoom chatRoom = findById(roomId);
     Map<Long, Integer> chatUserSessionCountMap = chatRoom.getChatUserSessionCountMap();
 
@@ -43,11 +43,12 @@ public class ChatRoomService {
       chatUserSessionCountMap.put(userId, 1);
       chatUserService.addChatRoomId(sessionId, roomId);
     }
-
     chatRoomRepository.updateChatUserIds(roomId, chatUserSessionCountMap);
+
+    return chatRoom;
   }
 
-  public void exit(String roomId, String sessionId, Long userId) {
+  public ChatRoom exit(String roomId, String sessionId, Long userId) {
     ChatRoom chatRoom = findById(roomId);
     Map<Long, Integer> chatUserSessionCountMap = chatRoom.getChatUserSessionCountMap();
     int sessionCount = chatUserSessionCountMap.get(userId);
@@ -58,8 +59,9 @@ public class ChatRoomService {
       chatUserSessionCountMap.remove(userId);
       chatUserService.removeChatRoomId(sessionId, roomId);
     }
-
     chatRoomRepository.updateChatUserIds(roomId, chatUserSessionCountMap);
+
+    return chatRoom;
   }
 
   public void exitAllChatRoomBySessionId(String sessionId) {

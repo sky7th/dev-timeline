@@ -41,10 +41,10 @@ export default {
       }
     },
     isNoticeMessage(msg) {
-      return msg.sender.name === 'NOTICE'
+      return msg.type === 'ENTER' || msg.type === 'QUIT'
     },
     isCurrentUser(msg) {
-      return this.currentUser.id == msg.sender.id
+      return msg.sender != null && this.currentUser.id === msg.sender.userId
     },
     convertDate(date) {
       let HHmm = date.substr(11, 5);

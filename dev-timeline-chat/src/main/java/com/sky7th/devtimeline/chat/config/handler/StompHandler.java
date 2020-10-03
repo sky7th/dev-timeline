@@ -7,10 +7,15 @@ import static org.springframework.messaging.simp.stomp.StompCommand.UNSUBSCRIBE;
 
 import com.sky7th.devtimeline.chat.config.security.TokenValidator;
 import com.sky7th.devtimeline.chat.config.security.UserContext;
+import com.sky7th.devtimeline.chat.model.ChatMessage;
+import com.sky7th.devtimeline.chat.model.ChatRoom;
+import com.sky7th.devtimeline.chat.service.ChatMessageService;
 import com.sky7th.devtimeline.chat.service.ChatRoomService;
 import com.sky7th.devtimeline.chat.service.ChatUserService;
+import com.sky7th.devtimeline.chat.service.OnGeneratePushMessageEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.simp.stomp.StompCommand;
@@ -29,6 +34,8 @@ public class StompHandler implements ChannelInterceptor {
     private final TokenValidator tokenProvider;
     private final ChatRoomService chatRoomService;
     private final ChatUserService chatUserService;
+    private final ChatMessageService chatMessageService;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
@@ -39,20 +46,24 @@ public class StompHandler implements ChannelInterceptor {
 
         if (isDisconnectedByClosingTheBrowser(token, command)) {
             chatRoomService.exitAllChatRoomBySessionId(sessionId);
+            return message;
         }
 
         UserContext userContext = tokenProvider.getUserContextFromToken(token);
         String roomId = accessor.getFirstNativeHeader(SUBSCRIBE_ID);
 
         if (command == CONNECT) {
-
             chatUserService.save(sessionId, userContext);
 
         } else if (command == SUBSCRIBE) {
-            chatRoomService.enter(roomId, sessionId, userContext.getId());
+            ChatRoom chatRoom = chatRoomService.enter(roomId, sessionId, userContext.getId());
+            ChatMessage chatMessage = ChatMessage.enterMessage(userContext, chatRoom);
+            pushMessage(chatMessageService.save(chatMessage));
 
         } else if (command == UNSUBSCRIBE) {
-            chatRoomService.exit(roomId, sessionId, userContext.getId());
+            ChatRoom chatRoom = chatRoomService.exit(roomId, sessionId, userContext.getId());
+            ChatMessage chatMessage = ChatMessage.exitMessage(userContext, chatRoom);
+            pushMessage(chatMessageService.save(chatMessage));
         }
 
         return message;
@@ -69,5 +80,10 @@ public class StompHandler implements ChannelInterceptor {
             return bearerToken.replace(tokenRequestHeaderPrefix, "");
         }
         return null;
+    }
+
+    private void pushMessage(ChatMessage chatMessage) {
+        OnGeneratePushMessageEvent onGenerateEmailVerificationEvent = new OnGeneratePushMessageEvent(chatMessage);
+        applicationEventPublisher.publishEvent(onGenerateEmailVerificationEvent);
     }
 }

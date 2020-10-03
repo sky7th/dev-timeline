@@ -8,8 +8,10 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.event.EventListener;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,8 +54,14 @@ public class ChatPubSubService {
 //    chatRoomService.delete(roomId);
   }
 
-  public void pushMessage(ChatMessage chatMessage) {
+  public void publish(ChatMessage chatMessage) {
     ChannelTopic channel = channels.get(chatMessage.getRoomId());
     redisPublisher.publish(channel, chatMessage);
+  }
+
+  @Async
+  @EventListener
+  public void onPublishEvent(OnGeneratePushMessageEvent onGenerateEmailVerificationEvent) {
+    publish(onGenerateEmailVerificationEvent.getChatMessage());
   }
 }

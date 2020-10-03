@@ -1,7 +1,9 @@
 package com.sky7th.devtimeline.chat.model;
 
+import com.sky7th.devtimeline.chat.config.security.UserContext;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,7 +33,8 @@ public class ChatMessage implements Serializable {
     private String createdDate;
 
     @Builder
-    public ChatMessage(MessageType type, String roomId, int userCount, ChatUser sender, String message, String createdDate) {
+    public ChatMessage(String id, MessageType type, String roomId, int userCount, ChatUser sender, String message, String createdDate) {
+        this.id = id;
         this.type = type;
         this.roomId = roomId;
         this.userCount = userCount;
@@ -40,4 +43,23 @@ public class ChatMessage implements Serializable {
         this.createdDate = createdDate;
     }
 
+    public static ChatMessage enterMessage(UserContext userContext, ChatRoom chatRoom) {
+        return ChatMessage.builder()
+            .type(MessageType.ENTER)
+            .roomId(chatRoom.getId())
+            .userCount(chatRoom.getUserCount())
+            .message(userContext.getName() + " 님이 들어왔습니다.")
+            .createdDate(ChatMessage.format.format(new Date()))
+            .build();
+    }
+
+    public static ChatMessage exitMessage(UserContext userContext, ChatRoom chatRoom) {
+        return ChatMessage.builder()
+            .type(MessageType.QUIT)
+            .roomId(chatRoom.getId())
+            .userCount(chatRoom.getUserCount())
+            .message(userContext.getName() + " 님이 나갔습니다.")
+            .createdDate(ChatMessage.format.format(new Date()))
+            .build();
+    }
 }

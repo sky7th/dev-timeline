@@ -71,12 +71,16 @@ export default {
         return;
       }
       this.chatConnect.ws.send(`/pub/chat/rooms/message`, {}, JSON.stringify({
-        type:'TALK', sender: this.currentUser, message: this.message, roomId: this.room.id
+        type:'TALK', 
+        sender: { userId: this.currentUser.id, name: this.currentUser.name, imageUrl: this.currentUser.imageUrl },
+        message: this.message, 
+        roomId: this.room.id
       }));
       this.message = '';
     },
 
     recvMessage(recv) {
+      console.log(recv);
       this.handlerUpdateUserCount(recv.userCount)
       this.messages.push({"type":recv.type, "sender":recv.sender, "message":recv.message,
         "createdDate": recv.createdDate});
@@ -102,10 +106,6 @@ export default {
         var recv = JSON.parse(message.body);
         this.recvMessage(recv);
       }, { id: this.room.id });
-
-      this.chatConnect.ws.send(`/pub/chat/rooms/message`, {}, JSON.stringify({
-        type:'ENTER', sender: this.currentUser, message: this.message, roomId: this.room.id
-      }));
     },
 
     connectFailCallback() {
@@ -122,9 +122,6 @@ export default {
 
       if (this.chatConnect.connected) {
         this.subscribeObject.unsubscribe(this.room.id, {});
-        this.chatConnect.ws.send(`/pub/chat/rooms/message`, {}, JSON.stringify({
-          type:'QUIT', sender: this.currentUser, message: this.message, roomId: this.room.id
-        }));
 
         if (this.selectedChatRooms.length === 0) {
           this.chatConnect.ws.disconnect(() => {
@@ -139,9 +136,6 @@ export default {
     },
     handlerUpdateUserCount(userCount) {
       this.$emit('updateUserCount', userCount)
-    },
-    isNoticeMessage(msg) {
-      return msg.sender.name === 'NOTICE'
     },
     // isSameUserBeforeMessage(msg) {
     //   if (this.messages.length === 1) {

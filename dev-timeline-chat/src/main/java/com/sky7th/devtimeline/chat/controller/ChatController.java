@@ -16,6 +16,6 @@ public class ChatController {
 
   @MessageMapping("/chat/rooms/message")
   public void pushMessage(ChatMessageRequestDto requestDto) {
-    chatPubSubService.pushMessage(chatMessageService.save(requestDto));
+    chatPubSubService.publish(chatMessageService.save(requestDto));
   }
 }
