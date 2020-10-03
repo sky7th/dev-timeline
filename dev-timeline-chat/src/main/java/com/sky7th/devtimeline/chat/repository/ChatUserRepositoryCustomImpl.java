@@ -13,14 +13,8 @@ public class ChatUserRepositoryCustomImpl implements ChatUserRepositoryCustom {
   private final RedisKeyValueTemplate redisKeyValueTemplate;
 
   @Override
-  public void updateChatRoomIds(Long userId, Set<String> chatRoomIds) {
-    redisKeyValueTemplate.update(new PartialUpdate<>(userId.toString(), ChatUser.class)
+  public void updateChatRoomIds(String sessionId, Set<String> chatRoomIds) {
+    redisKeyValueTemplate.update(new PartialUpdate<>(sessionId, ChatUser.class)
         .set("chatRoomIds", Lists.newArrayList(chatRoomIds)));
-  }
-
-  @Override
-  public void updateSessionId(Long userId, String sessionId) {
-    redisKeyValueTemplate.update(new PartialUpdate<>(userId.toString(), ChatUser.class)
-        .set("sessionId", sessionId));
   }
 }

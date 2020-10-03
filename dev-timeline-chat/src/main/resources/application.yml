@@ -11,4 +11,4 @@ spring:
     secret: 926D96C90030DD58429D2751AC1BDBBC
 
 server:
-  port: 8082
+  port: 8280

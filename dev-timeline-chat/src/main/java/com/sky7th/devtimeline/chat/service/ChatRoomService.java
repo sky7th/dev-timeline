@@ -2,11 +2,11 @@ package com.sky7th.devtimeline.chat.service;
 
 import com.google.common.collect.Lists;
 import com.sky7th.devtimeline.chat.model.ChatRoom;
+import com.sky7th.devtimeline.chat.model.ChatUser;
 import com.sky7th.devtimeline.chat.repository.ChatRoomRepository;
-import com.sky7th.devtimeline.chat.service.exception.AlreadyDeletedChatRoomException;
 import com.sky7th.devtimeline.chat.service.exception.NotFoundChatRoomException;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ChatRoomService {
 
   private final ChatRoomRepository chatRoomRepository;
+  private final ChatUserService chatUserService;
 
   @Transactional(readOnly = true)
   public ChatRoom findById(String roomId) {
@@ -31,24 +32,40 @@ public class ChatRoomService {
     return chatRoomRepository.save(new ChatRoom(roomName));
   }
 
-  public void delete(String roomId) {
-    if (!chatRoomRepository.existsById(roomId)) {
-      throw new AlreadyDeletedChatRoomException();
+  public void enter(String roomId, String sessionId, Long userId) {
+    ChatRoom chatRoom = findById(roomId);
+    Map<Long, Integer> chatUserSessionCountMap = chatRoom.getChatUserSessionCountMap();
+
+    if (chatUserSessionCountMap.containsKey(userId)) {
+      int sessionCount = chatUserSessionCountMap.get(userId);
+      chatUserSessionCountMap.put(userId, sessionCount + 1);
+    } else {
+      chatUserSessionCountMap.put(userId, 1);
+      chatUserService.addChatRoomId(sessionId, roomId);
     }
-    chatRoomRepository.existsById(roomId);
+
+    chatRoomRepository.updateChatUserIds(roomId, chatUserSessionCountMap);
   }
 
-  public void addChatUserId(String roomId, Long userId) {
+  public void exit(String roomId, String sessionId, Long userId) {
     ChatRoom chatRoom = findById(roomId);
-    Set<Long> userIds = chatRoom.getChatUserIds();
-    userIds.add(userId);
-    chatRoomRepository.updateChatUserIds(roomId, userIds);
+    Map<Long, Integer> chatUserSessionCountMap = chatRoom.getChatUserSessionCountMap();
+    int sessionCount = chatUserSessionCountMap.get(userId);
+
+    if (sessionCount > 1) {
+      chatUserSessionCountMap.put(userId, sessionCount - 1);
+    } else {
+      chatUserSessionCountMap.remove(userId);
+      chatUserService.removeChatRoomId(sessionId, roomId);
+    }
+
+    chatRoomRepository.updateChatUserIds(roomId, chatUserSessionCountMap);
   }
 
-  public void removeChatUserId(String roomId, Long userId) {
-    ChatRoom chatRoom = findById(roomId);
-    Set<Long> userIds = chatRoom.getChatUserIds();
-    userIds.remove(userId);
-    chatRoomRepository.updateChatUserIds(roomId, userIds);
+  public void exitAllChatRoomBySessionId(String sessionId) {
+    ChatUser chatUser = chatUserService.findBySessionId(sessionId);
+    chatUser.getChatRoomIds().forEach(roomId -> {
+      exit(roomId, sessionId, chatUser.getUserId());
+    });
   }
 }

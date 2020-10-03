@@ -1,8 +1,8 @@
 package com.sky7th.devtimeline.chat.repository;
 
-import java.util.Set;
+import java.util.Map;
 
 public interface ChatRoomRepositoryCustom {
 
-  void updateChatUserIds(String roomId, Set<Long> chatUserIds);
+  void updateChatUserIds(String roomId, Map<Long, Integer> chatUserSessionCountMap);
 }

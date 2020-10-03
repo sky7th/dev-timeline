@@ -1,5 +1,6 @@
 package com.sky7th.devtimeline.chat.model;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,7 +13,7 @@ import org.springframework.data.redis.core.RedisHash;
 @Getter
 @Setter
 @RedisHash(value = "chat_message")
-public class ChatMessage {
+public class ChatMessage implements Serializable {
 
     public static final SimpleDateFormat format = new SimpleDateFormat ( "yyyy-MM-dd HH:mm:ss");
 

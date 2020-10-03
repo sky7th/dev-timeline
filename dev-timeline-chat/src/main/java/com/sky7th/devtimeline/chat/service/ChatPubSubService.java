@@ -49,7 +49,7 @@ public class ChatPubSubService {
     ChannelTopic channel = channels.get(roomId);
     redisMessageListener.removeMessageListener(redisSubscriber, channel);
     channels.remove(roomId);
-    chatRoomService.delete(roomId);
+//    chatRoomService.delete(roomId);
   }
 
   public void pushMessage(ChatMessage chatMessage) {

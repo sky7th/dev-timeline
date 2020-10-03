@@ -1,8 +1,8 @@
 package com.sky7th.devtimeline.chat.model;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
@@ -16,7 +16,7 @@ public class ChatRoom implements Serializable {
     @Id
     private String id;
     private String name;
-    private Set<Long> chatUserIds = new HashSet<>();
+    private Map<Long, Integer> chatUserSessionCountMap = new HashMap<>();
 
     public ChatRoom(String name) {
         this(null, name);
@@ -28,6 +28,6 @@ public class ChatRoom implements Serializable {
     }
 
     public int getUserCount() {
-        return this.chatUserIds.size();
+        return this.chatUserSessionCountMap.size();
     }
 }

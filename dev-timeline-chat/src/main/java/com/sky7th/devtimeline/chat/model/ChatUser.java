@@ -1,5 +1,6 @@
 package com.sky7th.devtimeline.chat.model;
 
+import com.sky7th.devtimeline.chat.config.security.UserContext;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Objects;
@@ -7,6 +8,7 @@ import java.util.Set;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
 @NoArgsConstructor
@@ -14,16 +16,23 @@ import org.springframework.data.redis.core.RedisHash;
 @RedisHash(value = "chat_sender")
 public class ChatUser implements Serializable {
 
-    private Long id;
+    @Id
+    private String sessionId;
+    private Long userId;
     private String name;
     private String imageUrl;
     private Set<String> chatRoomIds = new HashSet<>();
 
     @Builder
-    public ChatUser(Long id, String name, String imageUrl) {
-        this.id = id;
+    public ChatUser(String sessionId, Long userId, String name, String imageUrl) {
+        this.sessionId = sessionId;
+        this.userId = userId;
         this.name = name;
         this.imageUrl = imageUrl;
+    }
+
+    public static ChatUser of(UserContext userContext, String sessionId) {
+        return new ChatUser(sessionId, userContext.getId(), userContext.getName(), userContext.getImageUrl());
     }
 
     @Override
@@ -35,11 +44,11 @@ public class ChatUser implements Serializable {
             return false;
         }
         ChatUser that = (ChatUser) o;
-        return Objects.equals(id, that.id);
+        return Objects.equals(sessionId, that.sessionId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(sessionId);
     }
 }

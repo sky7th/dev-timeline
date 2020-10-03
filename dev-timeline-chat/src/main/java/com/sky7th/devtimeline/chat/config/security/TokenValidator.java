@@ -1,6 +1,7 @@
 package com.sky7th.devtimeline.chat.config.security;
 
 import com.sky7th.devtimeline.chat.config.security.exception.InvalidTokenRequestException;
+import com.sky7th.devtimeline.core.domain.user.UserRole;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -24,6 +25,16 @@ public class TokenValidator {
 
     @Value("${spring.jwt.secret}")
     private String secretKey;
+
+    public UserContext getUserContextFromToken(String token) {
+        Claims claims = validateToken(token);
+        Long userId = Long.parseLong(claims.getId());
+        UserRole role = UserRole.valueOf(claims.get(ROLE, String.class));
+        String name = claims.get(TokenValidator.NAME, String.class);
+        String imageUrl = claims.get(TokenValidator.IMAGE_URL, String.class);
+
+        return new UserContext(userId, role, name, imageUrl);
+    }
 
     public Claims validateToken(String authToken) {
         try {

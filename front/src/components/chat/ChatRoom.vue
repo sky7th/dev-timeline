@@ -70,7 +70,7 @@ export default {
         this.chatConnect.connected = false;
         return;
       }
-      this.chatConnect.ws.send(`/pub/rooms/message`, {}, JSON.stringify({
+      this.chatConnect.ws.send(`/pub/chat/rooms/message`, {}, JSON.stringify({
         type:'TALK', sender: this.currentUser, message: this.message, roomId: this.room.id
       }));
       this.message = '';
@@ -103,7 +103,7 @@ export default {
         this.recvMessage(recv);
       }, { id: this.room.id });
 
-      this.chatConnect.ws.send(`/pub/rooms/message`, {}, JSON.stringify({
+      this.chatConnect.ws.send(`/pub/chat/rooms/message`, {}, JSON.stringify({
         type:'ENTER', sender: this.currentUser, message: this.message, roomId: this.room.id
       }));
     },
@@ -122,7 +122,7 @@ export default {
 
       if (this.chatConnect.connected) {
         this.subscribeObject.unsubscribe(this.room.id, {});
-        this.chatConnect.ws.send(`/pub/rooms/message`, {}, JSON.stringify({
+        this.chatConnect.ws.send(`/pub/chat/rooms/message`, {}, JSON.stringify({
           type:'QUIT', sender: this.currentUser, message: this.message, roomId: this.room.id
         }));
 
