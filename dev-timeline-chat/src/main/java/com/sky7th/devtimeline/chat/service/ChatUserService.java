@@ -42,4 +42,8 @@ public class ChatUserService {
       chatUserRepository.save(ChatUser.of(userContext, sessionId));
     }
   }
+
+  public void delete(String sessionId) {
+    chatUserRepository.deleteById(sessionId);
+  }
 }

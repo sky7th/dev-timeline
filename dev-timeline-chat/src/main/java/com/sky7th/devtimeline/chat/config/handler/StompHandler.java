@@ -10,6 +10,7 @@ import com.sky7th.devtimeline.chat.config.security.UserContext;
 import com.sky7th.devtimeline.chat.model.ChatMessage;
 import com.sky7th.devtimeline.chat.model.ChatMessage.MessageType;
 import com.sky7th.devtimeline.chat.model.ChatRoom;
+import com.sky7th.devtimeline.chat.model.ChatUser;
 import com.sky7th.devtimeline.chat.service.ChatMessageService;
 import com.sky7th.devtimeline.chat.service.ChatRoomService;
 import com.sky7th.devtimeline.chat.service.ChatUserService;
@@ -45,59 +46,77 @@ public class StompHandler implements ChannelInterceptor {
         String sessionId = accessor.getSessionId();
         String token = getJwtFromAccessor(accessor);
 
-        if (isDisconnectedByClosingTheBrowser(token, command)) {
-            chatRoomService.exitAllChatRoomBySessionId(sessionId);
+        if (command == CONNECT) {
+            UserContext userContext = tokenProvider.getUserContextFromToken(token);
+            chatUserService.save(sessionId, userContext);
             return message;
         }
 
-        UserContext userContext = tokenProvider.getUserContextFromToken(token);
-        String roomId = accessor.getFirstNativeHeader(SUBSCRIBE_ID);
+        if (isFinalDisconnect(token, command)) {
+            ChatUser chatUser = chatUserService.findBySessionId(sessionId);
+            chatUser.getChatRoomIds().forEach(_roomId -> {
+                ChatRoom _chatRoom = chatRoomService.exit(_roomId, chatUser);
+                ChatMessage _chatMessage = ChatMessage.exitMessage(chatUser, _chatRoom);
+                pushMessage(chatMessageService.save(_chatMessage), command, _chatRoom, chatUser);
+            });
 
-        if (command == CONNECT) {
-            chatUserService.save(sessionId, userContext);
+            chatUserService.delete(sessionId);
+
+            return message;
         }
 
-        ChatRoom chatRoom = null;
-        ChatMessage chatMessage = null;
+        if (command == SUBSCRIBE || command == UNSUBSCRIBE) {
+            ChatUser chatUser = chatUserService.findBySessionId(sessionId);
+            String roomId = accessor.getFirstNativeHeader(SUBSCRIBE_ID);
+            ChatRoom chatRoom;
+            ChatMessage chatMessage;
 
-        if (command == SUBSCRIBE) {
-            chatRoom = chatRoomService.enter(roomId, sessionId, userContext.getId());
-            chatMessage = ChatMessage.enterMessage(userContext, chatRoom);
-        }
+            if (command == SUBSCRIBE) {
+                chatRoom = chatRoomService.enter(roomId, chatUser);
+                chatMessage = ChatMessage.enterMessage(chatUser, chatRoom);
+            }
+            else {
+                chatRoom = chatRoomService.exit(roomId, chatUser);
+                chatMessage = ChatMessage.exitMessage(chatUser, chatRoom);
+            }
 
-        if (command == UNSUBSCRIBE) {
-            chatRoom = chatRoomService.exit(roomId, sessionId, userContext.getId());
-            chatMessage = ChatMessage.exitMessage(userContext, chatRoom);
-        }
-
-        if ((command == SUBSCRIBE || command == UNSUBSCRIBE)) {
-            if (isOpenedMultipleBrowser(chatRoom, userContext)) {
+            if (isOpenedMultipleBrowser(command, chatRoom, chatUser)) {
                 chatMessage.setType(MessageType.MULTIPLE);
             }
-            pushMessage(chatMessageService.save(chatMessage));
+
+            pushMessage(chatMessageService.save(chatMessage), command, chatRoom, chatUser);
         }
 
         return message;
     }
 
-    private boolean isDisconnectedByClosingTheBrowser(String token, StompCommand command) {
+    private boolean isFinalDisconnect(String token, StompCommand command) {
         return token == null && command == DISCONNECT;
     }
 
-    private boolean isOpenedMultipleBrowser(ChatRoom chatRoom, UserContext userContext) {
-        return chatRoom.getChatUserSessionCountMap().get(userContext.getId()) != 1;
+    private boolean isOpenedMultipleBrowser(StompCommand command, ChatRoom chatRoom, ChatUser chatUser) {
+        if (command == SUBSCRIBE) {
+            return chatRoom.getChatUserSessionCountMap().get(chatUser.getUserId()) != 1;
+        }
+        else {
+            return chatRoom.getChatUserSessionCountMap().containsKey(chatUser.getUserId());
+        }
     }
 
     private String getJwtFromAccessor(StompHeaderAccessor accessor) {
         String tokenRequestHeaderPrefix = "Bearer ";
         String bearerToken = accessor.getFirstNativeHeader("Authorization");
+
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(tokenRequestHeaderPrefix)) {
             return bearerToken.replace(tokenRequestHeaderPrefix, "");
         }
         return null;
     }
 
-    private void pushMessage(ChatMessage chatMessage) {
+    private void pushMessage(ChatMessage chatMessage, StompCommand command, ChatRoom chatRoom, ChatUser chatUser) {
+        if (isOpenedMultipleBrowser(command, chatRoom, chatUser)) {
+            chatMessage.setType(MessageType.MULTIPLE);
+        }
         OnGeneratePushMessageEvent onGenerateEmailVerificationEvent = new OnGeneratePushMessageEvent(chatMessage);
         applicationEventPublisher.publishEvent(onGenerateEmailVerificationEvent);
     }

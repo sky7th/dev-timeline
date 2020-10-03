@@ -1,6 +1,5 @@
 package com.sky7th.devtimeline.chat.model;
 
-import com.sky7th.devtimeline.chat.config.security.UserContext;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -43,22 +42,22 @@ public class ChatMessage implements Serializable {
         this.createdDate = createdDate;
     }
 
-    public static ChatMessage enterMessage(UserContext userContext, ChatRoom chatRoom) {
+    public static ChatMessage enterMessage(ChatUser chatUser, ChatRoom chatRoom) {
         return ChatMessage.builder()
             .type(MessageType.ENTER)
             .roomId(chatRoom.getId())
             .userCount(chatRoom.getUserCount())
-            .message(userContext.getName() + " 님이 들어왔습니다.")
+            .message(chatUser.getName() + " 님이 들어왔습니다.")
             .createdDate(ChatMessage.format.format(new Date()))
             .build();
     }
 
-    public static ChatMessage exitMessage(UserContext userContext, ChatRoom chatRoom) {
+    public static ChatMessage exitMessage(ChatUser chatUser, ChatRoom chatRoom) {
         return ChatMessage.builder()
             .type(MessageType.QUIT)
             .roomId(chatRoom.getId())
             .userCount(chatRoom.getUserCount())
-            .message(userContext.getName() + " 님이 나갔습니다.")
+            .message(chatUser.getName() + " 님이 나갔습니다.")
             .createdDate(ChatMessage.format.format(new Date()))
             .build();
     }

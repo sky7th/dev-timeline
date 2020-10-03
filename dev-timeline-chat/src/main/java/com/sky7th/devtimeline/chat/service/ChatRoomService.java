@@ -32,7 +32,8 @@ public class ChatRoomService {
     return chatRoomRepository.save(new ChatRoom(roomName));
   }
 
-  public ChatRoom enter(String roomId, String sessionId, Long userId) {
+  public ChatRoom enter(String roomId, ChatUser chatUser) {
+    Long userId = chatUser.getUserId();
     ChatRoom chatRoom = findById(roomId);
     Map<Long, Integer> chatUserSessionCountMap = chatRoom.getChatUserSessionCountMap();
 
@@ -41,14 +42,15 @@ public class ChatRoomService {
       chatUserSessionCountMap.put(userId, sessionCount + 1);
     } else {
       chatUserSessionCountMap.put(userId, 1);
-      chatUserService.addChatRoomId(sessionId, roomId);
     }
     chatRoomRepository.updateChatUserIds(roomId, chatUserSessionCountMap);
+    chatUserService.addChatRoomId(chatUser.getSessionId(), roomId);
 
     return chatRoom;
   }
 
-  public ChatRoom exit(String roomId, String sessionId, Long userId) {
+  public ChatRoom exit(String roomId, ChatUser chatUser) {
+    Long userId = chatUser.getUserId();
     ChatRoom chatRoom = findById(roomId);
     Map<Long, Integer> chatUserSessionCountMap = chatRoom.getChatUserSessionCountMap();
     int sessionCount = chatUserSessionCountMap.get(userId);
@@ -57,17 +59,16 @@ public class ChatRoomService {
       chatUserSessionCountMap.put(userId, sessionCount - 1);
     } else {
       chatUserSessionCountMap.remove(userId);
-      chatUserService.removeChatRoomId(sessionId, roomId);
     }
     chatRoomRepository.updateChatUserIds(roomId, chatUserSessionCountMap);
+    chatUserService.removeChatRoomId(chatUser.getSessionId(), roomId);
 
     return chatRoom;
   }
 
-  public void exitAllChatRoomBySessionId(String sessionId) {
-    ChatUser chatUser = chatUserService.findBySessionId(sessionId);
+  public void exitAllChatRoom(ChatUser chatUser) {
     chatUser.getChatRoomIds().forEach(roomId -> {
-      exit(roomId, sessionId, chatUser.getUserId());
+      exit(roomId, chatUser);
     });
   }
 }
