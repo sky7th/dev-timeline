@@ -4,6 +4,7 @@ import com.sky7th.devtimeline.core.domain.common.BaseTimeEntity;
 import com.sky7th.devtimeline.core.domain.company.domain.Company;
 import com.sky7th.devtimeline.core.domain.company.domain.CompanyUrl;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -59,6 +60,12 @@ public class TechPost extends BaseTimeEntity {
         this.sortDate = sortDate;
     }
 
+    public void update(String title, String date, String thumbnailUrl) {
+        this.title = title;
+        this.date = date;
+        this.thumbnailUrl = thumbnailUrl;
+    }
+
     public Company getCompany() {
         return this.companyUrl.getCompany();
     }
@@ -75,8 +82,27 @@ public class TechPost extends BaseTimeEntity {
                 +","+contentUrl;
     }
 
-    public boolean isEqual(String str) {
-        return toString().equals(str);
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        TechPost techPost = (TechPost) o;
+        return Objects.equals(postCrawlId, techPost.postCrawlId) &&
+            Objects.equals(title, techPost.title) &&
+            Objects.equals(description, techPost.description) &&
+            Objects.equals(author, techPost.author) &&
+            Objects.equals(date, techPost.date) &&
+            Objects.equals(thumbnailUrl, techPost.thumbnailUrl) &&
+            Objects.equals(contentUrl, techPost.contentUrl);
     }
 
+    @Override
+    public int hashCode() {
+        return Objects
+            .hash(postCrawlId, title, description, author, date, thumbnailUrl, contentUrl);
+    }
 }

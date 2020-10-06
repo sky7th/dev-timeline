@@ -5,6 +5,7 @@ import com.sky7th.devtimeline.core.domain.company.domain.CompanyUrl;
 import com.sky7th.devtimeline.core.domain.company.domain.CompanyUrlType;
 import com.sky7th.devtimeline.core.domain.recruitpost.domain.RecruitPost;
 import com.sky7th.devtimeline.core.domain.techpost.domain.TechPost;
+import java.util.Objects;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -63,5 +64,22 @@ public class CrawlingDto {
                 +","+title
                 +","+(date==null ? "" : date)+(closingDate==null ? "" : closingDate)
                 +","+contentUrl;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        CrawlingDto that = (CrawlingDto) o;
+        return Objects.equals(crawlId, that.crawlId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(crawlId);
     }
 }

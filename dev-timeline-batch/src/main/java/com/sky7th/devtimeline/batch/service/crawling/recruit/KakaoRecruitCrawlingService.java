@@ -1,6 +1,7 @@
-package com.sky7th.devtimeline.batch.service.crawling;
+package com.sky7th.devtimeline.batch.service.crawling.recruit;
 
 import com.sky7th.devtimeline.batch.dto.CrawlingDto;
+import com.sky7th.devtimeline.batch.service.crawling.CompanyCrawlingService;
 import com.sky7th.devtimeline.batch.utils.CrawlingUtils;
 import com.sky7th.devtimeline.batch.dto.CompanyDto;
 import com.sky7th.devtimeline.core.domain.company.domain.CompanyType;
@@ -19,7 +20,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class NaverRecruitCrawlingService implements CompanyCrawlingService {
+public class KakaoRecruitCrawlingService implements CompanyCrawlingService {
 
     private final WebDriver driver;
 
@@ -28,14 +29,28 @@ public class NaverRecruitCrawlingService implements CompanyCrawlingService {
     @Override
     public List<CrawlingDto> crawling(CompanyDto companyDto) {
         this.companyDto = companyDto;
-        this.driver.get(this.companyDto.getCompanyUrl().getUrl());
+        int pageSize = getKakaoRecruitLastPageNum();
 
-        CrawlingUtils.clickMoreBtnUntilTheEnd(this.driver, By.className("more_btn"));
+        return getAllCrawlingDtoUntilLastPage(pageSize);
+    }
 
-        By by = By.cssSelector("#jobListDiv > ul");
-        WebElement element = CrawlingUtils.getWebElement(this.driver, by);
+    private int getKakaoRecruitLastPageNum() {
+        this.driver.get(companyDto.getCompanyUrl().getUrl());
 
-        return parseWebElement(element);
+        return Integer.parseInt(this.driver.findElement(By.className("btn_lst"))
+                .getAttribute("href").split("=")[1]);
+    }
+
+   private List<CrawlingDto> getAllCrawlingDtoUntilLastPage(int pageSize) {
+        List<CrawlingDto> crawlingItems = new ArrayList<>();
+
+        for (int i = 1; i <= pageSize; i++) {
+            this.driver.get(this.companyDto.getCompanyUrl().getUrl() + "?page=" + i);
+            By by = By.className("list_jobs");
+            WebElement element = CrawlingUtils.getWebElement(this.driver, by);
+            crawlingItems.addAll(parseWebElement(element));
+        }
+        return crawlingItems;
     }
 
     @Override
@@ -50,20 +65,24 @@ public class NaverRecruitCrawlingService implements CompanyCrawlingService {
 
     @Override
     public CrawlingDto getCrawlingDto(WebElement element) {
-        WebElement closingDateElement = CrawlingUtils.getWebElement(element, By.className("crd_date"));
-        String title = element.findElement(By.className("crd_tit")).getText();
+        String title = element.findElement(By.className("tit_jobs")).getText();
+        List<WebElement> periodSpanElements = element.findElement(By.className("list_info")).findElements(By.tagName("dd"));
+        WebElement closingDateElement = periodSpanElements.stream()
+                .filter(webElement -> webElement.getText().contains("년") || webElement.getText().contains("영입종료시"))
+                .findFirst().orElse(null);
         String closingDate = closingDateElement==null ? "" : closingDateElement.getText();
         String contentUrl = element.findElement(By.tagName("a")).getAttribute("href");
-        Pattern p = Pattern.compile("(?<=annoId=).+(?=&classId)", Pattern.CASE_INSENSITIVE);
+        Pattern p = Pattern.compile("(?<=P-).+(?=\\?)", Pattern.CASE_INSENSITIVE);
         Matcher m = p.matcher(contentUrl);
         String key = m.find() ? m.group() : "";
 
         return CrawlingDto.builder()
-                .crawlId(CompanyType.NAVER.toString()+"-"+CompanyUrlType.RECRUIT.toString()+"-"+key)
+                .crawlId(CompanyType.KAKAO.toString()+"-"+ CompanyUrlType.RECRUIT.toString()+"-"+key)
                 .companyUrl(this.companyDto.getCompanyUrl())
                 .title(title)
                 .closingDate(closingDate)
                 .contentUrl(contentUrl)
                 .build();
     }
+
 }
