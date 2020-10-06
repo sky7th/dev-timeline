@@ -101,7 +101,7 @@ export default new Vuex.Store({
       localStorage.ACCESS_TOKEN = accessToken;
       setHeader(accessToken);
     },
-    setUserDetail(state, payload) {
+    setCurrentUser(state, payload) {
       state.currentUser = payload;
       state.authenticated = payload !== null;
     },
@@ -221,7 +221,7 @@ export default new Vuex.Store({
   },
   actions: {
     setToken: (context, payload) => context.commit('setToken', payload),
-    setUserDetail: (context, payload) => context.commit('setUserDetail', payload),
+    setCurrentUser: (context, payload) => context.commit('setCurrentUser', payload),
     updatePosts: context => context.commit('updatePosts'),
     insertPosts: (context, payload) => context.commit('insertPosts', { infiniteState: payload.infiniteState }),
     removePost: (context, payload) => context.commit('removePost', payload),

@@ -1,8 +1,7 @@
 <template>
   <div class="chat-button">
     <notifications group="notify" position="bottom center"/>
-    <button class="list-group-item list-group-item-action" v-on:click="enterRoom()">
-      <div style="margin-bottom: 3px;">{{ convertNameSelectedChatRoom() }}</div>
+    <button v-if="!isOnChatRooms" class="list-group-item list-group-item-action" v-on:click="open()">
       <div>채팅방</div>
     </button>
   </div>
@@ -35,7 +34,7 @@ export default {
       return response.data;
     },
 
-    async enterRoom() {
+    async open() {
       if (!this.isOnChatRooms) {
         const rooms = await this.findRooms();
         this.updateChatRooms(rooms);
@@ -45,15 +44,6 @@ export default {
         this.updateIsOnChatRooms(false);
       }
     },
-
-    convertNameSelectedChatRoom() {
-      if (this.selectedMenu === 'recruit-posts')
-        return '채용';
-      else if (this.selectedMenu === 'tech-posts')
-        return '테크 블로그';
-      else if (this.selectedMenu === 'link-posts')
-        return '링크 공유';
-    }
   }
 }
 </script>

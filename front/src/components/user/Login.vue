@@ -58,7 +58,7 @@ export default {
       .then(response => {
         notification.success('로그인 성공', () => {
           this.$store.commit('setToken', response.data.accessToken);
-          this.$emit('getUserDetails');
+          this.$emit('getCurrentUsers');
           location.reload();
         });
       })

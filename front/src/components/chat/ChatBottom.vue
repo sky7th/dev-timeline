@@ -1,7 +1,7 @@
 <template>
   <div class="chat-bottom"  @click="handlerChangeChatOpenState()">
     <span>{{ room.name }}</span>
-    <span class="user-count">{{ room.userCount }}</span>
+    <span class="user-count">{{ userCount }}</span>
   </div>
 </template>
 
@@ -12,7 +12,8 @@ export default {
       id: '',
       name: '',
       userCount: 0
-    })}
+    })},
+    userCount: { type: Number, default: 0 },
   },
   methods: {
     handlerChangeChatOpenState() {

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <router-view @getUserDetails="getUserDetails"/>
+    <router-view @getCurrentUsers="getCurrentUsers"/>
   </div>
 </template>
 
@@ -11,14 +11,14 @@ import { mapActions, mapGetters } from "vuex";
 
 export default {
   created(){
-    this.getUserDetails();
+    this.getCurrentUsers();
   },
   computed: {
     ...mapGetters(['currentUser'])
   },
   methods: {
-    ...mapActions(['setUserDetail']),
-    async getUserDetails() {
+    ...mapActions(['setCurrentUser']),
+    async getCurrentUsers() {
       try {
         const token = this.$store.getters.token;
         if (token===null || token==='null' || token ==='') {
@@ -32,7 +32,7 @@ export default {
 
         const response = await this.axios.get(`/user/me`);
         if (response.status === 200) {
-          this.setUserDetail(response.data)
+          this.setCurrentUser(response.data)
         }
       } catch (err) {
         notification.error(err, "사용자 정보를 불러올 수 없습니다.", () => {

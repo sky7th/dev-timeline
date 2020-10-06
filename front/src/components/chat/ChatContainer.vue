@@ -2,6 +2,7 @@
   <div class="chat-container">
     <ChatBottom
       :room="room"
+      :userCount="userCount"
       @changeChatOpenState="changeChatOpenState"/>
     <ChatRoom 
       :room="room"
@@ -30,7 +31,8 @@ export default {
   },
   data() {
     return {
-      isChatOpen: true
+      isChatOpen: true,
+      userCount: 0
     }
   },
   methods: {
@@ -41,7 +43,7 @@ export default {
         this.isChatOpen = false
     },
     updateUserCount(userCount) {
-      this.room.userCount = userCount
+      this.userCount = userCount
     }
   }
 }

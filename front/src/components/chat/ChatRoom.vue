@@ -80,7 +80,6 @@ export default {
     },
 
     recvMessage(recv) {
-      console.log(recv);
       this.handlerUpdateUserCount(recv.userCount);
       if (recv.type === 'MULTIPLE') {
         return;
@@ -104,7 +103,17 @@ export default {
       }
     },
 
-    connectSuccessCallback() {
+    async connectSuccessCallback() {
+      await this.axios.get(`${process.env.VUE_APP_CHAT_API}/chat/rooms/${this.room.id}/message`)
+        .then(({data}) => {
+          console.log(data);
+          data.forEach(chatMessage => {
+            this.recvMessage(chatMessage);
+          });
+        }).catch(() => {
+            notification.warn('채팅 목록을 불러오지 못했습니다.');
+        });
+    console.log('aaaaaa');
       this.subscribeObject = this.chatConnect.ws.subscribe(`/sub/chat/rooms/${this.room.id}`, (message) => {
         var recv = JSON.parse(message.body);
         this.recvMessage(recv);
