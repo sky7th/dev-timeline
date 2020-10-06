@@ -4,6 +4,8 @@ import com.sky7th.devtimeline.chat.model.ChatMessage;
 import com.sky7th.devtimeline.chat.model.ChatRoom;
 import com.sky7th.devtimeline.chat.pubsub.RedisPublisher;
 import com.sky7th.devtimeline.chat.pubsub.RedisSubscriber;
+import com.sky7th.devtimeline.chat.service.event.OnGeneratePushMessageEvent;
+import com.sky7th.devtimeline.core.domain.chattingRoom.service.ChattingRoomInternalService;
 import java.util.HashMap;
 import java.util.Map;
 import javax.annotation.PostConstruct;
@@ -21,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ChatPubSubService {
 
   private final ChatRoomService chatRoomService;
+  private final ChattingRoomInternalService chattingRoomInternalService;
   private final RedisMessageListenerContainer redisMessageListener;
   private final RedisPublisher redisPublisher;
   private final RedisSubscriber redisSubscriber;
@@ -28,30 +31,24 @@ public class ChatPubSubService {
 
   @PostConstruct
   public void init() {
-//    chatRoomService.findAll();
     channels = new HashMap<>();
-    ChatRoom chatRoom1 = chatRoomService.save("1");
-    ChatRoom chatRoom2 = chatRoomService.save("2");
-    channels.put(chatRoom1.getId(), new ChannelTopic(chatRoom1.getId()));
-    channels.put(chatRoom2.getId(), new ChannelTopic(chatRoom2.getId()));
-    redisMessageListener.addMessageListener(redisSubscriber, channels.get(chatRoom1.getId()));
-    redisMessageListener.addMessageListener(redisSubscriber, channels.get(chatRoom2.getId()));
+
+    chattingRoomInternalService.findAll().stream()
+        .map(chattingRoom -> ChatRoom.toEntity(chattingRoom, new HashMap<>()))
+        .forEach(this::createRoom);
   }
 
-  public ChatRoom createRoom(String roomName) {
-    ChatRoom chatRoom = chatRoomService.save(roomName);
-    ChannelTopic channel = new ChannelTopic(chatRoom.getId());
+  private void createRoom(ChatRoom chatRoom) {
+    ChatRoom savedChatRoom = chatRoomService.save(chatRoom);
+    ChannelTopic channel = new ChannelTopic(savedChatRoom.getId());
     redisMessageListener.addMessageListener(redisSubscriber, channel);
-    channels.put(chatRoom.getId(), channel);
-
-    return chatRoom;
+    channels.put(savedChatRoom.getId(), channel);
   }
 
   public void deleteRoom(String roomId) {
     ChannelTopic channel = channels.get(roomId);
     redisMessageListener.removeMessageListener(redisSubscriber, channel);
     channels.remove(roomId);
-//    chatRoomService.delete(roomId);
   }
 
   public void publish(ChatMessage chatMessage) {
