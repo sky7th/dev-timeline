@@ -26,7 +26,6 @@ public class ChatMessageRequestDto implements Serializable {
         return ChatMessage.builder()
             .type(requestDto.getType())
             .roomId(requestDto.getRoomId())
-            .realRoomId(chatRoom.getRoomId())
             .userCount(chatRoom.getUserCount())
             .sender(requestDto.getSender())
             .message(requestDto.getMessage())

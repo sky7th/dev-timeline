@@ -17,17 +17,15 @@ import lombok.ToString;
 @ToString
 public class ChatMessageResponseDto implements Serializable {
 
-    private String id;
     private MessageType type;
-    private String roomId;
     private int userCount;
     private ChatUser sender;
     private String message;
     private String createdDate;
 
     public static ChatMessageResponseDto of(ChatMessage entity) {
-        return new ChatMessageResponseDto(entity.getId(), entity.getType(), entity.getRoomId(),
-            entity.getUserCount(), entity.getSender(), entity.getMessage(), entity.getCreatedDate());
+        return new ChatMessageResponseDto(entity.getType(), entity.getUserCount(),
+            entity.getSender(), entity.getMessage(), entity.getCreatedDate());
     }
 
     public static List<ChatMessageResponseDto> of(List<ChatMessage> entities) {
