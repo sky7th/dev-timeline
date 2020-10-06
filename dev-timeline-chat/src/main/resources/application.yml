@@ -1,14 +1,9 @@
 spring:
   profiles:
-    active: local
----
-spring:
-  profiles: local
-  redis:
-    host: localhost
-    port: 6379
-  jwt:
-    secret: 926D96C90030DD58429D2751AC1BDBBC
+    active: dev
 
 server:
   port: 8280
+
+
+

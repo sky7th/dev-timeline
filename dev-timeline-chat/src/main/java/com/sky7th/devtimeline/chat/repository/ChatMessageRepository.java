@@ -6,5 +6,7 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface ChatMessageRepository extends CrudRepository<ChatMessage, String> {
 
-  List<ChatMessage> findFirst30ByRoomId(String roomId);
+  @Override
+  List<ChatMessage> findAll();
+  List<ChatMessage> findAllByRoomId(String roomId);
 }

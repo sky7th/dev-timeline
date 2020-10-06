@@ -1,0 +1,79 @@
+spring:
+  profiles: prod
+
+  redis:
+    host: localhost
+    port: 6379
+
+  jwt:
+    secret: 926D96C90030DD58429D2751AC1BDBBC
+
+  datasource:
+    hikari:
+      jdbc-url: jdbc:mysql://database-1.czh5fahyf9wh.ap-northeast-2.rds.amazonaws.com:3306/dev_timeline
+      username: admin
+      password: nm0523679
+      driver-class-name: com.mysql.cj.jdbc.Driver
+#      auto-commit: false
+#      connection-test-query: SELECT 1
+#      minimum-idle: 10
+#      maximum-pool-size: 50
+#      transaction-isolation: TRANSACTION_READ_UNCOMMITTED
+#      pool-name: pool-timeline
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    properties.hibernate:
+      dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+      default_batch_fetch_size: 1000
+    hibernate:
+      ddl-auto: update
+    generate-ddl: true
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 660641647489-3tvclq6bu93546110lnrv1v0rbbnbj6j.apps.googleusercontent.com
+            client-secret: 3adRqjinELMl40Ah_4MVnwVA
+          github:
+            client-id: 3a5fd8be9a929bbac08d
+            client-secret: 1dd82c3ed618452083df2cce6c9fc924e878010e
+#        provider:
+#          facebook:
+#            authorization-uri: https://www.facebook.com/v3.0/dialog/oauth
+#            token-uri: https://graph.facebook.com/v3.0/oauth/access_token
+#            user-info-uri: https://graph.facebook.com/v3.0/me?fields=id,first_name,middle_name,last_name,name,email,verified,is_verified,picture.width(250).height(250)
+
+restTemplate:
+  factory:
+    readTimeout: 5000
+    connectTimeout: 3000
+  httpClient:
+    maxConnTotal: 100
+    maxConnPerRoute: 5
+
+app:
+  auth:
+    tokenSecret: 926D96C90030DD58429D2751AC1BDBBC
+    tokenExpirationMsec: 864000000
+  oauth2:
+    # After successfully authenticating with the OAuth2 Provider,
+    # we'll be generating an auth token for the user and sending the token to the
+    # redirectUri mentioned by the client in the /oauth2/authorize request.
+    # We're not using cookies because they won't work well in mobile clients.
+    authorizedRedirectUris:
+      - http://dev-timeline-front.s3-website.ap-northeast-2.amazonaws.com/oauth2/redirect
+      - myandroidapp://oauth2/redirect
+      - myiosapp://oauth2/redirect
+
+server:
+  servlet:
+    context-path: /dev-timeline-api
+
+logging:
+  level:
+    root: INFO
+    dev-timeline-api: DEBUG
+  file:
+    path: /home/github-actions/dev-timeline-api/log

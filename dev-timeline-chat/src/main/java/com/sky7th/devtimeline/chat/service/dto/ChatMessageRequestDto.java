@@ -1,10 +1,11 @@
 package com.sky7th.devtimeline.chat.service.dto;
 
 import com.sky7th.devtimeline.chat.model.ChatMessage;
-import com.sky7th.devtimeline.chat.model.ChatMessage.MessageType;
+import com.sky7th.devtimeline.chat.model.ChatRoom;
 import com.sky7th.devtimeline.chat.model.ChatUser;
+import com.sky7th.devtimeline.core.domain.chattingMessage.domain.ChattingMessage.MessageType;
+import com.sky7th.devtimeline.core.utils.LocalDateTimeUtils;
 import java.io.Serializable;
-import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,14 +22,15 @@ public class ChatMessageRequestDto implements Serializable {
     private ChatUser sender;
     private String message;
 
-    public static ChatMessage toTalkMessageEntity(ChatMessageRequestDto requestDto, int userCount) {
+    public static ChatMessage toTalkMessageEntity(ChatMessageRequestDto requestDto, ChatRoom chatRoom) {
         return ChatMessage.builder()
             .type(requestDto.getType())
             .roomId(requestDto.getRoomId())
-            .userCount(userCount)
+            .realRoomId(chatRoom.getRoomId())
+            .userCount(chatRoom.getUserCount())
             .sender(requestDto.getSender())
             .message(requestDto.getMessage())
-            .createdDate(ChatMessage.format.format(new Date()))
+            .createdDate(LocalDateTimeUtils.toStringNowUntilMilisecond())
             .build();
     }
 }

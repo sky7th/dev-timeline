@@ -1,4 +1,4 @@
-package com.sky7th.devtimeline.chat.service;
+package com.sky7th.devtimeline.chat.service.event;
 
 import com.sky7th.devtimeline.chat.model.ChatMessage;
 import lombok.Getter;

@@ -8,13 +8,13 @@ import static org.springframework.messaging.simp.stomp.StompCommand.UNSUBSCRIBE;
 import com.sky7th.devtimeline.chat.config.security.TokenValidator;
 import com.sky7th.devtimeline.chat.config.security.UserContext;
 import com.sky7th.devtimeline.chat.model.ChatMessage;
-import com.sky7th.devtimeline.chat.model.ChatMessage.MessageType;
 import com.sky7th.devtimeline.chat.model.ChatRoom;
 import com.sky7th.devtimeline.chat.model.ChatUser;
 import com.sky7th.devtimeline.chat.service.ChatMessageService;
 import com.sky7th.devtimeline.chat.service.ChatRoomService;
 import com.sky7th.devtimeline.chat.service.ChatUserService;
-import com.sky7th.devtimeline.chat.service.OnGeneratePushMessageEvent;
+import com.sky7th.devtimeline.chat.service.event.OnGeneratePushMessageEvent;
+import com.sky7th.devtimeline.core.domain.chattingMessage.domain.ChattingMessage.MessageType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -68,23 +68,17 @@ public class StompHandler implements ChannelInterceptor {
         if (command == SUBSCRIBE || command == UNSUBSCRIBE) {
             ChatUser chatUser = chatUserService.findBySessionId(sessionId);
             String roomId = accessor.getFirstNativeHeader(SUBSCRIBE_ID);
-            ChatRoom chatRoom;
-            ChatMessage chatMessage;
 
             if (command == SUBSCRIBE) {
-                chatRoom = chatRoomService.enter(roomId, chatUser);
-                chatMessage = ChatMessage.enterMessage(chatUser, chatRoom);
+                ChatRoom chatRoom = chatRoomService.enter(roomId, chatUser);
+                ChatMessage chatMessage = ChatMessage.enterMessage(chatUser, chatRoom);
+                pushMessage(chatMessageService.save(chatMessage), command, chatRoom, chatUser);
             }
             else {
-                chatRoom = chatRoomService.exit(roomId, chatUser);
-                chatMessage = ChatMessage.exitMessage(chatUser, chatRoom);
+                ChatRoom chatRoom = chatRoomService.exit(roomId, chatUser);
+                ChatMessage chatMessage = ChatMessage.exitMessage(chatUser, chatRoom);
+                pushMessage(chatMessageService.save(chatMessage), command, chatRoom, chatUser);
             }
-
-            if (isOpenedMultipleBrowser(command, chatRoom, chatUser)) {
-                chatMessage.setType(MessageType.MULTIPLE);
-            }
-
-            pushMessage(chatMessageService.save(chatMessage), command, chatRoom, chatUser);
         }
 
         return message;
@@ -117,7 +111,6 @@ public class StompHandler implements ChannelInterceptor {
         if (isOpenedMultipleBrowser(command, chatRoom, chatUser)) {
             chatMessage.setType(MessageType.MULTIPLE);
         }
-        OnGeneratePushMessageEvent onGenerateEmailVerificationEvent = new OnGeneratePushMessageEvent(chatMessage);
-        applicationEventPublisher.publishEvent(onGenerateEmailVerificationEvent);
+        applicationEventPublisher.publishEvent(new OnGeneratePushMessageEvent(chatMessage));
     }
 }
