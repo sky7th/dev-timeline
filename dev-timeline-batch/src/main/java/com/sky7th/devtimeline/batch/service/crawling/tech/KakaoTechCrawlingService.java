@@ -1,7 +1,8 @@
-package com.sky7th.devtimeline.batch.service.crawling;
+package com.sky7th.devtimeline.batch.service.crawling.tech;
 
 import com.sky7th.devtimeline.batch.dto.CompanyDto;
 import com.sky7th.devtimeline.batch.dto.CrawlingDto;
+import com.sky7th.devtimeline.batch.service.crawling.CompanyCrawlingService;
 import com.sky7th.devtimeline.batch.utils.CrawlingUtils;
 import com.sky7th.devtimeline.core.domain.company.domain.CompanyType;
 import com.sky7th.devtimeline.core.domain.company.domain.CompanyUrlType;

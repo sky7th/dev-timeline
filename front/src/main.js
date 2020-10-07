@@ -4,6 +4,7 @@ import router from "./router";
 import store from "./store";
 import notifications from 'vue-notification';
 import axios from './libs/axios.custom'
+import Stomp from './libs/stomp.custom';
 import constant from './constant/Constant'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { fas } from '@fortawesome/free-solid-svg-icons' 
@@ -15,6 +16,7 @@ faLibrary.add(fas, far)
 Vue.use(constant);
 Vue.use(notifications);
 Vue.prototype.axios = axios;
+Vue.prototype.Stomp = Stomp;
 Vue.config.productionTip = false
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)

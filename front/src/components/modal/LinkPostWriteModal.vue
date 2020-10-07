@@ -1,19 +1,19 @@
 <template>
   <div class="link-post-modal">
     <div class="wrapper">
-      <div class="description">title</div>
+      <div class="description">제목</div>
       <InputForm class="title-input" name="title" placeholder="제목" 
         v-model="linkPost.title" 
         @keypressEnter="moveFocusToLink"/>
     </div>
     <div class="wrapper">
-      <div class="description">link</div>
+      <div class="description">링크</div>
       <InputForm class="link-input" name="linkUrl" type="text" placeholder="https://www.devtimeline.com/" 
         v-model="linkPost.linkUrl"
         @keypressEnter="moveFocusToTag"/>
     </div>
     <div class="wrapper">
-      <div class="description">tags <span style="font-size: 12px; margin-left: 4px;">(태그 입력 후 엔터를 꾸욱)</span></div>
+      <div class="description">태그 <span style="font-size: 12px; margin-left: 4px;">(태그 입력 후 엔터를 꾸욱)</span></div>
       <ul class="tag-wrapper" 
         @click="moveFocusToTag">
         <li v-for="(tag, i) in linkPost.tags" :key="i" class="tag-add">
@@ -29,7 +29,7 @@
       </ul>
     </div>
     <div class="wrapper content">
-      <div class="description">description</div>
+      <div class="description">설명</div>
       <TextareaForm class="content-input" name="content" placeholder="설명을 적어주세요." 
         v-model="linkPost.content"/>
     </div>
@@ -171,8 +171,8 @@ export default {
   margin-bottom: 20px;
 }
 .description {
-  margin-bottom: 3px;
-  font-size: 15px;
+  margin-bottom: 6px;
+  font-size: 14px;
   color: #6a6a6a;
   margin-left: 5px;
 }

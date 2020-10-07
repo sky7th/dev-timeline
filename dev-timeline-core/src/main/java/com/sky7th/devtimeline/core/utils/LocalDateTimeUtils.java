@@ -7,6 +7,7 @@ import java.util.Optional;
 public class LocalDateTimeUtils {
 
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private static final DateTimeFormatter MILLISECOND_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
 
     public static String toStringDate(LocalDateTime localDateTime) {
         if (localDateTime == null) {
@@ -29,4 +30,15 @@ public class LocalDateTimeUtils {
                 .orElse("");
     }
 
+    public static LocalDateTime toLocalDateTime(String time) {
+        return LocalDateTime.parse(time, FORMATTER);
+    }
+
+    public static LocalDateTime toLocalDateTimeForMilisecond(String time) {
+        return LocalDateTime.parse(time, MILLISECOND_FORMATTER);
+    }
+
+    public static String toStringNowUntilMilisecond() {
+        return LocalDateTime.now().format(MILLISECOND_FORMATTER);
+    }
 }

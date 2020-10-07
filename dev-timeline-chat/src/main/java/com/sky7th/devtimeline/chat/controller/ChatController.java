@@ -1,22 +1,52 @@
 package com.sky7th.devtimeline.chat.controller;
 
-import com.sky7th.devtimeline.chat.model.ChatMessage;
-import com.sky7th.devtimeline.chat.repository.ChatRoomRepository;
-import com.sky7th.devtimeline.chat.service.ChatService;
+import com.sky7th.devtimeline.chat.service.ChatMessageService;
+import com.sky7th.devtimeline.chat.service.ChatPubSubService;
+import com.sky7th.devtimeline.chat.service.dto.ChatMessageRequestDto;
+import com.sky7th.devtimeline.chat.service.dto.ChatMessageResponseDto;
+import com.sky7th.devtimeline.core.domain.chattingMessage.dto.ChattingMessageResponseDtos;
+import com.sky7th.devtimeline.core.domain.chattingMessage.service.ChattingMessageInternalService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
-@Controller
+@RestController
 public class ChatController {
 
-    private final ChatRoomRepository chatRoomRepository;
-    private final ChatService chatService;
+  private final ChatPubSubService chatPubSubService;
+  private final ChatMessageService chatMessageService;
 
-    @MessageMapping("/chat/message")
-    public void message(ChatMessage message) {
-        message.setUserCount(chatRoomRepository.getUserCount(message.getRoomId()));
-        chatService.sendChatMessage(message);
-    }
+  @MessageMapping("/chat/rooms/messages")
+  public void pushMessage(ChatMessageRequestDto requestDto) {
+    chatPubSubService.publish(chatMessageService.save(requestDto));
+  }
+
+  @GetMapping("/chat/rooms/{roomId}/messages/first")
+  public ResponseEntity<List<ChatMessageResponseDto>> firstList(@PathVariable Long roomId) {
+    return ResponseEntity.ok(chatMessageService.findByRoomId(roomId));
+  }
+
+  @GetMapping("/chat/rooms/{roomId}/messages")
+  public ResponseEntity<ChattingMessageResponseDtos> list(@PathVariable Long roomId,
+      @PageableDefault(
+          size = ChattingMessageInternalService.DEFAULT_MESSAGE_PAGE_SIZE,
+          sort = "id",
+          direction = Direction.DESC) Pageable pageable,
+      @RequestParam(value = "start") Long start) {
+    return ResponseEntity.ok(chatMessageService.findByRoomId(roomId, pageable, start));
+  }
+
+  @GetMapping("/health")
+  public ResponseEntity<Void> checkHealth() {
+    return ResponseEntity.ok().build();
+  }
 }

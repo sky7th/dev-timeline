@@ -90,9 +90,6 @@ export default {
       }
     }
   },
-  created() {
-    this.updatePosts()
-  },
   computed: {
     ...mapGetters(['posts', 'postCounts', 'sortOrder'])
   },

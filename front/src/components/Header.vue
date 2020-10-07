@@ -29,12 +29,12 @@ export default {
     ...mapGetters(['token', 'currentUser', 'isClickedClickMenu', 'isClickedMyLike'])
   },
   methods: {
-    ...mapActions(['setToken', 'setUserDetail', 'updateIsClickedClickMenu', 
+    ...mapActions(['setToken', 'setCurrentUser', 'updateIsClickedClickMenu', 
       'updateClickMenuList', 'updateClickMenuLocation', 'updateIsClickedMyLike', 'resetAll',
       'onModalState', 'updateModalContent']),
     logout() {
       this.setToken(null)
-      this.setUserDetail(null)
+      this.setCurrentUser(null)
       this.$router.replace('/');
       location.reload()
       notification.success('로그아웃 처리 되었습니다.')

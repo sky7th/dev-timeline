@@ -3,7 +3,7 @@ import Vuex from "vuex";
 
 import Constant from '@/constant/Constant';
 import { setHeader } from './libs/axios.custom';
-import axios from './libs/axios.custom'
+import axios from './libs/axios.custom';
 
 Vue.use(Vuex);
 
@@ -59,7 +59,15 @@ export default new Vuex.Store({
     isClickedClickMenu: false,
     clickMenuList: [],
     clickMenuLocation: [],
-    isClickedMyLike: false
+    isClickedMyLike: false,
+    isOnChatRooms: false,
+    chatConnect: {
+      connected: false,
+      sock: null,
+      ws: null,
+      reconnect: 0,
+      subscribeObject: null
+    },
   },
   getters: {
     token: state => state.token,
@@ -83,7 +91,9 @@ export default new Vuex.Store({
     isClickedClickMenu: state => state.isClickedClickMenu,
     clickMenuList: state => state.clickMenuList,
     clickMenuLocation: state => state.clickMenuLocation,
-    isClickedMyLike: state => state.isClickedMyLike
+    isClickedMyLike: state => state.isClickedMyLike,
+    isOnChatRooms: state => state.isOnChatRooms,
+    chatConnect: state => state.chatConnect,
   },
   mutations: {
     setToken(state, accessToken) {
@@ -91,7 +101,7 @@ export default new Vuex.Store({
       localStorage.ACCESS_TOKEN = accessToken;
       setHeader(accessToken);
     },
-    setUserDetail(state, payload) {
+    setCurrentUser(state, payload) {
       state.currentUser = payload;
       state.authenticated = payload !== null;
     },
@@ -114,7 +124,7 @@ export default new Vuex.Store({
         }
         state.posts = response.data.posts
         state.offset = response.data.offset
-        if (response.data.searchCount) {
+        if (response.data.searchCount != null) {
           state.postCounts = response.data.searchCount
         }
       })
@@ -187,7 +197,7 @@ export default new Vuex.Store({
     updateChatRooms: (state, payload) => state.chatRooms = payload,
     insertSelectedChatRooms: (state, payload) => state.selectedChatRooms.push(payload),
     removeSelectedChatRoom: (state, payload) => {
-      state.selectedChatRooms = state.selectedChatRooms.filter(room => room.roomId !== payload);
+      state.selectedChatRooms = state.selectedChatRooms.filter(room => room.id !== payload);
     },
     onModalState: state => state.modalState = true,
     offModalState: state => state.modalState = false,
@@ -197,11 +207,13 @@ export default new Vuex.Store({
     updateIsClickedClickMenu: (state, payload) => state.isClickedClickMenu = payload,
     updateClickMenuList: (state, payload) => state.clickMenuList = payload,
     updateClickMenuLocation: (state, payload) => state.clickMenuLocation = payload,
-    updateIsClickedMyLike: (state, payload) => state.isClickedMyLike = payload
+    updateIsClickedMyLike: (state, payload) => state.isClickedMyLike = payload,
+    updateIsOnChatRooms: (state, payload) => state.isOnChatRooms = payload,
+    updateChatConnect: (state, payload) => state.chatConnect = payload
   },
   actions: {
     setToken: (context, payload) => context.commit('setToken', payload),
-    setUserDetail: (context, payload) => context.commit('setUserDetail', payload),
+    setCurrentUser: (context, payload) => context.commit('setCurrentUser', payload),
     updatePosts: context => context.commit('updatePosts'),
     insertPosts: (context, payload) => context.commit('insertPosts', { infiniteState: payload.infiniteState }),
     removePost: (context, payload) => context.commit('removePost', payload),
@@ -228,7 +240,9 @@ export default new Vuex.Store({
     updateIsClickedClickMenu: (context, payload) => context.commit('updateIsClickedClickMenu', payload),
     updateClickMenuList: (context, payload) => context.commit('updateClickMenuList', payload),
     updateClickMenuLocation: (context, payload) => context.commit('updateClickMenuLocation', payload),
-    updateIsClickedMyLike: (context, payload) => context.commit('updateIsClickedMyLike', payload)
+    updateIsClickedMyLike: (context, payload) => context.commit('updateIsClickedMyLike', payload),
+    updateIsOnChatRooms: (context, payload) => context.commit('updateIsOnChatRooms', payload),
+    updateChatConnect: (context, payload) => context.commit('updateChatConnect', payload),
   },
   strict: debug
 });

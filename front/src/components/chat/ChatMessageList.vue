@@ -27,25 +27,51 @@ import { mapGetters } from "vuex";
 
 export default {
   props: ['messages'],
+  data() {
+    return {
+      beforeScrollDiff: 0,
+      beforeScrollTop: 0,
+      beforeScrollHeight: 0,
+      messageElement: null
+    }
+  },
   updated() {
-    this.scrollDown();
+    this.changeScroll();
   },
   computed: {
     ...mapGetters(['currentUser', 'token'])
   },
+  mounted() {
+    this.messageElement = this.$refs.messageList;
+  },
   methods: {
-    scrollDown() {
-      let element = this.$refs.messageList;
-      if (Math.abs(element.scrollTop + element.clientHeight - element.scrollHeight) < 60) {
+    changeScroll() {
+      let element = this.messageElement;
+      let _scrollDiff = Math.abs(element.scrollTop + element.clientHeight - element.scrollHeight);
+      let _scrollHeight = element.scrollHeight
+      let _scrollTop = element.scrollTop;
+      
+      if (this.beforeScrollDiff < 300) {
         element.scrollTop = element.scrollHeight;
       }
+
+      if (_scrollTop < 50 && this.beforeScrollHeight < _scrollHeight) {
+        element.scrollTop = _scrollHeight - this.beforeScrollHeight;
+      }
+
+      this.beforeScrollDiff = _scrollDiff;
+      this.beforeScrollHeight = _scrollHeight;
+      this.beforeScrollTop = _scrollTop;
     },
+
     isNoticeMessage(msg) {
-      return msg.sender.name === 'NOTICE'
+      return msg.type === 'ENTER' || msg.type === 'QUIT'
     },
+
     isCurrentUser(msg) {
-      return this.currentUser.id == msg.sender.id
+      return msg.sender != null && this.currentUser.id === msg.sender.userId
     },
+    
     convertDate(date) {
       let HHmm = date.substr(11, 5);
       let [hour, min] = HHmm.split(':');

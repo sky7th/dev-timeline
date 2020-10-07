@@ -1,7 +1,8 @@
-package com.sky7th.devtimeline.batch.service.crawling;
+package com.sky7th.devtimeline.batch.service.crawling.tech;
 
 import com.sky7th.devtimeline.batch.dto.CompanyDto;
 import com.sky7th.devtimeline.batch.dto.CrawlingDto;
+import com.sky7th.devtimeline.batch.service.crawling.CompanyCrawlingService;
 import com.sky7th.devtimeline.batch.utils.CrawlingUtils;
 import com.sky7th.devtimeline.core.domain.company.domain.CompanyType;
 import com.sky7th.devtimeline.core.domain.company.domain.CompanyUrlType;
@@ -21,7 +22,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class NhnTechCrawlingService implements CompanyCrawlingService {
+public class NaverTechCrawlingService implements CompanyCrawlingService {
 
     private final WebDriver driver;
 
@@ -36,19 +37,14 @@ public class NhnTechCrawlingService implements CompanyCrawlingService {
 
     private List<CrawlingDto> getAllCrawlingDtoUntilLastPage() {
         List<CrawlingDto> crawlingItems = new ArrayList<>();
-        int pageNum = 1;
-        String title = "";
+        int pageNum = 0;
+
         while (true) {
             this.driver.get(this.companyDto.getCompanyUrl().getUrl() + "?page=" + pageNum);
-            waitContentsChanged();
-            WebElement element = CrawlingUtils.getWebElement(this.driver, By.className("lst_type"));
-            List<WebElement> elements = element.findElements(By.cssSelector(".lst_item"));
-            WebElement lastChild = elements.get(elements.size()-1);
-            String nowTitle = lastChild.findElement(By.cssSelector(".tit")).getText();
-            if (nowTitle.equals(title)) {
+            if (isNotExistNaverD2Contents())
                 break;
-            }
-            title = nowTitle;
+            waitNaverD2ContentsChanged();
+            WebElement element = CrawlingUtils.getWebElement(this.driver, By.className("contents"));
             crawlingItems.addAll(parseWebElement(element));
             pageNum += 1;
         }
@@ -56,9 +52,16 @@ public class NhnTechCrawlingService implements CompanyCrawlingService {
         return crawlingItems;
     }
 
-    private void waitContentsChanged() {
-        By firstContentTitle = By.cssSelector(".lst_type .lst_item .sec_box h3");
+    private void waitNaverD2ContentsChanged() {
+        By firstContentTitle = By.cssSelector(".contents > .post_article > .cont_post > h2 > a");
         CrawlingUtils.getWebElement(this.driver, firstContentTitle);
+    }
+
+    private boolean isNotExistNaverD2Contents() {
+        By contentsBy = By.cssSelector(".contents > .post_article");
+        WebElement webElement = CrawlingUtils.getWebElement(this.driver, contentsBy, 2);
+
+        return webElement == null;
     }
 
     @Override
@@ -66,27 +69,34 @@ public class NhnTechCrawlingService implements CompanyCrawlingService {
         if (element == null) {
             return new ArrayList<>();
         }
-        return element.findElements(By.cssSelector(".lst_item")).stream()
+        return element.findElements(By.cssSelector(".post_article > .cont_post")).stream()
                 .map(this::getCrawlingDto)
                 .collect(Collectors.toList());
     }
 
     @Override
     public CrawlingDto getCrawlingDto(WebElement element) {
-        String title = element.findElement(By.cssSelector(".tit")).getText();
-        String date = element.findElement(By.cssSelector(".date")).getText().trim();
-        String contentUrl = element.findElement(By.cssSelector("a")).getAttribute("href");
-        Pattern p = Pattern.compile("(?<=/posts/).+", Pattern.CASE_INSENSITIVE);
+        WebElement thumnailUrlElement = CrawlingUtils.getWebElement(element, By.cssSelector(".cont_img > a > img"));
+        List<WebElement> bottomSpanElements = element.findElement(By.tagName("dl")).findElements(By.tagName("dd"));
+        WebElement dateElement = bottomSpanElements.stream()
+                .filter(webElement -> webElement.getText().contains("."))
+                .findFirst().orElse(null);
+
+        String title = element.findElement(By.cssSelector("h2 > a")).getText();
+        String date = dateElement==null ? "" : dateElement.getText();
+        String thumbnailUrl = thumnailUrlElement==null ? "" : thumnailUrlElement.getAttribute("src");
+        String contentUrl = element.findElement(By.cssSelector("h2 > a")).getAttribute("href");
+        Pattern p = Pattern.compile("(?<=helloworld/).+", Pattern.CASE_INSENSITIVE);
         Matcher m = p.matcher(contentUrl);
         String key = m.find() ? m.group() : "";
 
         return CrawlingDto.builder()
-                .crawlId(CompanyType.NHN.toString()+"-"+ CompanyUrlType.TECH.toString()+"-"+key)
+                .crawlId(CompanyType.NAVER.toString()+"-"+ CompanyUrlType.TECH.toString()+"-"+key)
                 .companyUrl(this.companyDto.getCompanyUrl())
                 .title(title)
                 .author("")
                 .date(date)
-                .thumbnailUrl("")
+                .thumbnailUrl(thumbnailUrl)
                 .contentUrl(contentUrl)
                 .build();
     }

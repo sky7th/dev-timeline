@@ -13,7 +13,7 @@ export default {
     const token = this.$route.query.token;
     if (token) {
       this.$store.commit('setToken', token);
-      this.$emit('getUserDetails');
+      this.$emit('getCurrentUsers');
       this.$router.replace('/')
     }
     else {

@@ -15,4 +15,15 @@ function scrollFetch(fetchData, element) {
     });
 }
 
-export { scrollFetch };
+function reverseScrollFetch(fetchData, element) {
+  element.addEventListener('scroll', () => {
+      throttler.throttle(() => {
+          if (element.scrollTop < 50) {
+            fetchData();
+          }
+          
+      }, 700);
+  });
+}
+
+export { scrollFetch, reverseScrollFetch };
