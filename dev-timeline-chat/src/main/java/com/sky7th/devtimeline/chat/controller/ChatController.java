@@ -44,4 +44,9 @@ public class ChatController {
       @RequestParam(value = "start") Long start) {
     return ResponseEntity.ok(chatMessageService.findByRoomId(roomId, pageable, start));
   }
+
+  @GetMapping("/health")
+  public ResponseEntity<Void> checkHealth() {
+    return ResponseEntity.ok().build();
+  }
 }

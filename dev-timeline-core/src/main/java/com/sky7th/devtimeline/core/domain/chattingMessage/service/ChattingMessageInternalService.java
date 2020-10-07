@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class ChattingMessageInternalService {
 
-    public static final int DEFAULT_MESSAGE_PAGE_SIZE = 15;
+    public static final int DEFAULT_MESSAGE_PAGE_SIZE = 50;
     public static final int DEFAULT_START = 0;
 
     private final ChattingMessageRepository chattingMessageRepository;

@@ -7,7 +7,7 @@
     </div>
     <ul>
       <li
-      v-for="({id, name, userCount}) in chatRooms" 
+      v-for="({id, name, userCount, imageUrl}) in chatRooms" 
         :key="id"
         @click="enter(id)"
         :class="{ 'selected-room': isEntered(id) }" 
@@ -25,7 +25,7 @@
             </div>
           </div>
         </div>
-        <img class="logo" src="http://wiki.hash.kr/images/thumb/8/8f/%EC%8A%A4%ED%94%84%EB%A7%81_%EB%A1%9C%EA%B3%A0.png/300px-%EC%8A%A4%ED%94%84%EB%A7%81_%EB%A1%9C%EA%B3%A0.png" alt="">
+        <img class="logo" :src="imageUrl" alt="">
       </li>
     </ul>
   </div>
@@ -47,7 +47,10 @@ export default {
         notification.warn('로그인 후 이용 가능합니다.');
         return;
       }
-      
+      if (this.selectedChatRooms.length === 6) {
+        notification.warn('채팅방은 6개까지 열 수 있습니다.');
+        return;
+      }
       const chatRoom = this.findRoom(id);
 
       if (chatRoom != null) {
@@ -127,10 +130,10 @@ export default {
   padding: 57px 0px 0px 0px;
   border-bottom: 1px dashed black;
   width: 350px;
-  height: auto;
   height: 100%;
   background-color: #fff;
   transition: all 600ms cubic-bezier(0.36, 0, 0.07, 1);
+  z-index: 2000;
 }
 .chat-rooms-hidden {
   margin-right: -350px;
@@ -143,7 +146,7 @@ li {
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 10px 0px;
+  padding: 6px 7px;
   background-color: #fff;
   cursor: pointer;
   color: #1E2733;
@@ -159,10 +162,10 @@ li:hover {
 }
 .logo {
   height: 40px;
-  background: white;
-  border-radius: 10px;
+  border-radius: 5px;
   padding: 4px;
   margin-left: 10px;
+  margin-bottom: 5px;
 }
 .left {
   width: 100%;
@@ -181,4 +184,14 @@ li:hover {
   font-size: 12px;
   color: #888;
 }
+@media screen and (max-width: 480px) {
+  .chat-rooms {
+    width: 100%;
+  }
+  .chat-rooms-hidden {
+    margin-right: -480px;
+    transition: all 600ms cubic-bezier(0.36, 0, 0.07, 1);
+  }
+}
+
 </style>

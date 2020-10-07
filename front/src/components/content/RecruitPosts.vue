@@ -111,7 +111,7 @@ export default {
   width: 260px;
   padding: 0 25px;
   display: inline-flex;
-  margin: 15px;
+  margin: 13px 15px;
   padding: 18px 20px 11px 20px;
   border: 1px solid #dedede;
   box-shadow: 0px 0px 1px 0 rgba(0, 0, 0, 0.2);

@@ -1,7 +1,7 @@
 <template>
   <div class="chat-button">
     <notifications group="notify" position="bottom center"/>
-    <button v-if="!isOnChatRooms" class="list-group-item list-group-item-action" v-on:click="open()">
+    <button class="list-group-item list-group-item-action" v-on:click="open()">
       <div>채팅방</div>
     </button>
   </div>
@@ -51,7 +51,7 @@ export default {
 <style scoped>
 .chat-button {
   position: fixed;
-  bottom: 20px;
+  bottom: 80px;
   right: 0;
   z-index: 2000;
   animation: fadeIn 0.3s ease-in-out;

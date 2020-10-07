@@ -87,7 +87,7 @@ public class ChatMessageService {
 
   public static class MessageCounter {
 
-    private static final int MESSAGE_LIMIT = 15;
+    private static final int MESSAGE_LIMIT = 100;
 
     private static int messageCount = 0;
 

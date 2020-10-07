@@ -232,7 +232,7 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 500px;
+  height: 600px;
   background-color: white;
   padding: 5px;
   border-radius: 3px;
@@ -248,7 +248,6 @@ export default {
   background-color: #eaeaea;
   top: -25px;
   cursor: pointer;
-  z-index: 1;
 }
 .btn-close:hover {
   background-color: #aaaaaa;
@@ -309,6 +308,13 @@ export default {
 .no-user-name {
   display: none;
 }
+
+@media screen and (max-width: 480px) {
+  .chat-room {
+    height: 71vh;
+  }
+}
+
 ::-webkit-scrollbar { width: 3.2px; } /* 스크롤 바 */
 ::-webkit-scrollbar-track { background-color:#f7f7f7; } /* 스크롤 바 밑의 배경 */
 ::-webkit-scrollbar-thumb { background: #dadada; } /* 실질적 스크롤 바 */

@@ -5,7 +5,7 @@
     <TechPosts v-else-if="selectedMenu==='tech-posts'"/>
     <LinkPosts v-else-if="selectedMenu==='link-posts'"/>
 
-    <SideButton v-if="isMenuPossibleWrite && currentUser!=null" @event="handlerOnModalState" style="bottom: 14%;"/>
+    <SideButton v-if="isMenuPossibleWrite && currentUser!=null" @event="handlerOnModalState" style="bottom: 130px;"/>
     <ChatButton/>
     <ChatRooms/>
     <div class="chat-bottoms-wrapper">
@@ -89,15 +89,42 @@ export default {
   position: fixed;
   bottom: 0;
   left: 100px;
-  display: flex;
+  display: grid;
+  grid-template-rows: repeat(2, 30px);
+  grid-template-columns: repeat(3, 370px);
   width: 85%;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
+  min-width: 85%;
+  justify-content: center;
+}
+@media screen and (max-width: 1280px) {
+  .chat-bottoms-wrapper {
+    grid-template-rows: repeat(3, 30px);
+    grid-template-columns: repeat(2, 370px);
+    width: 85%;
+    min-width: 85%;
+    justify-content: center;
+  }
+}
+@media screen and (max-width: 830px) {
+  .chat-bottoms-wrapper {
+    left: 55px;
+    grid-template-rows: repeat(6, 30px);
+    grid-template-columns: repeat(1, 370px);
+    width: 85%;
+    min-width: 85%;
+    justify-content: center;
+  }
 }
 @media screen and (max-width: 480px) {
     .content {
         padding-left: 0;
+    }
+    .chat-bottoms-wrapper {
+      grid-template-rows: repeat(6, 30px);
+      grid-template-columns: repeat(1, 100%);
+      left: 0px;
+      width: 100%;
+      min-width: 100%;
     }
 }
 </style>

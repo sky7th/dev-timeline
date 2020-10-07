@@ -35,7 +35,6 @@ export default {
   padding: 6px;
   font-size: 14px;
   font-weight: bold;
-  z-index: 1;
 }
 .chat-bottom:hover {
   background-color: #eeeeee;
