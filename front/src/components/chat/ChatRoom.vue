@@ -102,6 +102,8 @@ export default {
       }
       this.messages.push({"type":recv.type, "sender":recv.sender, "message":recv.message,
         "createdDate": recv.createdDate});
+      
+      this.scrollDown();
     },
 
     recvMessages(messages, isReverse=false) {
@@ -147,6 +149,8 @@ export default {
                   notification.warn('과거 채팅 목록을 불러오지 못했습니다.');
               });
 
+        this.scrollDown(true);
+
         await this.axios.get(`${process.env.VUE_APP_CHAT_API}/chat/rooms/${roomId}/messages/first`)
           .then(({ data }) => {
             this.recvMessages(data);
@@ -154,6 +158,8 @@ export default {
           }).catch(() => {
               notification.warn('최근 채팅 목록을 불러오지 못했습니다.');
           });
+
+        this.scrollDown(true);
 
         this.subscribeObject = this.chatConnect.ws.subscribe(`/sub/chat/rooms/${roomId}`, (message) => {
           var recv = JSON.parse(message.body);
@@ -195,6 +201,13 @@ export default {
 
     isCurrentUser(msg) {
       return this.currentUser.id == msg.sender.id
+    },
+
+    scrollDown(isForce=false) {
+      let element = this.$refs.messageList.$refs.messageList;
+      if (isForce || Math.abs(element.scrollTop + element.clientHeight - element.scrollHeight) < 300) {
+        element.scrollTop = element.scrollHeight;
+      }
     },
   }
 }
