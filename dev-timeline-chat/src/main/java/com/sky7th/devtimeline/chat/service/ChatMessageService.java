@@ -39,8 +39,8 @@ public class ChatMessageService {
     return ChatMessageResponseDto.of(chatMessages);
   }
 
-  public ChattingMessageResponseDtos findByRoomId(Long roomId, Pageable pageable) {
-    Page<ChattingMessage> pages = chattingMessageInternalService.findByRoomId(roomId, pageable);
+  public ChattingMessageResponseDtos findByRoomId(Long roomId, Pageable pageable, Long start) {
+    Page<ChattingMessage> pages = chattingMessageInternalService.findByRoomId(roomId, pageable, start);
     List<ChattingMessageResponseDto> chattingMessageResponseDtos = pages.stream()
         .map(ChattingMessageResponseDto::of)
         .collect(Collectors.toList());

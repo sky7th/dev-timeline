@@ -17,7 +17,10 @@
             {{name}} 
           </div>
           <div class="bottom">
-            <div class="user-count">
+            <div class="user-count" v-if="isEntered(id)">
+              채팅 중
+            </div>
+            <div class="user-count" v-else>
               {{userCount}} 명
             </div>
           </div>

@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
@@ -39,7 +40,8 @@ public class ChatController {
       @PageableDefault(
           size = ChattingMessageInternalService.DEFAULT_MESSAGE_PAGE_SIZE,
           sort = "id",
-          direction = Direction.DESC) Pageable pageable) {
-    return ResponseEntity.ok(chatMessageService.findByRoomId(roomId, pageable));
+          direction = Direction.DESC) Pageable pageable,
+      @RequestParam(value = "start") Long start) {
+    return ResponseEntity.ok(chatMessageService.findByRoomId(roomId, pageable, start));
   }
 }

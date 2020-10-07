@@ -13,4 +13,8 @@ public interface ChattingMessageRepository extends JpaRepository<ChattingMessage
   @EntityGraph(attributePaths = "user")
   @Query("FROM ChattingMessage c where c.roomId = :roomId")
   Page<ChattingMessage> findByRoomId(Long roomId, Pageable pageable);
+
+  @EntityGraph(attributePaths = "user")
+  @Query("FROM ChattingMessage c where c.roomId = :roomId and c.id <= :start")
+  Page<ChattingMessage> findByRoomIdAndStart(Long roomId, Pageable pageable, Long start);
 }

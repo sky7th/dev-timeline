@@ -1,8 +1,8 @@
 <template>
   <div class="chat-room" v-cloak>
     <button class="btn-close" @click="unsubscribe">x</button>
-    <ChatMessageList v-if="chatConnect.connected" :messages="messages" @scrollDown="scrollDown" ref="messageList" />
-    <div class="no-connect-wrapper" v-else>
+    <ChatMessageList :messages="messages" @scrollDown="scrollDown" ref="messageList" />
+    <div class="no-connect-wrapper" v-if="!chatConnect.connected">
       <div class="no-connect-message">연결되지 않았습니다.</div>
       <div class="re-connect" @click="initChatConnect(room.id)">다시 연결</div>
     </div>
@@ -19,6 +19,7 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import SockJS from 'sockjs-client';
+import { reverseScrollFetch } from '../../utils/scrollFetch';
 import notification from '../../libs/notification';
 import ChatMessageList from '@/components/chat/ChatMessageList';
 
@@ -43,17 +44,20 @@ export default {
       message: '',
       messages: [],
       subscribeObject: null,
-      page: 0
+      page: 0,
+      start: 0
     }
   },
   mounted() {
-    this.messageElement = document.getElementById('message-list');
+    this.messageElement = this.$refs.messageList.$refs.messageList;
+    reverseScrollFetch(() => this.insertMessages(), this.messageElement);
+    this.subscribe(this.room.id);
   },
   computed: {
     ...mapGetters(['currentUser', 'token', 'currentUser', 'chatConnect', 'selectedChatRooms']),
     isConnected: function () {
       return this.chatConnect.connected;
-    }
+    },
   },
   watch: {
     isConnected: function (newVal) {
@@ -61,9 +65,6 @@ export default {
         this.subscribeActionCurried(this.room.id)();
       }
     }
-  },
-  created() {
-    this.subscribe(this.room.id);
   },
   methods: {
     ...mapActions(['removeSelectedChatRoom', 'updateChatConnect']),
@@ -102,8 +103,6 @@ export default {
       }
       this.messages.push({"type":recv.type, "sender":recv.sender, "message":recv.message,
         "createdDate": recv.createdDate});
-      
-      this.scrollDown();
     },
 
     recvMessages(messages, isReverse=false) {
@@ -111,7 +110,8 @@ export default {
       if (isReverse) {
         messages = messages.reverse();
       }
-      this.messages = [...this.messages, ...messages];
+
+      this.messages = [...messages, ...this.messages];
     },
 
     subscribe(roomId) {
@@ -136,21 +136,16 @@ export default {
       }, this.connectFailCallback);
     },
 
-    subscribeActionCurried(roomId) {
+    initChat() {
       this.messages = [];
+      this.page = 0;
+      this.start = 0;
+    },
+
+    subscribeActionCurried(roomId) {
+      this.initChat();
 
       return async () => {
-        await this.axios.get(`${process.env.VUE_APP_CHAT_API}/chat/rooms/${roomId}/messages?page=${this.page}`)
-              .then(({ data }) => {
-                this.recvMessages(data.messages, true);
-                this.page += 1;
-                this.scrollDown(true);
-              }).catch(() => {
-                  notification.warn('과거 채팅 목록을 불러오지 못했습니다.');
-              });
-
-        this.scrollDown(true);
-
         await this.axios.get(`${process.env.VUE_APP_CHAT_API}/chat/rooms/${roomId}/messages/first`)
           .then(({ data }) => {
             this.recvMessages(data);
@@ -159,6 +154,7 @@ export default {
               notification.warn('최근 채팅 목록을 불러오지 못했습니다.');
           });
 
+        this.insertMessages(true);
         this.scrollDown(true);
 
         this.subscribeObject = this.chatConnect.ws.subscribe(`/sub/chat/rooms/${roomId}`, (message) => {
@@ -166,6 +162,27 @@ export default {
           this.recvMessage(recv);
         }, { id: roomId });
       }
+    },
+
+    async insertMessages(isFirst=false) {
+      await this.axios.get(`${process.env.VUE_APP_CHAT_API}/chat/rooms/${this.room.id}/messages?start=${this.start}&page=${this.page}`)
+        .then(({ data }) => {
+          if (data.messages.length === 0) {
+            notification.success('채팅 메시지를 모두 확인했어요.');
+            return;
+          }
+          
+          this.recvMessages(data.messages, true);
+            
+          if (isFirst) {
+            this.start = this.messages[0].id - 1;
+          } else {
+            this.page += 1;
+          }
+
+        }).catch(() => {
+            notification.warn('과거 채팅 목록을 불러오지 못했습니다.');
+        });
     },
 
     connectFailCallback() {
@@ -191,10 +208,6 @@ export default {
       }
     },
 
-    reConnect() {
-      this.connect();
-    },
-
     handlerUpdateUserCount(userCount) {
       this.$emit('updateUserCount', userCount)
     },
@@ -204,11 +217,11 @@ export default {
     },
 
     scrollDown(isForce=false) {
-      let element = this.$refs.messageList.$refs.messageList;
+      let element = this.messageElement;
       if (isForce || Math.abs(element.scrollTop + element.clientHeight - element.scrollHeight) < 300) {
         element.scrollTop = element.scrollHeight;
       }
-    },
+    }
   }
 }
 </script>
@@ -268,6 +281,10 @@ export default {
   background-color: #eaeaea;
 }
 .no-connect-wrapper {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: white;
   display: flex;
   flex-direction: column;
   height: 100%;

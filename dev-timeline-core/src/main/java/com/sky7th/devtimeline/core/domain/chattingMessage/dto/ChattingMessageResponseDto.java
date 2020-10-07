@@ -17,6 +17,7 @@ import lombok.ToString;
 @ToString
 public class ChattingMessageResponseDto implements Serializable {
 
+    private Long id;
     private MessageType type;
     private ChattingUserResponseDto sender;
     private String message;
@@ -24,6 +25,7 @@ public class ChattingMessageResponseDto implements Serializable {
 
     public static ChattingMessageResponseDto of(ChattingMessage entity) {
         return new ChattingMessageResponseDto(
+            entity.getId(),
             entity.getType(),
             entity.getUser() == null ? null : ChattingUserResponseDto.of(entity.getUser()),
             entity.getMessage(),

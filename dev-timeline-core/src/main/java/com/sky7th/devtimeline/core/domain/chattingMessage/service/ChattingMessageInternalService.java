@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ChattingMessageInternalService {
 
     public static final int DEFAULT_MESSAGE_PAGE_SIZE = 15;
+    public static final int DEFAULT_START = 0;
 
     private final ChattingMessageRepository chattingMessageRepository;
 
@@ -24,11 +25,15 @@ public class ChattingMessageInternalService {
     }
 
     @Transactional(readOnly = true)
-    public Page<ChattingMessage> findByRoomId(Long roomId, Pageable pageable) {
+    public Page<ChattingMessage> findByRoomId(Long roomId, Pageable pageable, Long start) {
         if (pageable.getPageSize() != DEFAULT_MESSAGE_PAGE_SIZE) {
             throw new InvalidPageRequstException();
         }
 
-        return chattingMessageRepository.findByRoomId(roomId, pageable);
+        if (start == DEFAULT_START) {
+            return chattingMessageRepository.findByRoomId(roomId, pageable);
+        } else {
+            return chattingMessageRepository.findByRoomIdAndStart(roomId, pageable, start);
+        }
     }
 }
