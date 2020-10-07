@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <springProperty scope="context" name="LOG_DIR" source="logging.file.path"/>
+
+    <springProfile name="console-logging">
+        <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+            <layout class="ch.qos.logback.classic.PatternLayout">
+                <Pattern>%d{yyyy-mm-dd HH:mm:ss.SSS} %magenta([%thread]) %highlight(%-5level) %logger{36}.%M [%L]- %msg%n</Pattern>
+            </layout>
+        </appender>
+    </springProfile>
+
+    <springProfile name="file-logging">
+        <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <encoder>
+                <Pattern>%d{yyyy-mm-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36}.%M [%L]- %msg%n</Pattern>
+            </encoder>
+            <file>${LOG_DIR}/spring-boot-logger.log</file>
+            <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+                <fileNamePattern>${LOG_DIR}/spring-boot-logger-%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
+                <maxFileSize>10MB</maxFileSize>
+                <maxHistory>30</maxHistory>
+            </rollingPolicy>
+        </appender>
+    </springProfile>
+
+    <springProfile name="rolling-file-logging">
+        <appender name="RollingFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>${LOG_DIR}/archived/dev-timeline-chat_roling.log</file>
+            <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+                <Pattern>%d{yyyy-MM-dd HH:mm:ss} [%-5level] %logger{36} - %msg%n</Pattern>
+                <charset>UTF-8</charset>
+            </encoder>
+
+            <!-- 10MB가 넘어가면 새로운 압축파일이 생성 -->
+            <triggeringPolicy
+                    class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+                <MaxFileSize>10MB</MaxFileSize>
+            </triggeringPolicy>
+
+            <!-- 파일을 덮어쓰는 정책 -->
+            <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+                <FileNamePattern>${LOG_DIR}/archived/dev-timeline-chat_roling.%i.log.zip</FileNamePattern>
+                <!--
+                    10MB단위로 로그 압축 파일이 생성된다. (1 ~ 10)
+                    10개가 넘어가면 오래된순으로 덮어쓰기 됩니다.
+                -->
+                <MinIndex>1</MinIndex>
+                <MaxIndex>10</MaxIndex>
+            </rollingPolicy>
+        </appender>
+    </springProfile>
+
+    <springProfile name="error-logging">
+        <appender name="Error" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <filter class="ch.qos.logback.classic.filter.LevelFilter">
+                <level>error</level>
+                <onMatch>ACCEPT</onMatch>
+                <onMismatch>DENY</onMismatch>
+            </filter>
+            <file>${LOG_DIR}/dev-timeline-chat-error.log</file>
+            <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+                <Pattern>
+                    %d{yyyy-MM-dd HH:mm:ss} [%-5level] %logger{36} - %msg%n
+                </Pattern>
+                <charset>UTF-8</charset>
+            </encoder>
+
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <fileNamePattern>${LOG_DIR}/dev-timeline-chat/dev-timeline-chat-error.%d{yyyy-MM-dd}.log</fileNamePattern>
+                <maxHistory>30</maxHistory>
+            </rollingPolicy>
+        </appender>
+    </springProfile>
+
+    <root>
+        <springProfile name="console-logging">
+            <appender-ref ref="CONSOLE"/>
+        </springProfile>
+
+        <springProfile name="file-logging">
+            <appender-ref ref="FILE"/>
+        </springProfile>
+    </root>
+
+</configuration>

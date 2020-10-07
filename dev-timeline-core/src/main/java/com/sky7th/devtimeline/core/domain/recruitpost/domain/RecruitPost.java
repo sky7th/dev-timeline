@@ -4,6 +4,7 @@ import com.sky7th.devtimeline.core.domain.common.BaseTimeEntity;
 import com.sky7th.devtimeline.core.domain.company.domain.Company;
 import com.sky7th.devtimeline.core.domain.company.domain.CompanyUrl;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
@@ -49,6 +50,11 @@ public class RecruitPost extends BaseTimeEntity {
         this.sortDate = sortDate;
     }
 
+    public void update(String title, String closingDate) {
+        this.title = title;
+        this.closingDate = closingDate;
+    }
+
     public Company getCompany() {
         return this.companyUrl.getCompany();
     }
@@ -65,8 +71,23 @@ public class RecruitPost extends BaseTimeEntity {
                 +","+contentUrl;
     }
 
-    public boolean isEqual(String str) {
-        return toString().equals(str);
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        RecruitPost that = (RecruitPost) o;
+        return Objects.equals(postCrawlId, that.postCrawlId) &&
+            Objects.equals(title, that.title) &&
+            Objects.equals(closingDate, that.closingDate) &&
+            Objects.equals(contentUrl, that.contentUrl);
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(postCrawlId, title, closingDate, contentUrl);
+    }
 }

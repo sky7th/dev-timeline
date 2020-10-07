@@ -90,11 +90,16 @@ project(':dev-timeline-batch') {
 
 project(':dev-timeline-chat') {
 	dependencies {
+		implementation project(':dev-timeline-core')
 		compile 'org.springframework.boot:spring-boot-starter-data-redis'
+		implementation 'org.springframework.boot:spring-boot-starter-security'
 		compile group: 'it.ozimov', name: 'embedded-redis', version: '0.7.2'
 		implementation 'org.springframework.boot:spring-boot-starter-websocket'
 		implementation 'io.jsonwebtoken:jjwt:0.9.1'
 		implementation 'javax.xml.bind:jaxb-api'
+		testImplementation('org.springframework.boot:spring-boot-starter-test') {
+			exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+		}
 	}
 }
 

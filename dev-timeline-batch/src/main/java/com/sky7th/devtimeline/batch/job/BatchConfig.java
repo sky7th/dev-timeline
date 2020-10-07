@@ -1,15 +1,25 @@
 package com.sky7th.devtimeline.batch.job;
 
+import com.sky7th.devtimeline.batch.dto.CompanyDto;
 import com.sky7th.devtimeline.batch.dto.CrawlingDto;
 import com.sky7th.devtimeline.batch.service.CrawlingService;
-import com.sky7th.devtimeline.batch.dto.CompanyDto;
 import com.sky7th.devtimeline.core.domain.company.domain.CompanyUrl;
 import com.sky7th.devtimeline.core.domain.company.domain.CompanyUrlType;
 import com.sky7th.devtimeline.core.domain.post.domain.Post;
 import com.sky7th.devtimeline.core.domain.post.domain.PostRepository;
 import com.sky7th.devtimeline.core.domain.post.domain.PostType;
+import com.sky7th.devtimeline.core.domain.recruitpost.domain.RecruitPost;
 import com.sky7th.devtimeline.core.domain.recruitpost.domain.RecruitPostRepository;
+import com.sky7th.devtimeline.core.domain.techpost.domain.TechPost;
 import com.sky7th.devtimeline.core.domain.techpost.domain.TechPostRepository;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+import javax.persistence.EntityManagerFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
@@ -24,9 +34,6 @@ import org.springframework.batch.item.database.builder.JpaPagingItemReaderBuilde
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.EntityManagerFactory;
-import java.util.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -70,7 +77,7 @@ public class BatchConfig {
                 .name("jpaPagingItemReader")
                 .entityManagerFactory(entityManagerFactory)
                 .pageSize(CHUNK_SIZE)
-                .queryString("SELECT u FROM CompanyUrl u")
+                .queryString("SELECT u FROM CompanyUrl u JOIN FETCH u.company")
                 .build();
     }
 
@@ -89,40 +96,74 @@ public class BatchConfig {
                 log.info(">>>>>>>> writer 종료 (크롤링 도중 문제가 생김)");
                 return;
             }
-            techPostRepository.deleteAll();
-            recruitPostRepository.deleteAll();
 
-            Set<String> postKeySet = new HashSet<>();
-            List<Post> posts = postRepository.findAll();
-            posts.forEach(post -> postKeySet.add(post.getCrawlId()));
+            List<TechPost> techPosts = techPostRepository.findAll();
+            Map<String, TechPost> techPostMap = techPosts.stream()
+                .collect(Collectors.toMap(TechPost::getPostCrawlId, techPost -> techPost));
+            List<RecruitPost> recruitPosts = recruitPostRepository.findAll();
+            Map<String, RecruitPost> recruitPostMap = recruitPosts.stream()
+                .collect(Collectors.toMap(RecruitPost::getPostCrawlId, recruitPost -> recruitPost));
 
             Map<String, Integer> addedPostCountMap = new HashMap<>();
             int addedPostCount = 0;
 
-            for (List<CrawlingDto> crawlingResult : crawlingResults) {
-                for (CrawlingDto crawlingDto : crawlingResult) {
-                    if (!postKeySet.contains(crawlingDto.getCrawlId())) {
-                        Post post = Post.builder()
-                                .crawlId(crawlingDto.getCrawlId())
-                                .likeCount(0L)
-                                .commentCount(0L)
-                                .build();
-                        if (crawlingDto.isCompanyUrlType(CompanyUrlType.RECRUIT)) {
-                            post.setPostType(PostType.RECRUIT_POST);
-                        } else if (crawlingDto.isCompanyUrlType(CompanyUrlType.TECH)) {
-                            post.setPostType(PostType.TECH_POST);
-                        }
-                        postRepository.save(post);
-                    }
+            Map<String, Integer> updatedPostCountMap = new HashMap<>();
+            int updatedPostCount = 0;
 
+            Set<RecruitPost> crawlingRecruitPosts = new HashSet<>();
+            Set<TechPost> crawlingTechPosts = new HashSet<>();
+
+            for (List<CrawlingDto> crawlingResult : crawlingResults) {
+                Set<CrawlingDto> crawlingDtos = new LinkedHashSet<>(crawlingResult);
+                for (CrawlingDto crawlingDto : crawlingDtos) {
                     if (crawlingDto.isCompanyUrlType(CompanyUrlType.RECRUIT)) {
-                        recruitPostRepository.save(crawlingDto.toRecruitPost());
+                        RecruitPost recruitPost = crawlingDto.toRecruitPost();
+                        crawlingRecruitPosts.add(recruitPost);
+                        String crawlId = recruitPost.getPostCrawlId();
+
+                        if (recruitPostMap.containsKey(crawlId)) {
+                            if (!recruitPost.equals(recruitPostMap.get(crawlId))) {
+                                recruitPostMap.get(crawlId).update(recruitPost.getTitle(), recruitPost.getClosingDate());
+                                updatePostCountMap(updatedPostCountMap, crawlingDto.getCompanyUrl());
+                                updatedPostCount += 1;
+                            }
+                        } else {
+                            recruitPostRepository.save(crawlingDto.toRecruitPost());
+                            postRepository.save(new Post(PostType.RECRUIT_POST, crawlingDto.getCrawlId()));
+                            updatePostCountMap(addedPostCountMap, crawlingDto.getCompanyUrl());
+                            addedPostCount += 1;
+                        }
 
                     } else if (crawlingDto.isCompanyUrlType(CompanyUrlType.TECH)) {
-                        techPostRepository.save(crawlingDto.toTechPost());
+                        TechPost techPost = crawlingDto.toTechPost();
+                        crawlingTechPosts.add(techPost);
+                        String crawlId = techPost.getPostCrawlId();
+
+                        if (techPostMap.containsKey(crawlId)) {
+                            if (!techPost.equals(techPostMap.get(crawlId))) {
+                                techPostMap.get(crawlId).update(techPost.getTitle(), techPost.getDate(), techPost.getThumbnailUrl());
+                                updatePostCountMap(updatedPostCountMap, crawlingDto.getCompanyUrl());
+                                updatedPostCount += 1;
+                            }
+                        } else {
+                            techPostRepository.save(crawlingDto.toTechPost());
+                            postRepository.save(new Post(PostType.TECH_POST, crawlingDto.getCrawlId()));
+                            updatePostCountMap(addedPostCountMap, crawlingDto.getCompanyUrl());
+                            addedPostCount += 1;
+                        }
                     }
-                    updateAddedPostCountMap(addedPostCountMap, crawlingDto.getCompanyUrl());
-                    addedPostCount += 1;
+                }
+            }
+
+            for (RecruitPost recruitPost : recruitPosts) {
+                if (!crawlingRecruitPosts.contains(recruitPost)) {
+                    recruitPostRepository.delete(recruitPost);
+                }
+            }
+
+            for (TechPost techPost : techPosts) {
+                if (!crawlingTechPosts.contains(techPost)) {
+                    techPostRepository.delete(techPost);
                 }
             }
 
@@ -130,11 +171,16 @@ public class BatchConfig {
                 log.info(">>>>>>>> {}: {} 개 새로 추가", key, addedPostCountMap.get(key));
             }
 
-            log.info(">>>>>>>> 신규 크롤링 정보 {} 개 추가 성공", addedPostCount);
+            for (String key : updatedPostCountMap.keySet()) {
+                log.info(">>>>>>>> {}: {} 개 내용 변경", key, updatedPostCountMap.get(key));
+            }
+
+            log.info(">>>>>>>> 신규 크롤링 정보 {} 개 추가", addedPostCount);
+            log.info(">>>>>>>> 신규 크롤링 정보 {} 개 내용 변경", updatedPostCount);
         };
     }
 
-    private void updateAddedPostCountMap(Map<String, Integer> map, CompanyUrl companyUrl) {
+    private void updatePostCountMap(Map<String, Integer> map, CompanyUrl companyUrl) {
         String key = companyUrl.getCompany().getCompanyType().getName()
                 +" "+companyUrl.getCompanyUrlType().getName();
 

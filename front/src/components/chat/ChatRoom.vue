@@ -1,10 +1,10 @@
 <template>
   <div class="chat-room" v-cloak>
-    <button class="btn-close" @click="disconnect">x</button>
-    <ChatMessageList v-if="connected" :messages="messages"/>
-    <div class="no-connect-wrapper" v-else>
+    <button class="btn-close" @click="unsubscribe">x</button>
+    <ChatMessageList :messages="messages" @scrollDown="scrollDown" ref="messageList" />
+    <div class="no-connect-wrapper" v-if="!chatConnect.connected">
       <div class="no-connect-message">연결되지 않았습니다.</div>
-      <div class="re-connect" @click="reConnect">다시 연결</div>
+      <div class="re-connect" @click="initChatConnect(room.id)">다시 연결</div>
     </div>
     <div class="bottom">
       <textarea type="text" class="form-text" placeholder="내용을 입력해주세요..."
@@ -19,7 +19,7 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import SockJS from 'sockjs-client';
-import Stomp from 'stomp-websocket';
+import { reverseScrollFetch } from '../../utils/scrollFetch';
 import notification from '../../libs/notification';
 import ChatMessageList from '@/components/chat/ChatMessageList';
 
@@ -30,27 +30,44 @@ export default {
     ChatMessageList
   },
   props: {
-    isChatOpen: { type: Boolean, default: true }
+    isChatOpen: { type: Boolean, default: true },
+    room: { type: Object, default: () => ({
+      id: 0,
+      roomId: '',
+      name: '',
+      userCount: 0
+    })}
   },
   data() {
     return {
-      room: {},
       sender: '',
       message: '',
       messages: [],
-      connected: false
+      subscribeObject: null,
+      page: 0,
+      start: 0
     }
   },
-  computed: {
-    ...mapGetters(['currentUser', 'token'])
+  mounted() {
+    this.messageElement = this.$refs.messageList.$refs.messageList;
+    reverseScrollFetch(() => this.insertMessages(), this.messageElement);
+    this.subscribe(this.room.id);
   },
-  created() {
-    this.room = JSON.parse(localStorage.getItem('wschat.roomId'));
-    this.sender = JSON.parse(localStorage.getItem('wschat.sender'));
-    this.connect();
+  computed: {
+    ...mapGetters(['currentUser', 'token', 'currentUser', 'chatConnect', 'selectedChatRooms']),
+    isConnected: function () {
+      return this.chatConnect.connected;
+    },
+  },
+  watch: {
+    isConnected: function (newVal) {
+      if (newVal) {
+        this.subscribeActionCurried(this.room.id)();
+      }
+    }
   },
   methods: {
-    ...mapActions(['removeSelectedChatRoom']),
+    ...mapActions(['removeSelectedChatRoom', 'updateChatConnect']),
     sendMessage(event) {
       event.preventDefault();
       if (event.keyCode == 13 && event.shiftKey) {
@@ -65,70 +82,145 @@ export default {
         return;
       }
         
-      if (!this.ws || !this.ws.connected) {
-        this.connected = false;
+      if (!this.chatConnect.ws || !this.chatConnect.ws.connected) {
+        this.chatConnect.connected = false;
         return;
       }
-      this.ws.send(`/pub/chat/message`, { token: this.token }, JSON.stringify({
-        type:'TALK', roomId: this.room.roomId, sender: this.sender, message: this.message
+
+      this.chatConnect.ws.send(`/pub/chat/rooms/messages`, {}, JSON.stringify({
+        type:'TALK', 
+        sender: { userId: this.currentUser.id, name: this.currentUser.name, imageUrl: this.currentUser.imageUrl },
+        message: this.message, 
+        roomId: this.room.id
       }));
       this.message = '';
     },
+
     recvMessage(recv) {
-      this.handlerUpdateUserCount(recv.userCount)
+      this.handlerUpdateUserCount(recv.userCount);
+      if (recv.type === 'MULTIPLE') {
+        return;
+      }
       this.messages.push({"type":recv.type, "sender":recv.sender, "message":recv.message,
         "createdDate": recv.createdDate});
     },
-    connect() {
-      this.connected = true;
-      this.sock = new SockJS(`${process.env.VUE_APP_CHAT_API}/ws-stomp`);
-      this.ws = Stomp.over(this.sock);
-      this.reconnect = 0;
 
-      this.ws.connect({ token: this.token }, () => {
-        this.ws.subscribe(`/sub/chat/room/${this.room.roomId}`, (message) => {
-          var recv = JSON.parse(message.body);
-          this.recvMessage(recv);
-        });
-        this.ws.send(`/pub/chat/message`, { token: this.token }, JSON.stringify({
-        type:'TALK', roomId: this.room.roomId, sender: { id: null, name: 'NOTICE', imageUrl: null }, message: this.sender.name + ' 님이 들어왔습니다.'
-      }));
-      }, () => {
-        this.connected = false;
-        notification.warn('연결에 실패했습니다.');
+    recvMessages(messages, isReverse=false) {
+      messages = messages.filter(m => m.type !== 'MULTIPLE');
+      if (isReverse) {
+        messages = messages.reverse();
+      }
 
-        // if (this.reconnect++ < 5) {
-        //   setTimeout(() => {
-        //     this.sock = new SockJS(`${process.env.VUE_APP_CHAT_API}/ws-stomp`);
-        //     this.ws = Stomp.over(this.sock);
-        //     this.connect();
-        //   }, 10 * 1000);
-        // }
-      });
+      this.messages = [...messages, ...this.messages];
     },
-    disconnect() {
-      if (this.ws) {
-        this.ws.disconnect();
-        this.removeSelectedChatRoom(this.room.roomId);
+
+    subscribe(roomId) {
+      if (!this.chatConnect.connected) {
+        this.initChatConnect();
+      } else {
+        this.subscribeActionCurried(roomId)();
       }
     },
-    reConnect() {
-      this.connect();
+
+    initChatConnect() {
+      const sock = new SockJS(`${process.env.VUE_APP_CHAT_API}/ws-stomp`);
+      this.updateChatConnect({
+        connected: false,
+        sock: sock,
+        ws: this.Stomp.over(sock, { Authorization: `Bearer ${this.token}` }),
+        reconnect: 0
+      });
+
+      this.chatConnect.ws.connect({}, () => {
+        this.chatConnect.connected = true;
+      }, this.connectFailCallback);
     },
+
+    initChat() {
+      this.messages = [];
+      this.page = 0;
+      this.start = 0;
+    },
+
+    subscribeActionCurried(roomId) {
+      this.initChat();
+
+      return async () => {
+        await this.axios.get(`${process.env.VUE_APP_CHAT_API}/chat/rooms/${roomId}/messages/first`)
+          .then(({ data }) => {
+            this.recvMessages(data);
+
+          }).catch(() => {
+              notification.warn('최근 채팅 목록을 불러오지 못했습니다.');
+          });
+
+        this.insertMessages(true);
+        this.scrollDown(true);
+
+        this.subscribeObject = this.chatConnect.ws.subscribe(`/sub/chat/rooms/${roomId}`, (message) => {
+          var recv = JSON.parse(message.body);
+          this.recvMessage(recv);
+        }, { id: roomId });
+      }
+    },
+
+    async insertMessages(isFirst=false) {
+      await this.axios.get(`${process.env.VUE_APP_CHAT_API}/chat/rooms/${this.room.id}/messages?start=${this.start}&page=${this.page}`)
+        .then(({ data }) => {
+          if (data.messages.length === 0) {
+            notification.success('채팅 메시지를 모두 확인했어요.');
+            return;
+          }
+          
+          this.recvMessages(data.messages, true);
+            
+          if (isFirst) {
+            this.start = this.messages[0].id - 1;
+          } else {
+            this.page += 1;
+          }
+
+        }).catch(() => {
+            notification.warn('과거 채팅 목록을 불러오지 못했습니다.');
+        });
+    },
+
+    connectFailCallback() {
+      this.chatConnect.connected = false;
+      notification.warn('연결에 실패했습니다.');
+    },
+
+    unsubscribe() {
+      if (this.selectedChatRooms.length === 0) {
+        return;
+      }
+
+      this.removeSelectedChatRoom(this.room.id);
+
+      if (this.chatConnect.connected) {
+        this.subscribeObject.unsubscribe(this.room.id, {});
+
+        if (this.selectedChatRooms.length === 0) {
+          this.chatConnect.ws.disconnect(() => {
+            this.chatConnect.connected = false;
+          }, {});
+        }
+      }
+    },
+
     handlerUpdateUserCount(userCount) {
       this.$emit('updateUserCount', userCount)
     },
-    isNoticeMessage(msg) {
-      return msg.sender.name === 'NOTICE'
-    },
-    // isSameUserBeforeMessage(msg) {
-    //   if (this.messages.length === 1) {
-    //     return false;
-    //   }
-    //   return this.messages[this.messages.length - 2].sender.id == msg.sender.id;
-    // },
+
     isCurrentUser(msg) {
       return this.currentUser.id == msg.sender.id
+    },
+
+    scrollDown(isForce=false) {
+      let element = this.messageElement;
+      if (isForce || Math.abs(element.scrollTop + element.clientHeight - element.scrollHeight) < 300) {
+        element.scrollTop = element.scrollHeight;
+      }
     }
   }
 }
@@ -140,7 +232,7 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 500px;
+  height: 600px;
   background-color: white;
   padding: 5px;
   border-radius: 3px;
@@ -188,11 +280,16 @@ export default {
   background-color: #eaeaea;
 }
 .no-connect-wrapper {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: white;
   display: flex;
   flex-direction: column;
   height: 100%;
   justify-content: center;
   align-items: center;
+  animation: fadeIn 3s ease-in-out;
 }
 .no-connect-message {
   font-size: 14px;
@@ -211,6 +308,13 @@ export default {
 .no-user-name {
   display: none;
 }
+
+@media screen and (max-width: 480px) {
+  .chat-room {
+    height: 71vh;
+  }
+}
+
 ::-webkit-scrollbar { width: 3.2px; } /* 스크롤 바 */
 ::-webkit-scrollbar-track { background-color:#f7f7f7; } /* 스크롤 바 밑의 배경 */
 ::-webkit-scrollbar-thumb { background: #dadada; } /* 실질적 스크롤 바 */

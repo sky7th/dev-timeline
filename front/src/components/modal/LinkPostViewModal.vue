@@ -12,7 +12,7 @@
             <div class="author">{{ post.user.name }}</div>
           </div>
           <div class="between">|</div>
-          <div class="date">{{ post.createdDate }}</div>
+          <div class="date">{{ getDateTime(post.createdDate) }}</div>
         </div>
       </div>
       <Like :isLike="post.like" :postId="post.id" :likeCount="post.likeCount" class="like-wrapper"/>
@@ -93,6 +93,10 @@ export default {
     },
     handlerClosePopup() {
       this.$emit('closePopup');
+    },
+    getDateTime(time) {
+      time = time.replaceAll('-', '.')
+      return time.substring(0, 16)
     }
   },
 }

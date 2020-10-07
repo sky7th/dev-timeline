@@ -2,6 +2,14 @@ package com.sky7th.devtimeline.batch.service;
 
 import com.sky7th.devtimeline.batch.dto.CrawlingDto;
 import com.sky7th.devtimeline.batch.service.crawling.*;
+import com.sky7th.devtimeline.batch.service.crawling.recruit.KakaoRecruitCrawlingService;
+import com.sky7th.devtimeline.batch.service.crawling.recruit.NaverRecruitCrawlingService;
+import com.sky7th.devtimeline.batch.service.crawling.tech.KakaoTechCrawlingService;
+import com.sky7th.devtimeline.batch.service.crawling.tech.LineTechCrawlingService;
+import com.sky7th.devtimeline.batch.service.crawling.tech.NaverTechCrawlingService;
+import com.sky7th.devtimeline.batch.service.crawling.tech.NhnTechCrawlingService;
+import com.sky7th.devtimeline.batch.service.crawling.tech.WoowabrosTechCrawlingService;
+import com.sky7th.devtimeline.batch.service.crawling.tech.ZumTechCrawlingService;
 import com.sky7th.devtimeline.core.domain.company.domain.CompanyType;
 import com.sky7th.devtimeline.core.domain.company.domain.CompanyUrl;
 import com.sky7th.devtimeline.core.domain.company.domain.CompanyUrlRepository;

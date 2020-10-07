@@ -56,17 +56,21 @@ public class Post extends BaseTimeEntity {
     private List<Comment> comments = new ArrayList<>();
 
     public Post(PostType postType, List<Tag> tags) {
-        this(null, null, postType, 0L, 0L, tags);
+        this(null, null, postType, 0L, 0L);
+        tags.forEach(this::addTag);
+    }
+
+    public Post(PostType postType, String crawlId) {
+        this(null, crawlId, postType, 0L, 0L);
     }
 
     @Builder
-    public Post(Long id, String crawlId, PostType postType, Long likeCount, Long commentCount, List<Tag> tags) {
+    public Post(Long id, String crawlId, PostType postType, Long likeCount, Long commentCount) {
         this.id = id;
         this.crawlId = crawlId;
         this.postType = postType;
         this.likeCount = likeCount;
         this.commentCount = commentCount;
-        tags.forEach(this::addTag);
     }
 
     public Post(Long id) {
