@@ -6,6 +6,7 @@ import com.sky7th.devtimeline.core.domain.user.domain.User;
 import com.sky7th.devtimeline.core.utils.LocalDateTimeUtils;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.util.Objects;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,42 +27,38 @@ public class ChatMessage implements Serializable {
     private String id;
     private MessageType type;
     @Indexed
-    private String roomId;
-    private Long realRoomId;
+    private Long roomId;
     private int userCount;
     private ChatUser sender;
     private String message;
     private String createdDate;
 
     @Builder
-    public ChatMessage(String id, MessageType type, String roomId, Long realRoomId, int userCount, ChatUser sender, String message, String createdDate) {
+    public ChatMessage(String id, MessageType type, Long roomId, int userCount, ChatUser sender, String message, String createdDate) {
         this.id = id;
         this.type = type;
         this.roomId = roomId;
-        this.realRoomId = realRoomId;
         this.userCount = userCount;
         this.sender = sender;
         this.message = message;
         this.createdDate = createdDate;
     }
 
-    public static ChatMessage enterMessage(ChatUser chatUser, ChatRoom chatRoom) {
+    public static ChatMessage enterMessage(ChatUser chatUser, Long roomId, int userCount) {
         return ChatMessage.builder()
             .type(MessageType.ENTER)
-            .roomId(chatRoom.getId())
-            .realRoomId(chatRoom.getRoomId())
-            .userCount(chatRoom.getUserCount())
+            .roomId(roomId)
+            .userCount(userCount)
             .message(chatUser.getName() + " 님이 들어왔습니다.")
             .createdDate(LocalDateTimeUtils.toStringNowUntilMilisecond())
             .build();
     }
 
-    public static ChatMessage exitMessage(ChatUser chatUser, ChatRoom chatRoom) {
+    public static ChatMessage exitMessage(ChatUser chatUser, Long roomId, int userCount) {
         return ChatMessage.builder()
             .type(MessageType.QUIT)
-            .roomId(chatRoom.getId())
-            .realRoomId(chatRoom.getRoomId())
-            .userCount(chatRoom.getUserCount())
+            .roomId(roomId)
+            .userCount(userCount)
             .message(chatUser.getName() + " 님이 나갔습니다.")
             .createdDate(LocalDateTimeUtils.toStringNowUntilMilisecond())
             .build();
@@ -73,11 +70,28 @@ public class ChatMessage implements Serializable {
         return ChattingMessage.builder()
             .messageId(entity.getId())
             .type(entity.getType())
-            .roomId(entity.getRealRoomId())
+            .roomId(entity.getRoomId())
             .userCount(entity.getUserCount())
             .message(entity.getMessage())
             .user(chatUser == null ? null : new User(chatUser.getUserId()))
             .createdDate(LocalDateTimeUtils.toLocalDateTimeForMilisecond(entity.getCreatedDate()))
             .build();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ChatMessage that = (ChatMessage) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

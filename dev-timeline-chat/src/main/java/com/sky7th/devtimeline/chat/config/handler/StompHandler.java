@@ -8,10 +8,11 @@ import static org.springframework.messaging.simp.stomp.StompCommand.UNSUBSCRIBE;
 import com.sky7th.devtimeline.chat.config.security.TokenValidator;
 import com.sky7th.devtimeline.chat.config.security.UserContext;
 import com.sky7th.devtimeline.chat.model.ChatMessage;
-import com.sky7th.devtimeline.chat.model.ChatRoom;
+import com.sky7th.devtimeline.chat.model.ChatSession;
 import com.sky7th.devtimeline.chat.model.ChatUser;
 import com.sky7th.devtimeline.chat.service.ChatMessageService;
 import com.sky7th.devtimeline.chat.service.ChatRoomService;
+import com.sky7th.devtimeline.chat.service.ChatSessionService;
 import com.sky7th.devtimeline.chat.service.ChatUserService;
 import com.sky7th.devtimeline.chat.service.event.OnGeneratePushMessageEvent;
 import com.sky7th.devtimeline.core.domain.chattingMessage.domain.ChattingMessage.MessageType;
@@ -38,11 +39,14 @@ public class StompHandler implements ChannelInterceptor {
     private final ChatUserService chatUserService;
     private final ChatMessageService chatMessageService;
     private final ApplicationEventPublisher applicationEventPublisher;
+    private final ChatSessionService chatSessionService;
 
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
         final StompCommand command = accessor.getCommand();
+        String roomIdStr = accessor.getFirstNativeHeader(SUBSCRIBE_ID);
+        Long roomId = roomIdStr == null ? null : Long.parseLong(roomIdStr);
         String sessionId = accessor.getSessionId();
         String token = getJwtFromAccessor(accessor);
 
@@ -55,9 +59,10 @@ public class StompHandler implements ChannelInterceptor {
         if (isFinalDisconnect(token, command)) {
             ChatUser chatUser = chatUserService.findBySessionId(sessionId);
             chatUser.getChatRoomIds().forEach(_roomId -> {
-                ChatRoom _chatRoom = chatRoomService.exit(_roomId, chatUser);
-                ChatMessage _chatMessage = ChatMessage.exitMessage(chatUser, _chatRoom);
-                pushMessage(chatMessageService.save(_chatMessage), command, _chatRoom, chatUser);
+                ChatSession chatSession = chatRoomService.exit(_roomId, chatUser);
+                int userCount = chatSessionService.countByRoomId(_roomId);
+                ChatMessage chatMessage = ChatMessage.exitMessage(chatUser, _roomId, userCount);
+                pushMessage(chatMessageService.save(chatMessage), command, chatSession);
             });
 
             chatUserService.delete(sessionId);
@@ -67,17 +72,18 @@ public class StompHandler implements ChannelInterceptor {
 
         if (command == SUBSCRIBE || command == UNSUBSCRIBE) {
             ChatUser chatUser = chatUserService.findBySessionId(sessionId);
-            String roomId = accessor.getFirstNativeHeader(SUBSCRIBE_ID);
 
             if (command == SUBSCRIBE) {
-                ChatRoom chatRoom = chatRoomService.enter(roomId, chatUser);
-                ChatMessage chatMessage = ChatMessage.enterMessage(chatUser, chatRoom);
-                pushMessage(chatMessageService.save(chatMessage), command, chatRoom, chatUser);
+                ChatSession chatSession = chatRoomService.enter(roomId, chatUser);
+                int userCount = chatSessionService.countByRoomId(roomId);
+                ChatMessage chatMessage = ChatMessage.enterMessage(chatUser, roomId, userCount);
+                pushMessage(chatMessageService.save(chatMessage), command, chatSession);
             }
             else {
-                ChatRoom chatRoom = chatRoomService.exit(roomId, chatUser);
-                ChatMessage chatMessage = ChatMessage.exitMessage(chatUser, chatRoom);
-                pushMessage(chatMessageService.save(chatMessage), command, chatRoom, chatUser);
+                ChatSession chatSession = chatRoomService.exit(roomId, chatUser);
+                int userCount = chatSessionService.countByRoomId(roomId);
+                ChatMessage chatMessage = ChatMessage.exitMessage(chatUser, roomId, userCount);
+                pushMessage(chatMessageService.save(chatMessage), command, chatSession);
             }
         }
 
@@ -88,12 +94,12 @@ public class StompHandler implements ChannelInterceptor {
         return token == null && command == DISCONNECT;
     }
 
-    private boolean isOpenedMultipleBrowser(StompCommand command, ChatRoom chatRoom, ChatUser chatUser) {
+    private boolean isOpenedMultipleBrowser(StompCommand command, ChatSession chatSession) {
         if (command == SUBSCRIBE) {
-            return chatRoom.getChatUserSessionCountMap().get(chatUser.getUserId()) != 1;
+            return chatSession.getSessionIds().size() > 1;
         }
         else {
-            return chatRoom.getChatUserSessionCountMap().containsKey(chatUser.getUserId());
+            return chatSession.getSessionIds().size() != 0;
         }
     }
 
@@ -107,8 +113,8 @@ public class StompHandler implements ChannelInterceptor {
         return null;
     }
 
-    private void pushMessage(ChatMessage chatMessage, StompCommand command, ChatRoom chatRoom, ChatUser chatUser) {
-        if (isOpenedMultipleBrowser(command, chatRoom, chatUser)) {
+    private void pushMessage(ChatMessage chatMessage, StompCommand command, ChatSession chatSession) {
+        if (isOpenedMultipleBrowser(command, chatSession)) {
             chatMessage.setType(MessageType.MULTIPLE);
         }
         applicationEventPublisher.publishEvent(new OnGeneratePushMessageEvent(chatMessage));

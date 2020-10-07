@@ -34,7 +34,7 @@ public class ChatPubSubService {
     channels = new HashMap<>();
 
     chattingRoomInternalService.findAll().stream()
-        .map(chattingRoom -> ChatRoom.toEntity(chattingRoom, new HashMap<>()))
+        .map(ChatRoom::toEntity)
         .forEach(this::createRoom);
   }
 
@@ -45,14 +45,16 @@ public class ChatPubSubService {
     channels.put(savedChatRoom.getId(), channel);
   }
 
-  public void deleteRoom(String roomId) {
-    ChannelTopic channel = channels.get(roomId);
+  public void deleteRoom(Long roomId) {
+    ChatRoom chatRoom = chatRoomService.findByRoomId(roomId);
+    ChannelTopic channel = channels.get(chatRoom.getId());
     redisMessageListener.removeMessageListener(redisSubscriber, channel);
-    channels.remove(roomId);
+    channels.remove(chatRoom.getId());
   }
 
   public void publish(ChatMessage chatMessage) {
-    ChannelTopic channel = channels.get(chatMessage.getRoomId());
+    ChatRoom chatRoom = chatRoomService.findByRoomId(chatMessage.getRoomId());
+    ChannelTopic channel = channels.get(chatRoom.getId());
     redisPublisher.publish(channel, chatMessage);
   }
 

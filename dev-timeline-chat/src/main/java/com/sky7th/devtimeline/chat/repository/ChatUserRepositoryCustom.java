@@ -4,5 +4,5 @@ import java.util.Set;
 
 public interface ChatUserRepositoryCustom {
 
-  void updateChatRoomIds(String sessionId, Set<String> chatRoomIds);
+  void updateChatRoomIds(String sessionId, Set<Long> chatRoomIds);
 }

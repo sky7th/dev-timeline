@@ -30,8 +30,8 @@ public class ChatController {
   }
 
   @GetMapping("/chat/rooms/{roomId}/messages/first")
-  public ResponseEntity<List<ChatMessageResponseDto>> firstList(@PathVariable String roomId) {
-    return ResponseEntity.ok(chatMessageService.findFirst30ByRoomId(roomId));
+  public ResponseEntity<List<ChatMessageResponseDto>> firstList(@PathVariable Long roomId) {
+    return ResponseEntity.ok(chatMessageService.findByRoomId(roomId));
   }
 
   @GetMapping("/chat/rooms/{roomId}/messages")
@@ -40,6 +40,6 @@ public class ChatController {
           size = ChattingMessageInternalService.DEFAULT_MESSAGE_PAGE_SIZE,
           sort = "id",
           direction = Direction.DESC) Pageable pageable) {
-    return ResponseEntity.ok(chatMessageService.findAllByRoomId(roomId, pageable));
+    return ResponseEntity.ok(chatMessageService.findByRoomId(roomId, pageable));
   }
 }

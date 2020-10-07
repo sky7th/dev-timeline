@@ -13,7 +13,7 @@ import org.springframework.data.redis.core.RedisHash;
 
 @NoArgsConstructor
 @Getter
-@RedisHash(value = "chat_sender")
+@RedisHash(value = "chat_user")
 public class ChatUser implements Serializable {
 
     @Id
@@ -21,7 +21,7 @@ public class ChatUser implements Serializable {
     private Long userId;
     private String name;
     private String imageUrl;
-    private Set<String> chatRoomIds = new HashSet<>();
+    private Set<Long> chatRoomIds = new HashSet<>();
 
     @Builder
     public ChatUser(String sessionId, Long userId, String name, String imageUrl) {

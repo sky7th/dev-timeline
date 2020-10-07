@@ -21,16 +21,16 @@ public class ChatUserService {
     return chatUserRepository.findById(sessionId).orElseThrow(NotFoundChatUserException::new);
   }
 
-  public void addChatRoomId(String sessionId, String roomId) {
+  public void addChatRoomId(String sessionId, Long roomId) {
     ChatUser chatUser = findBySessionId(sessionId);
-    Set<String> chatRoomIds = chatUser.getChatRoomIds();
+    Set<Long> chatRoomIds = chatUser.getChatRoomIds();
     chatRoomIds.add(roomId);
     chatUserRepository.updateChatRoomIds(sessionId, chatRoomIds);
   }
 
-  public void removeChatRoomId(String sessionId, String roomId) {
+  public void removeChatRoomId(String sessionId, Long roomId) {
     ChatUser chatUser = findBySessionId(sessionId);
-    Set<String> chatRoomIds = chatUser.getChatRoomIds();
+    Set<Long> chatRoomIds = chatUser.getChatRoomIds();
     chatRoomIds.remove(roomId);
     chatUserRepository.updateChatRoomIds(sessionId, chatRoomIds);
   }

@@ -1,7 +1,6 @@
 package com.sky7th.devtimeline.chat.service;
 
 import com.sky7th.devtimeline.chat.model.ChatMessage;
-import com.sky7th.devtimeline.chat.model.ChatRoom;
 import com.sky7th.devtimeline.chat.repository.ChatMessageRepository;
 import com.sky7th.devtimeline.chat.service.dto.ChatMessageRequestDto;
 import com.sky7th.devtimeline.chat.service.dto.ChatMessageResponseDto;
@@ -28,10 +27,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class ChatMessageService {
 
   private final ChatMessageRepository chatMessageRepository;
-  private final ChatRoomService chatRoomService;
+  private final ChatSessionService chatSessionService;
   private final ChattingMessageInternalService chattingMessageInternalService;
 
-  public List<ChatMessageResponseDto> findFirst30ByRoomId(String roomId) {
+  public List<ChatMessageResponseDto> findByRoomId(Long roomId) {
     List<ChatMessage> chatMessages = chatMessageRepository.findAllByRoomId(roomId).stream()
         .sorted(Comparator.comparing((ChatMessage chatMessage) ->
             LocalDateTimeUtils.toLocalDateTimeForMilisecond(chatMessage.getCreatedDate())))
@@ -40,8 +39,8 @@ public class ChatMessageService {
     return ChatMessageResponseDto.of(chatMessages);
   }
 
-  public ChattingMessageResponseDtos findAllByRoomId(Long roomId, Pageable pageable) {
-    Page<ChattingMessage> pages = chattingMessageInternalService.findAllByRoomId(roomId, pageable);
+  public ChattingMessageResponseDtos findByRoomId(Long roomId, Pageable pageable) {
+    Page<ChattingMessage> pages = chattingMessageInternalService.findByRoomId(roomId, pageable);
     List<ChattingMessageResponseDto> chattingMessageResponseDtos = pages.stream()
         .map(ChattingMessageResponseDto::of)
         .collect(Collectors.toList());
@@ -50,8 +49,8 @@ public class ChatMessageService {
   }
 
   public ChatMessage save(ChatMessageRequestDto requestDto) {
-    ChatRoom chatRoom = chatRoomService.findById(requestDto.getRoomId());
-    ChatMessage chatMessage = ChatMessageRequestDto.toTalkMessageEntity(requestDto, chatRoom);
+    int userCount = chatSessionService.countByRoomId(requestDto.getRoomId());
+    ChatMessage chatMessage = ChatMessageRequestDto.toTalkMessageEntity(requestDto, userCount);
 
     return save(chatMessage);
   }
@@ -88,7 +87,7 @@ public class ChatMessageService {
 
   public static class MessageCounter {
 
-    private static final int MESSAGE_LIMIT = 100;
+    private static final int MESSAGE_LIMIT = 15;
 
     private static int messageCount = 0;
 

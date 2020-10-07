@@ -18,11 +18,20 @@ public class ChattingRoom extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String roomId;
+
+    private String imageUrl;
+
+    private Integer priority;
+
     private String name;
 
     @Builder
-    public ChattingRoom(Long id, String name) {
+    public ChattingRoom(Long id, String roomId, String imageUrl, Integer priority, String name) {
         this.id = id;
+        this.roomId = roomId;
+        this.imageUrl = imageUrl;
+        this.priority = priority;
         this.name = name;
     }
 }

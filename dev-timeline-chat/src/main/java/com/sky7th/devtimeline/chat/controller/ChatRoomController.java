@@ -2,7 +2,7 @@ package com.sky7th.devtimeline.chat.controller;
 
 import com.sky7th.devtimeline.chat.service.ChatPubSubService;
 import com.sky7th.devtimeline.chat.service.ChatRoomService;
-import com.sky7th.devtimeline.chat.service.dto.ChatRoomResponseDto;
+import com.sky7th.devtimeline.core.domain.chattingRoom.dto.ChattingRoomResponseDto;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,12 +21,12 @@ public class ChatRoomController {
   private final ChatRoomService chatRoomService;
 
   @GetMapping("/rooms")
-  public ResponseEntity<List<ChatRoomResponseDto>> findAllRoom() {
+  public ResponseEntity<List<ChattingRoomResponseDto>> findAllRoom() {
     return ResponseEntity.ok(chatRoomService.findAll());
   }
 
   @DeleteMapping("/rooms/{roomId}")
-  public void deleteRoom(@PathVariable String roomId) {
+  public void deleteRoom(@PathVariable Long roomId) {
     chatPubSubService.deleteRoom(roomId);
   }
 }

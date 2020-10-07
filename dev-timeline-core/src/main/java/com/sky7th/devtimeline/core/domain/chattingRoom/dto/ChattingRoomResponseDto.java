@@ -15,16 +15,22 @@ import lombok.ToString;
 public class ChattingRoomResponseDto {
 
     private Long id;
+    private String imageUrl;
     private String name;
+    private int userCount;
 
-    public static ChattingRoomResponseDto of(ChattingRoom entity) {
+    public static ChattingRoomResponseDto of(ChattingRoom entity, int userCount) {
         return ChattingRoomResponseDto.builder()
             .id(entity.getId())
+            .imageUrl(entity.getImageUrl())
             .name(entity.getName())
+            .userCount(userCount)
             .build();
     }
 
-    public static List<ChattingRoomResponseDto> of(List<ChattingRoom> entities) {
-        return entities.stream().map(ChattingRoomResponseDto::of).collect(Collectors.toList());
+    public static List<ChattingRoomResponseDto> of(List<ChattingRoom> entities, int userCount) {
+        return entities.stream()
+            .map(entity -> ChattingRoomResponseDto.of(entity, userCount))
+            .collect(Collectors.toList());
     }
 }

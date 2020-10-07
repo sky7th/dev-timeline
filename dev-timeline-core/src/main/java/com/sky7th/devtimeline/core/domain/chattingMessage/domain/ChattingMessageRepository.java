@@ -8,9 +8,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ChattingMessageRepository extends JpaRepository<ChattingMessage, String> {
+public interface ChattingMessageRepository extends JpaRepository<ChattingMessage, Long> {
 
   @EntityGraph(attributePaths = "user")
-  @Query("FROM ChattingMessage c")
-  Page<ChattingMessage> findAllByRoomID(Long roomId, Pageable pageable);
+  @Query("FROM ChattingMessage c where c.roomId = :roomId")
+  Page<ChattingMessage> findByRoomId(Long roomId, Pageable pageable);
 }

@@ -1,13 +1,13 @@
 package com.sky7th.devtimeline.chat.service;
 
 import com.sky7th.devtimeline.chat.model.ChatRoom;
+import com.sky7th.devtimeline.chat.model.ChatSession;
 import com.sky7th.devtimeline.chat.model.ChatUser;
 import com.sky7th.devtimeline.chat.repository.ChatRoomRepository;
-import com.sky7th.devtimeline.chat.service.dto.ChatRoomResponseDto;
 import com.sky7th.devtimeline.chat.service.exception.NotFoundChatRoomException;
+import com.sky7th.devtimeline.core.domain.chattingRoom.dto.ChattingRoomResponseDto;
 import com.sky7th.devtimeline.core.domain.chattingRoom.service.ChattingRoomInternalService;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,18 +21,23 @@ public class ChatRoomService {
   private final ChatRoomRepository chatRoomRepository;
   private final ChatUserService chatUserService;
   private final ChattingRoomInternalService chattingRoomInternalService;
+  private final ChatSessionService chatSessionService;
 
   @Transactional(readOnly = true)
-  public ChatRoom findById(String roomId) {
-    return chatRoomRepository.findById(roomId).orElseThrow(NotFoundChatRoomException::new);
+  public ChatRoom findById(String id) {
+    return chatRoomRepository.findById(id).orElseThrow(NotFoundChatRoomException::new);
   }
 
-  public List<ChatRoomResponseDto> findAll() {
+  @Transactional(readOnly = true)
+  public ChatRoom findByRoomId(Long roomId) {
+    return chatRoomRepository.findByRoomId(roomId).orElseThrow(NotFoundChatRoomException::new);
+  }
+
+  public List<ChattingRoomResponseDto> findAll() {
     return chattingRoomInternalService.findAll().stream()
         .map(chattingRoom -> {
-          ChatRoom chatRoom = chatRoomRepository.findByRoomId(chattingRoom.getId());
-          return ChatRoomResponseDto.of(
-              ChatRoom.toEntity(chatRoom.getId(), chattingRoom, chatRoom.getChatUserSessionCountMap()));
+          int userCount = chatSessionService.countByRoomId(chattingRoom.getId());
+          return ChattingRoomResponseDto.of(chattingRoom, userCount);
         })
         .collect(Collectors.toList());
   }
@@ -41,43 +46,13 @@ public class ChatRoomService {
     return chatRoomRepository.save(chatRoom);
   }
 
-  public ChatRoom enter(String roomId, ChatUser chatUser) {
-    Long userId = chatUser.getUserId();
-    ChatRoom chatRoom = findById(roomId);
-    Map<Long, Integer> chatUserSessionCountMap = chatRoom.getChatUserSessionCountMap();
-
-    if (chatUserSessionCountMap.containsKey(userId)) {
-      int sessionCount = chatUserSessionCountMap.get(userId);
-      chatUserSessionCountMap.put(userId, sessionCount + 1);
-    } else {
-      chatUserSessionCountMap.put(userId, 1);
-    }
-    chatRoomRepository.updateChatUserIds(roomId, chatUserSessionCountMap);
+  public ChatSession enter(Long roomId, ChatUser chatUser) {
     chatUserService.addChatRoomId(chatUser.getSessionId(), roomId);
-
-    return chatRoom;
+    return chatSessionService.addSessionId(roomId, chatUser);
   }
 
-  public ChatRoom exit(String roomId, ChatUser chatUser) {
-    Long userId = chatUser.getUserId();
-    ChatRoom chatRoom = findById(roomId);
-    Map<Long, Integer> chatUserSessionCountMap = chatRoom.getChatUserSessionCountMap();
-    int sessionCount = chatUserSessionCountMap.get(userId);
-
-    if (sessionCount > 1) {
-      chatUserSessionCountMap.put(userId, sessionCount - 1);
-    } else {
-      chatUserSessionCountMap.remove(userId);
-    }
-    chatRoomRepository.updateChatUserIds(roomId, chatUserSessionCountMap);
+  public ChatSession exit(Long roomId, ChatUser chatUser) {
     chatUserService.removeChatRoomId(chatUser.getSessionId(), roomId);
-
-    return chatRoom;
-  }
-
-  public void exitAllChatRoom(ChatUser chatUser) {
-    chatUser.getChatRoomIds().forEach(roomId -> {
-      exit(roomId, chatUser);
-    });
+    return chatSessionService.removeSessionId(roomId, chatUser);
   }
 }

@@ -8,5 +8,5 @@ public interface ChatMessageRepository extends CrudRepository<ChatMessage, Strin
 
   @Override
   List<ChatMessage> findAll();
-  List<ChatMessage> findAllByRoomId(String roomId);
+  List<ChatMessage> findAllByRoomId(Long roomId);
 }

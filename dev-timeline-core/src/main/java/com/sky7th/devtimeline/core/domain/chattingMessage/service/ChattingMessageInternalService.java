@@ -24,11 +24,11 @@ public class ChattingMessageInternalService {
     }
 
     @Transactional(readOnly = true)
-    public Page<ChattingMessage> findAllByRoomId(Long roomId, Pageable pageable) {
+    public Page<ChattingMessage> findByRoomId(Long roomId, Pageable pageable) {
         if (pageable.getPageSize() != DEFAULT_MESSAGE_PAGE_SIZE) {
             throw new InvalidPageRequstException();
         }
 
-        return chattingMessageRepository.findAllByRoomID(roomId, pageable);
+        return chattingMessageRepository.findByRoomId(roomId, pageable);
     }
 }

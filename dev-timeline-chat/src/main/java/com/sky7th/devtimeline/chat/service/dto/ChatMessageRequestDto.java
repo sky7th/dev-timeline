@@ -1,7 +1,6 @@
 package com.sky7th.devtimeline.chat.service.dto;
 
 import com.sky7th.devtimeline.chat.model.ChatMessage;
-import com.sky7th.devtimeline.chat.model.ChatRoom;
 import com.sky7th.devtimeline.chat.model.ChatUser;
 import com.sky7th.devtimeline.core.domain.chattingMessage.domain.ChattingMessage.MessageType;
 import com.sky7th.devtimeline.core.utils.LocalDateTimeUtils;
@@ -18,15 +17,15 @@ import lombok.ToString;
 public class ChatMessageRequestDto implements Serializable {
 
     private MessageType type;
-    private String roomId;
+    private Long roomId;
     private ChatUser sender;
     private String message;
 
-    public static ChatMessage toTalkMessageEntity(ChatMessageRequestDto requestDto, ChatRoom chatRoom) {
+    public static ChatMessage toTalkMessageEntity(ChatMessageRequestDto requestDto, int userCount) {
         return ChatMessage.builder()
             .type(requestDto.getType())
             .roomId(requestDto.getRoomId())
-            .userCount(chatRoom.getUserCount())
+            .userCount(userCount)
             .sender(requestDto.getSender())
             .message(requestDto.getMessage())
             .createdDate(LocalDateTimeUtils.toStringNowUntilMilisecond())
