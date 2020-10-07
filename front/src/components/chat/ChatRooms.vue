@@ -10,7 +10,7 @@
       v-for="({id, name, userCount}) in chatRooms" 
         :key="id"
         @click="enter(id)"
-        :class="{ 'asdf': isEntered(id) }" 
+        :class="{ 'selected-room': isEntered(id) }" 
       >
         <div class="left">
           <div class="title">
@@ -39,13 +39,13 @@ export default {
   methods: {    
     ...mapActions(['insertSelectedChatRooms', 'updateChatRooms', 'updateIsOnChatRooms']),
 
-    enter(roodId) {
+    enter(id) {
       if (this.currentUser == null || this.currentUser == undefined) {
         notification.warn('로그인 후 이용 가능합니다.');
         return;
       }
       
-      const chatRoom = this.findRoom(roodId);
+      const chatRoom = this.findRoom(id);
 
       if (chatRoom != null) {
         this.insertSelectedChatRooms(chatRoom);
@@ -53,12 +53,12 @@ export default {
       }
     },
 
-    findRoom(roomId) {
-      if (this.selectedChatRooms.find(chatRoom => chatRoom.id === roomId)) {
+    findRoom(id) {
+      if (this.selectedChatRooms.find(chatRoom => chatRoom.id === id)) {
         notification.warn('이미 참여중인 채팅방 입니다.');
         return null;
       }
-      return this.chatRooms.find(chatRoom => chatRoom.id === roomId);
+      return this.chatRooms.find(chatRoom => chatRoom.id === id);
     },
 
     isEntered(id) {
@@ -70,6 +70,7 @@ export default {
         .catch(e => {
           if (e.message === 'Network Error')
             notification.warn('채팅 서버가 꺼져있습니다.');
+            this.close();
         })
       return response.data;
     },
@@ -150,7 +151,7 @@ li:hover {
   transition: background-color .1s;
   background-color: #f4f4f4;
 }
-.asdf {
+.selected-room {
   background-color: #f4f4f4;
 }
 .logo {

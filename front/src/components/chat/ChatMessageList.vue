@@ -28,24 +28,24 @@ import { mapGetters } from "vuex";
 export default {
   props: ['messages'],
   updated() {
-    this.scrollDown();
+    this.handlerScrollDown();
   },
   computed: {
     ...mapGetters(['currentUser', 'token'])
   },
   methods: {
-    scrollDown() {
-      let element = this.$refs.messageList;
-      if (Math.abs(element.scrollTop + element.clientHeight - element.scrollHeight) < 400) {
-        element.scrollTop = element.scrollHeight;
-      }
+    handlerScrollDown() {
+      this.$emit('scrollDown', false);
     },
+
     isNoticeMessage(msg) {
       return msg.type === 'ENTER' || msg.type === 'QUIT'
     },
+
     isCurrentUser(msg) {
       return msg.sender != null && this.currentUser.id === msg.sender.userId
     },
+    
     convertDate(date) {
       let HHmm = date.substr(11, 5);
       let [hour, min] = HHmm.split(':');

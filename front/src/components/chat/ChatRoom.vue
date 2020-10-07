@@ -1,10 +1,10 @@
 <template>
   <div class="chat-room" v-cloak>
     <button class="btn-close" @click="unsubscribe">x</button>
-    <ChatMessageList v-if="chatConnect.connected" :messages="messages"/>
+    <ChatMessageList v-if="chatConnect.connected" :messages="messages" @scrollDown="scrollDown" ref="messageList" />
     <div class="no-connect-wrapper" v-else>
       <div class="no-connect-message">연결되지 않았습니다.</div>
-      <div class="re-connect" @click="reConnect">다시 연결</div>
+      <div class="re-connect" @click="initChatConnect(room.id)">다시 연결</div>
     </div>
     <div class="bottom">
       <textarea type="text" class="form-text" placeholder="내용을 입력해주세요..."
@@ -31,7 +31,8 @@ export default {
   props: {
     isChatOpen: { type: Boolean, default: true },
     room: { type: Object, default: () => ({
-      id: '',
+      id: 0,
+      roomId: '',
       name: '',
       userCount: 0
     })}
@@ -41,14 +42,28 @@ export default {
       sender: '',
       message: '',
       messages: [],
-      subscribeObject: null
+      subscribeObject: null,
+      page: 0
     }
   },
+  mounted() {
+    this.messageElement = document.getElementById('message-list');
+  },
   computed: {
-    ...mapGetters(['currentUser', 'token', 'currentUser', 'chatConnect', 'selectedChatRooms'])
+    ...mapGetters(['currentUser', 'token', 'currentUser', 'chatConnect', 'selectedChatRooms']),
+    isConnected: function () {
+      return this.chatConnect.connected;
+    }
+  },
+  watch: {
+    isConnected: function (newVal) {
+      if (newVal) {
+        this.subscribeActionCurried(this.room.id)();
+      }
+    }
   },
   created() {
-    this.subscribe();
+    this.subscribe(this.room.id);
   },
   methods: {
     ...mapActions(['removeSelectedChatRoom', 'updateChatConnect']),
@@ -70,7 +85,8 @@ export default {
         this.chatConnect.connected = false;
         return;
       }
-      this.chatConnect.ws.send(`/pub/chat/rooms/message`, {}, JSON.stringify({
+
+      this.chatConnect.ws.send(`/pub/chat/rooms/messages`, {}, JSON.stringify({
         type:'TALK', 
         sender: { userId: this.currentUser.id, name: this.currentUser.name, imageUrl: this.currentUser.imageUrl },
         message: this.message, 
@@ -88,36 +104,62 @@ export default {
         "createdDate": recv.createdDate});
     },
 
-    subscribe() {
+    recvMessages(messages, isReverse=false) {
+      messages = messages.filter(m => m.type !== 'MULTIPLE');
+      if (isReverse) {
+        messages = messages.reverse();
+      }
+      this.messages = [...this.messages, ...messages];
+    },
+
+    subscribe(roomId) {
       if (!this.chatConnect.connected) {
-        const sock = new SockJS(`${process.env.VUE_APP_CHAT_API}/ws-stomp`);
-        this.updateChatConnect({
-          connected: true,
-          sock: sock,
-          ws: this.Stomp.over(sock, { Authorization: `Bearer ${this.token}` }),
-          reconnect: 0
-        });
-        this.chatConnect.ws.connect({}, this.connectSuccessCallback, this.connectFailCallback);
+        this.initChatConnect();
       } else {
-        this.connectSuccessCallback();
+        this.subscribeActionCurried(roomId)();
       }
     },
 
-    async connectSuccessCallback() {
-      await this.axios.get(`${process.env.VUE_APP_CHAT_API}/chat/rooms/${this.room.id}/message`)
-        .then(({data}) => {
-          console.log(data);
-          data.forEach(chatMessage => {
-            this.recvMessage(chatMessage);
+    initChatConnect() {
+      const sock = new SockJS(`${process.env.VUE_APP_CHAT_API}/ws-stomp`);
+      this.updateChatConnect({
+        connected: false,
+        sock: sock,
+        ws: this.Stomp.over(sock, { Authorization: `Bearer ${this.token}` }),
+        reconnect: 0
+      });
+
+      this.chatConnect.ws.connect({}, () => {
+        this.chatConnect.connected = true;
+      }, this.connectFailCallback);
+    },
+
+    subscribeActionCurried(roomId) {
+      this.messages = [];
+
+      return async () => {
+        await this.axios.get(`${process.env.VUE_APP_CHAT_API}/chat/rooms/${roomId}/messages?page=${this.page}`)
+              .then(({ data }) => {
+                this.recvMessages(data.messages, true);
+                this.page += 1;
+                this.scrollDown(true);
+              }).catch(() => {
+                  notification.warn('과거 채팅 목록을 불러오지 못했습니다.');
+              });
+
+        await this.axios.get(`${process.env.VUE_APP_CHAT_API}/chat/rooms/${roomId}/messages/first`)
+          .then(({ data }) => {
+            this.recvMessages(data);
+
+          }).catch(() => {
+              notification.warn('최근 채팅 목록을 불러오지 못했습니다.');
           });
-        }).catch(() => {
-            notification.warn('채팅 목록을 불러오지 못했습니다.');
-        });
-    console.log('aaaaaa');
-      this.subscribeObject = this.chatConnect.ws.subscribe(`/sub/chat/rooms/${this.room.id}`, (message) => {
-        var recv = JSON.parse(message.body);
-        this.recvMessage(recv);
-      }, { id: this.room.id });
+
+        this.subscribeObject = this.chatConnect.ws.subscribe(`/sub/chat/rooms/${roomId}`, (message) => {
+          var recv = JSON.parse(message.body);
+          this.recvMessage(recv);
+        }, { id: roomId });
+      }
     },
 
     connectFailCallback() {
@@ -141,23 +183,19 @@ export default {
           }, {});
         }
       }
-      
     },
+
     reConnect() {
-      this.subscribe();
+      this.connect();
     },
+
     handlerUpdateUserCount(userCount) {
       this.$emit('updateUserCount', userCount)
     },
-    // isSameUserBeforeMessage(msg) {
-    //   if (this.messages.length === 1) {
-    //     return false;
-    //   }
-    //   return this.messages[this.messages.length - 2].sender.id == msg.sender.id;
-    // },
+
     isCurrentUser(msg) {
       return this.currentUser.id == msg.sender.id
-    }
+    },
   }
 }
 </script>
@@ -222,6 +260,7 @@ export default {
   height: 100%;
   justify-content: center;
   align-items: center;
+  animation: fadeIn 3s ease-in-out;
 }
 .no-connect-message {
   font-size: 14px;
