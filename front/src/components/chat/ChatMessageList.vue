@@ -50,8 +50,8 @@ export default {
       let _scrollDiff = Math.abs(element.scrollTop + element.clientHeight - element.scrollHeight);
       let _scrollHeight = element.scrollHeight
       let _scrollTop = element.scrollTop;
-      
-      if (this.beforeScrollDiff < 300) {
+
+      if (_scrollDiff < 300) {
         element.scrollTop = element.scrollHeight;
       }
 
@@ -59,9 +59,7 @@ export default {
         element.scrollTop = _scrollHeight - this.beforeScrollHeight;
       }
 
-      this.beforeScrollDiff = _scrollDiff;
       this.beforeScrollHeight = _scrollHeight;
-      this.beforeScrollTop = _scrollTop;
     },
 
     isNoticeMessage(msg) {
