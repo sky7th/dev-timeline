@@ -59,6 +59,7 @@ export default {
   justify-content: flex-end;
   margin-right: 10px;
   transition: all 600ms cubic-bezier(0.36, 0, 0.07, 1);
+  pointer-events: all;
 }
 .chat-container:nth-child(1) {
   grid-area: 2 / 1;

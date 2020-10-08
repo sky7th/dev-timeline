@@ -54,6 +54,7 @@ export default {
   bottom: 80px;
   right: 0;
   animation: fadeIn 0.3s ease-in-out;
+  z-index: 1;
 }
 .chat-button button {
   border: 0px solid black;
@@ -69,4 +70,11 @@ export default {
   background-color: #cacaca;
   transition: background-color .3s;
 }
+
+@media screen and (max-width: 480px) {
+  .chat-room {
+    height: 71vh;
+  }
+}
+
 </style>

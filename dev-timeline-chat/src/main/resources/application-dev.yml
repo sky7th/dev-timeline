@@ -68,9 +68,9 @@ app:
       - myandroidapp://oauth2/redirect
       - myiosapp://oauth2/redirect
 
-#logging:
-#  level:
-#    root: INFO
-#    dev-timeline-chat: DEBUG
-#  file:
-#    path: C://logs/spring-boot-log/dev-timeline-chat
+logging:
+  level:
+    root: INFO
+    dev-timeline-chat: DEBUG
+  file:
+    path: C://logs/spring-boot-log/dev-timeline-chat

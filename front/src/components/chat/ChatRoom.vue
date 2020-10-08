@@ -317,6 +317,7 @@ export default {
   justify-content: center;
   align-items: center;
   animation: fadeIn 3s ease-in-out;
+  z-index: 1;
 }
 .no-connect-message {
   font-size: 14px;

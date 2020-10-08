@@ -21,6 +21,7 @@ export default {
   position: fixed;
   right: 0;
   animation: fadeIn 0.3s ease-in-out;
+  z-index: 1;
 }
 .side-button button {
   border: 0px solid black;

@@ -129,6 +129,7 @@ export default {
   height: 100%;
   background-color: #fff;
   transition: all 600ms cubic-bezier(0.36, 0, 0.07, 1);
+  z-index: 1;
 }
 .chat-rooms-hidden {
   margin-right: -350px;

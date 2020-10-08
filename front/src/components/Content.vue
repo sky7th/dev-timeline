@@ -95,6 +95,8 @@ export default {
   width: 85%;
   min-width: 85%;
   justify-content: center;
+  z-index: 3;
+  pointer-events: none;
 }
 @media screen and (max-width: 1280px) {
   .chat-bottoms-wrapper {
