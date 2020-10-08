@@ -33,5 +33,5 @@ echo "> Now Nginx proxies to ${TARGET_PORT}."
 sudo service nginx reload
 echo "> Nginx reloaded."
 
-sudo fuser -k -n tcp ${CURRENT_PORT}
-echo "> Current Port Killed."
+curl -s ${TARGET_URL}:${CURRENT_PORT}/chat/messages/savePersistently
+echo "> Save chat messages persistently."

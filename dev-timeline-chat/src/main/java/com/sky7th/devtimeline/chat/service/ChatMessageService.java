@@ -60,13 +60,13 @@ public class ChatMessageService {
     MessageCounter.count();
 
     if (MessageCounter.isOverLimit()) {
-      savePermanentlyAllMessageInMemory();
+      savePersistentlyAllMessageInMemory();
     }
 
     return savedChatMessage;
   }
 
-  public void savePermanentlyAllMessageInMemory() {
+  public void savePersistentlyAllMessageInMemory() {
     List<ChatMessage> chatMessages = chatMessageRepository.findAll();
     onSaveMessagesEvent(new OnGenerateSaveMessagesEvent(chatMessages));
   }

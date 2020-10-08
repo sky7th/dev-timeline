@@ -45,6 +45,12 @@ public class ChatController {
     return ResponseEntity.ok(chatMessageService.findByRoomId(roomId, pageable, start));
   }
 
+  @GetMapping("/chat/messages/savePersistently")
+  public ResponseEntity<Void> savePersistently() {
+    chatMessageService.savePersistentlyAllMessageInMemory();
+    return ResponseEntity.ok().build();
+  }
+
   @GetMapping("/health")
   public ResponseEntity<Void> checkHealth() {
     return ResponseEntity.ok().build();
