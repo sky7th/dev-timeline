@@ -39,7 +39,7 @@ export default {
     this.changeScroll();
   },
   computed: {
-    ...mapGetters(['currentUser', 'token'])
+    ...mapGetters(['currentUser', 'token', 'isLogined'])
   },
   mounted() {
     this.messageElement = this.$refs.messageList;
@@ -69,7 +69,7 @@ export default {
     },
 
     isCurrentUser(msg) {
-      return msg.sender != null && this.currentUser.id === msg.sender.userId
+      return msg.sender != null && (this.isLogined && this.currentUser.id === msg.sender.userId);
     },
     
     convertDate(date) {
@@ -80,7 +80,7 @@ export default {
         pre = '오후';
         hour = String(Number(hour) - 12)
       }
-      if (hour.length == 2) {
+      if (hour.length == 2 && hour[0] === '0') {
         hour = hour.substr(1, 1);
       }
       return pre + ' ' + hour + ':' + min;
@@ -90,6 +90,9 @@ export default {
 </script>
 
 <style scoped>
+#message-list {
+  z-index: 1;
+}
 .message-item {
   display: flex;
   flex-direction: row;
@@ -155,6 +158,7 @@ li {
 .alert-message {
   justify-content: center;
 }
+
 ::-webkit-scrollbar { width: 3.2px; } /* 스크롤 바 */
 ::-webkit-scrollbar-track { background-color:#f7f7f7; } /* 스크롤 바 밑의 배경 */
 ::-webkit-scrollbar-thumb { background: #dadada; } /* 실질적 스크롤 바 */

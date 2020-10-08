@@ -6,7 +6,7 @@
       <span v-if="isClickedMyLike" class="logo-sub-name">보관함</span>
     </div>
     <SearchBar/>
-    <button v-if="token==null || token==='null' || token ===''" @click="login()" class="btn-login">
+    <button v-if="!isLogined" @click="login()" class="btn-login">
         <font-awesome-icon :icon="['fas', 'user']" class="user-icon"/>
     </button>
     <button v-else @click="onClick" class="btn-login">
@@ -26,7 +26,7 @@ export default {
     SearchBar
   },
   computed: {
-    ...mapGetters(['token', 'currentUser', 'isClickedClickMenu', 'isClickedMyLike'])
+    ...mapGetters(['token', 'currentUser', 'isClickedClickMenu', 'isClickedMyLike', 'isLogined'])
   },
   methods: {
     ...mapActions(['setToken', 'setCurrentUser', 'updateIsClickedClickMenu', 

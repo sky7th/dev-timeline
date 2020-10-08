@@ -53,7 +53,6 @@ export default {
   position: fixed;
   bottom: 80px;
   right: 0;
-  z-index: 2000;
   animation: fadeIn 0.3s ease-in-out;
 }
 .chat-button button {

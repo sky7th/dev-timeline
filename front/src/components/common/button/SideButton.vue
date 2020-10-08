@@ -20,7 +20,6 @@ export default {
 .side-button {
   position: fixed;
   right: 0;
-  z-index: 2000;
   animation: fadeIn 0.3s ease-in-out;
 }
 .side-button button {

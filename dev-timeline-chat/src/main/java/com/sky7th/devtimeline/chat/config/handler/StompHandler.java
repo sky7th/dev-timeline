@@ -50,7 +50,7 @@ public class StompHandler implements ChannelInterceptor {
         String sessionId = accessor.getSessionId();
         String token = getJwtFromAccessor(accessor);
 
-        if (command == CONNECT) {
+        if (isLogined(token) && command == CONNECT) {
             UserContext userContext = tokenProvider.getUserContextFromToken(token);
             chatUserService.save(sessionId, userContext);
             return message;
@@ -70,7 +70,7 @@ public class StompHandler implements ChannelInterceptor {
             return message;
         }
 
-        if (command == SUBSCRIBE || command == UNSUBSCRIBE) {
+        if (isLogined(token) && (command == SUBSCRIBE || command == UNSUBSCRIBE)) {
             ChatUser chatUser = chatUserService.findBySessionId(sessionId);
 
             if (command == SUBSCRIBE) {
@@ -91,7 +91,11 @@ public class StompHandler implements ChannelInterceptor {
     }
 
     private boolean isFinalDisconnect(String token, StompCommand command) {
-        return token == null && command == DISCONNECT;
+        return !isLogined(token) && command == DISCONNECT;
+    }
+
+    private boolean isLogined(String token) {
+        return token != null && !token.equals("null");
     }
 
     private boolean isOpenedMultipleBrowser(StompCommand command, ChatSession chatSession) {

@@ -3,7 +3,7 @@ spring:
 
   redis:
     host: localhost
-    port: 6380
+    port: 6379
 
   jwt:
     secret: 926D96C90030DD58429D2751AC1BDBBC
@@ -68,11 +68,9 @@ app:
       - myandroidapp://oauth2/redirect
       - myiosapp://oauth2/redirect
 
-logging:
-  level:
-    root: INFO
-    com.sky7th.devtimeline: DEBUG
-#    org.hibernate.SQL: DEBUG
-#    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
-  file:
-    path: C://logs/spring-boot-log/dev-timeline-api
+#logging:
+#  level:
+#    root: INFO
+#    dev-timeline-chat: DEBUG
+#  file:
+#    path: C://logs/spring-boot-log/dev-timeline-chat

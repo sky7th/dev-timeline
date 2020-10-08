@@ -17,7 +17,7 @@
             {{name}} 
           </div>
           <div class="bottom">
-            <div class="user-count" v-if="isEntered(id)">
+            <div class="user-count" v-if="isEntered(id) && isLogined">
               채팅 중
             </div>
             <div class="user-count" v-else>
@@ -37,16 +37,12 @@ import notification from '../../libs/notification';
 
 export default {
   computed: {
-    ...mapGetters(['chatRooms', 'isOnChatRooms', 'selectedChatRooms', 'currentUser'])
+    ...mapGetters(['chatRooms', 'isOnChatRooms', 'selectedChatRooms', 'currentUser', 'isLogined'])
   },
   methods: {    
     ...mapActions(['insertSelectedChatRooms', 'updateChatRooms', 'updateIsOnChatRooms']),
 
     enter(id) {
-      if (this.currentUser == null || this.currentUser == undefined) {
-        notification.warn('로그인 후 이용 가능합니다.');
-        return;
-      }
       if (this.selectedChatRooms.length === 6) {
         notification.warn('채팅방은 6개까지 열 수 있습니다.');
         return;
@@ -133,7 +129,6 @@ export default {
   height: 100%;
   background-color: #fff;
   transition: all 600ms cubic-bezier(0.36, 0, 0.07, 1);
-  z-index: 2000;
 }
 .chat-rooms-hidden {
   margin-right: -350px;

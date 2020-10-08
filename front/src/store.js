@@ -68,6 +68,7 @@ export default new Vuex.Store({
       reconnect: 0,
       subscribeObject: null
     },
+    isLogined: false
   },
   getters: {
     token: state => state.token,
@@ -94,6 +95,7 @@ export default new Vuex.Store({
     isClickedMyLike: state => state.isClickedMyLike,
     isOnChatRooms: state => state.isOnChatRooms,
     chatConnect: state => state.chatConnect,
+    isLogined: state => state.token !== null && state.token !== 'null' && state.token !== ''
   },
   mutations: {
     setToken(state, accessToken) {

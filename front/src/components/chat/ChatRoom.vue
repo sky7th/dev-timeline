@@ -2,16 +2,26 @@
   <div class="chat-room" v-cloak>
     <button class="btn-close" @click="unsubscribe">x</button>
     <ChatMessageList :messages="messages" @scrollDown="scrollDown" ref="messageList" />
-    <div class="no-connect-wrapper" v-if="!chatConnect.connected">
+    <div class="no-connect-wrapper" v-if="!isFirstConnect && !chatConnect.connected">
       <div class="no-connect-message">연결되지 않았습니다.</div>
       <div class="re-connect" @click="initChatConnect(room.id)">다시 연결</div>
     </div>
-    <div class="bottom">
+    <div class="loading-wrapper">
+        <img src="../../assets/images/loading.gif" class="loading"/>
+    </div>
+    <div class="bottom" v-if="isLogined">
       <textarea type="text" class="form-text" placeholder="내용을 입력해주세요..."
         v-model="message" 
         v-on:keydown.enter="sendMessage">
       </textarea>
       <button class="btn-send" type="button" @click="sendMessage">전송</button>
+    </div>
+    <div class="bottom" v-else>
+      <textarea type="text" class="form-text" placeholder="로그인 후에 채팅방 입장이 가능합니다."
+        v-model="message" 
+        v-on:keydown.enter="sendMessage" disabled>
+      </textarea>
+      <button class="btn-send" type="button" @click="login">로그인</button>
     </div>
   </div>
 </template>
@@ -45,7 +55,8 @@ export default {
       messages: [],
       subscribeObject: null,
       page: 0,
-      start: 0
+      start: 0,
+      isFirstConnect: true
     }
   },
   mounted() {
@@ -54,7 +65,7 @@ export default {
     this.subscribe(this.room.id);
   },
   computed: {
-    ...mapGetters(['currentUser', 'token', 'currentUser', 'chatConnect', 'selectedChatRooms']),
+    ...mapGetters(['currentUser', 'token', 'currentUser', 'chatConnect', 'selectedChatRooms', 'isLogined']),
     isConnected: function () {
       return this.chatConnect.connected;
     },
@@ -67,7 +78,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['removeSelectedChatRoom', 'updateChatConnect']),
+    ...mapActions(['removeSelectedChatRoom', 'updateChatConnect', 'updateModalContent', 'onModalState']),
     sendMessage(event) {
       event.preventDefault();
       if (event.keyCode == 13 && event.shiftKey) {
@@ -123,6 +134,10 @@ export default {
     },
 
     initChatConnect() {
+      let loadingElement = document.querySelector('.loading');
+      loadingElement.style.display = 'block';
+      loadingElement.style.visibility = 'visible';
+
       const sock = new SockJS(`${process.env.VUE_APP_CHAT_API}/ws-stomp`);
       this.updateChatConnect({
         connected: false,
@@ -133,6 +148,9 @@ export default {
 
       this.chatConnect.ws.connect({}, () => {
         this.chatConnect.connected = true;
+        this.isFirstConnect = false;
+        loadingElement.style.visibility = 'hidden';
+
       }, this.connectFailCallback);
     },
 
@@ -154,7 +172,7 @@ export default {
               notification.warn('최근 채팅 목록을 불러오지 못했습니다.');
           });
 
-        this.insertMessages(true);
+        await this.insertMessages(true);
         this.scrollDown(true);
 
         this.subscribeObject = this.chatConnect.ws.subscribe(`/sub/chat/rooms/${roomId}`, (message) => {
@@ -221,7 +239,12 @@ export default {
       if (isForce || Math.abs(element.scrollTop + element.clientHeight - element.scrollHeight) < 300) {
         element.scrollTop = element.scrollHeight;
       }
-    }
+    },
+
+    login() {
+      this.updateModalContent('LOGIN');
+      this.onModalState();
+    },
   }
 }
 </script>
@@ -238,6 +261,7 @@ export default {
   border-radius: 3px;
   box-shadow: 0 1px 2px 0 rgba(9,30,66,0.25), 0 0 1px 0 rgba(9,30,66,0.31);
   transition: all 600ms cubic-bezier(0.36, 0, 0.07, 1);
+  z-index: 0;
 }
 .btn-close {
   position: absolute;
@@ -267,6 +291,9 @@ export default {
   font-size: 13px;
   flex: 6;
 }
+.bottom .form-text::placeholder {
+  line-height: 160%;
+}
 .bottom .btn-send {
   flex: 1;
   background-color: #fafafa;
@@ -281,7 +308,7 @@ export default {
 }
 .no-connect-wrapper {
   position: absolute;
-  width: 100%;
+  width: 98%;
   height: 100%;
   background-color: white;
   display: flex;
@@ -307,6 +334,21 @@ export default {
 }
 .no-user-name {
   display: none;
+}
+.loading-wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  position: absolute;
+  width: 100%;
+  height: 90%;
+}
+.loading {
+    display: none;
+    height: 50px;
+    margin-top: -10px;
 }
 
 @media screen and (max-width: 480px) {

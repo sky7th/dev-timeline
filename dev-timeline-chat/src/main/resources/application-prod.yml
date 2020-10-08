@@ -60,6 +60,6 @@ server:
 logging:
   level:
     root: INFO
-    dev-timeline-api: DEBUG
+    dev-timeline-chat: DEBUG
   file:
     path: /home/github-actions/dev-timeline-chat/log
