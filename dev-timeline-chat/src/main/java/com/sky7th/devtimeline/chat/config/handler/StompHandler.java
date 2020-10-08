@@ -2,6 +2,7 @@ package com.sky7th.devtimeline.chat.config.handler;
 
 import static org.springframework.messaging.simp.stomp.StompCommand.CONNECT;
 import static org.springframework.messaging.simp.stomp.StompCommand.DISCONNECT;
+import static org.springframework.messaging.simp.stomp.StompCommand.SEND;
 import static org.springframework.messaging.simp.stomp.StompCommand.SUBSCRIBE;
 import static org.springframework.messaging.simp.stomp.StompCommand.UNSUBSCRIBE;
 
@@ -45,46 +46,40 @@ public class StompHandler implements ChannelInterceptor {
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
         final StompCommand command = accessor.getCommand();
-        String roomIdStr = accessor.getFirstNativeHeader(SUBSCRIBE_ID);
-        Long roomId = roomIdStr == null ? null : Long.parseLong(roomIdStr);
-        String sessionId = accessor.getSessionId();
         String token = getJwtFromAccessor(accessor);
 
-        if (isLogined(token) && command == CONNECT) {
+        if (isNormalDisconnect(token, command) || command == SUBSCRIBE) {
+            return message;
+        }
+
+        String sessionId = accessor.getSessionId();
+
+        if (isFinalDisconnect(token, command)) {
+            ChatUser chatUser = chatUserService.findBySessionId(sessionId);
+            chatUser.getChatRoomIds().forEach(_roomId -> {
+                pushMessage(command, _roomId, chatUser);
+            });
+            chatUserService.delete(sessionId);
+            return message;
+        }
+
+        if (!isLogined(token)) {
+            return message;
+        }
+
+        if (command == CONNECT) {
             UserContext userContext = tokenProvider.getUserContextFromToken(token);
             chatUserService.save(sessionId, userContext);
             return message;
         }
 
-        if (isFinalDisconnect(token, command)) {
-            ChatUser chatUser = chatUserService.findBySessionId(sessionId);
-            chatUser.getChatRoomIds().forEach(_roomId -> {
-                ChatSession chatSession = chatRoomService.exit(_roomId, chatUser);
-                int userCount = chatSessionService.countByRoomId(_roomId);
-                ChatMessage chatMessage = ChatMessage.exitMessage(chatUser, _roomId, userCount);
-                pushMessage(chatMessageService.save(chatMessage), command, chatSession);
-            });
+        String roomIdStr = accessor.getFirstNativeHeader(SUBSCRIBE_ID);
+        Long roomId = roomIdStr == null ? null : Long.parseLong(roomIdStr);
+        String type = accessor.getFirstNativeHeader("type");
+        ChatUser chatUser = chatUserService.findBySessionId(sessionId);
 
-            chatUserService.delete(sessionId);
-
-            return message;
-        }
-
-        if (isLogined(token) && (command == SUBSCRIBE || command == UNSUBSCRIBE)) {
-            ChatUser chatUser = chatUserService.findBySessionId(sessionId);
-
-            if (command == SUBSCRIBE) {
-                ChatSession chatSession = chatRoomService.enter(roomId, chatUser);
-                int userCount = chatSessionService.countByRoomId(roomId);
-                ChatMessage chatMessage = ChatMessage.enterMessage(chatUser, roomId, userCount);
-                pushMessage(chatMessageService.save(chatMessage), command, chatSession);
-            }
-            else {
-                ChatSession chatSession = chatRoomService.exit(roomId, chatUser);
-                int userCount = chatSessionService.countByRoomId(roomId);
-                ChatMessage chatMessage = ChatMessage.exitMessage(chatUser, roomId, userCount);
-                pushMessage(chatMessageService.save(chatMessage), command, chatSession);
-            }
+        if (command == UNSUBSCRIBE || isUserEnter(type, command)) {
+            pushMessage(command, roomId, chatUser);
         }
 
         return message;
@@ -94,12 +89,20 @@ public class StompHandler implements ChannelInterceptor {
         return !isLogined(token) && command == DISCONNECT;
     }
 
+    private boolean isNormalDisconnect(String token, StompCommand command) {
+        return isLogined(token) && command == DISCONNECT;
+    }
+
     private boolean isLogined(String token) {
         return token != null && !token.equals("null");
     }
 
+    private boolean isUserEnter(String type, StompCommand command) {
+        return type != null && type.equals(MessageType.ENTER.name()) && command == SEND;
+    }
+
     private boolean isOpenedMultipleBrowser(StompCommand command, ChatSession chatSession) {
-        if (command == SUBSCRIBE) {
+        if (command == SEND) {
             return chatSession.getSessionIds().size() > 1;
         }
         else {
@@ -117,10 +120,24 @@ public class StompHandler implements ChannelInterceptor {
         return null;
     }
 
-    private void pushMessage(ChatMessage chatMessage, StompCommand command, ChatSession chatSession) {
+    private void pushMessage(StompCommand command, Long roomId, ChatUser chatUser) {
+        int userCount;
+        ChatSession chatSession;
+        ChatMessage chatMessage;
+
+        if (command == UNSUBSCRIBE || command == DISCONNECT) {
+            chatSession = chatRoomService.exit(roomId, chatUser);
+            userCount = chatSessionService.countByRoomId(roomId);
+            chatMessage = ChatMessage.exitMessage(chatUser, roomId, userCount);
+        } else {
+            chatSession = chatRoomService.enter(roomId, chatUser);
+            userCount = chatSessionService.countByRoomId(roomId);
+            chatMessage = ChatMessage.enterMessage(chatUser, roomId, userCount);
+        }
+
         if (isOpenedMultipleBrowser(command, chatSession)) {
             chatMessage.setType(MessageType.MULTIPLE);
         }
-        applicationEventPublisher.publishEvent(new OnGeneratePushMessageEvent(chatMessage));
+        applicationEventPublisher.publishEvent(new OnGeneratePushMessageEvent(chatMessageService.save(chatMessage)));
     }
 }

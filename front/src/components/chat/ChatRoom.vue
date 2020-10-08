@@ -98,13 +98,21 @@ export default {
         return;
       }
 
-      this.chatConnect.ws.send(`/pub/chat/rooms/messages`, {}, JSON.stringify({
-        type:'TALK', 
-        sender: { userId: this.currentUser.id, name: this.currentUser.name, imageUrl: this.currentUser.imageUrl },
-        message: this.message, 
+      this.pushMessage('TALK', this.gerSender(), this.message);
+      this.message = '';
+    },
+
+    pushMessage(type, sender, message, headers={}) {
+      this.chatConnect.ws.send(`/pub/chat/rooms/messages`, headers, JSON.stringify({
+        type: type, 
+        sender: sender,
+        message: message, 
         roomId: this.room.id
       }));
-      this.message = '';
+    },
+
+    gerSender() {
+      return { userId: this.currentUser.id, name: this.currentUser.name, imageUrl: this.currentUser.imageUrl };
     },
 
     recvMessage(recv) {
@@ -133,10 +141,19 @@ export default {
       }
     },
 
-    initChatConnect() {
+    startSpinner() {
       let loadingElement = document.querySelector('.loading');
       loadingElement.style.display = 'block';
       loadingElement.style.visibility = 'visible';
+    },
+
+    stopSpinner() {
+      let loadingElement = document.querySelector('.loading');
+      loadingElement.style.visibility = 'hidden';
+    },
+
+    initChatConnect() {
+      this.startSpinner();
 
       const sock = new SockJS(`${process.env.VUE_APP_CHAT_API}/ws-stomp`);
       this.updateChatConnect({
@@ -149,7 +166,7 @@ export default {
       this.chatConnect.ws.connect({}, () => {
         this.chatConnect.connected = true;
         this.isFirstConnect = false;
-        loadingElement.style.visibility = 'hidden';
+        this.stopSpinner();
 
       }, this.connectFailCallback);
     },
@@ -164,6 +181,8 @@ export default {
       this.initChat();
 
       return async () => {
+        this.startSpinner();
+
         await this.axios.get(`${process.env.VUE_APP_CHAT_API}/chat/rooms/${roomId}/messages/first`)
           .then(({ data }) => {
             this.recvMessages(data);
@@ -175,10 +194,13 @@ export default {
         await this.insertMessages(true);
         this.scrollDown(true);
 
-        this.subscribeObject = this.chatConnect.ws.subscribe(`/sub/chat/rooms/${roomId}`, (message) => {
+        this.subscribeObject = await this.chatConnect.ws.subscribe(`/sub/chat/rooms/${roomId}`, (message) => {
           var recv = JSON.parse(message.body);
           this.recvMessage(recv);
         }, { id: roomId });
+
+        this.pushMessage('ENTER', null, '', { type: 'ENTER', id: this.room.id });
+        this.stopSpinner();
       }
     },
 

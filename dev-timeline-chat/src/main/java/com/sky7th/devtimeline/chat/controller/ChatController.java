@@ -4,6 +4,7 @@ import com.sky7th.devtimeline.chat.service.ChatMessageService;
 import com.sky7th.devtimeline.chat.service.ChatPubSubService;
 import com.sky7th.devtimeline.chat.service.dto.ChatMessageRequestDto;
 import com.sky7th.devtimeline.chat.service.dto.ChatMessageResponseDto;
+import com.sky7th.devtimeline.core.domain.chattingMessage.domain.ChattingMessage.MessageType;
 import com.sky7th.devtimeline.core.domain.chattingMessage.dto.ChattingMessageResponseDtos;
 import com.sky7th.devtimeline.core.domain.chattingMessage.service.ChattingMessageInternalService;
 import java.util.List;
@@ -27,7 +28,9 @@ public class ChatController {
 
   @MessageMapping("/chat/rooms/messages")
   public void pushMessage(ChatMessageRequestDto requestDto) {
-    chatPubSubService.publish(chatMessageService.save(requestDto));
+    if (requestDto.getType() != MessageType.ENTER) {
+      chatPubSubService.publish(chatMessageService.save(requestDto));
+    }
   }
 
   @GetMapping("/chat/rooms/{roomId}/messages/first")

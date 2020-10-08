@@ -29,4 +29,10 @@ public class ChatRoomController {
   public void deleteRoom(@PathVariable Long roomId) {
     chatPubSubService.deleteRoom(roomId);
   }
+
+  @GetMapping("/rooms/init")
+  public ResponseEntity<Void> init() {
+    chatPubSubService.init();
+    return ResponseEntity.ok().build();
+  }
 }
