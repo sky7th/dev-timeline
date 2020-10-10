@@ -22,6 +22,11 @@ public class UserInternalService {
     return userRepository.findById(id).orElseThrow(NotFoundUserException::new);
   }
 
+  @Transactional(readOnly = true)
+  public User findByEmail(String email) {
+    return userRepository.findByEmail(email).orElseThrow(NotFoundUserException::new);
+  }
+
   public User save(SignUpRequestDto requestDto, String encodedPassword) {
     if(userRepository.existsByEmail(requestDto.getEmail())) {
       throw new UserAlreadyInUseException();

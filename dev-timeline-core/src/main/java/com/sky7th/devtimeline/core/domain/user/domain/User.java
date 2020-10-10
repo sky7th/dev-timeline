@@ -4,11 +4,22 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sky7th.devtimeline.core.domain.common.BaseTimeEntity;
 import com.sky7th.devtimeline.core.domain.user.AuthProvider;
 import com.sky7th.devtimeline.core.domain.user.UserRole;
+import com.sky7th.devtimeline.core.domain.user.exception.AlreadyEmailVerifiedException;
 import com.sun.istack.NotNull;
-import lombok.*;
-//import javax.validation.constraints.Email;
-
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -52,6 +63,9 @@ public class User extends BaseTimeEntity {
 
     private String providerId;
 
+    @Column(nullable = false)
+    private Boolean active = true;
+
     public User(User user) {
         this.id = user.getId();
         this.userRole = user.getUserRole();
@@ -62,9 +76,17 @@ public class User extends BaseTimeEntity {
         this.password = user.getPassword();
         this.provider = user.getProvider();
         this.providerId = user.getProviderId();
+        this.active = user.getActive();
     }
 
     public User(Long id) {
         this.id = id;
+    }
+
+    public void emailVerify() {
+        if (this.emailVerified) {
+            throw new AlreadyEmailVerifiedException();
+        }
+        this.emailVerified = true;
     }
 }

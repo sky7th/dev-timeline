@@ -31,6 +31,7 @@ public class SignUpRequestDto {
             .provider(AuthProvider.local)
             .userRole(UserRole.USER)
             .imageUrl(User.DEFAULT_USER_IMAGE_URL)
+            .active(true)
             .build();
     }
 }
