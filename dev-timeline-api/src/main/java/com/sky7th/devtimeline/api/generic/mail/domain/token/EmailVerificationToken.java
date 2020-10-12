@@ -6,6 +6,7 @@ import java.time.Instant;
 import javax.persistence.Id;
 import lombok.Getter;
 import org.springframework.data.redis.core.RedisHash;
+import org.springframework.data.redis.core.index.Indexed;
 
 @Getter
 @RedisHash(value = "email_verification_token", timeToLive = 1800)
@@ -13,6 +14,7 @@ public class EmailVerificationToken implements Serializable {
 
   @Id
   private String id;
+  @Indexed
   private Long userId;
   private Instant expiryDate;
 

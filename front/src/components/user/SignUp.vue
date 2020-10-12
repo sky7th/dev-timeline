@@ -10,12 +10,13 @@
                 <input type="email" name="email"
                         class="form" placeholder="이메일"
                         v-model="user.email" ref="emailInput"/>
+                <div class="default-message">인증을 위한 이메일이 발송됩니다.</div>
                 <div class="check-message" ref="emailMessage"></div>
                 <input type="password" name="password"
                         class="form" placeholder="비밀번호"
                         v-model="user.password" ref="passwordInput"/>
-                <div class="check-message" ref="passwordMessage"></div>
-                <div class="default-message">비밀번호는 문자, 숫자, 특수 문자 각각 하나씩 포함, 최소 6자리</div>
+                <div class="default-message">비밀번호는 문자, 숫자, 특수 문자 하나씩 포함, 최소 6자리</div>
+                <div class="check-message password-check-message" ref="passwordMessage"></div>
                 <button type="submit" class="btn-signup">회원가입</button>
             </form>
             <span class="signup-link" @click="updateModalContent('LOGIN')">로그인하러 가기</span>
@@ -43,7 +44,7 @@ export default {
       inputElement: this.$refs.emailInput,
       messageElement: this.$refs.emailMessage
     }
-    const regEmail = /^[-A-Za-z0-9_]+[-A-Za-z0-9_.]*[@]{1}[-A-Za-z0-9_]+[-A-Za-z0-9_.]*[.]{1}[A-Za-z]{1,5}$/g;
+    const regEmail = /([\w-.]+)@((\[[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.)|(([\w-]+.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
     this.checkEmailForm(this.emailInfo, regEmail, state => this.loadCheckMessage(this.emailInfo, state, '올바른 형식의 이메일 입니다.', '올바른 형식의 이메일이 아닙니다.'));
 
     this.passwordInfo = {
@@ -81,6 +82,7 @@ export default {
       this.axios.post('/auth/signup', this.user)
       .then(() => {
         notification.success('회원가입을 완료했습니다.', () => {
+          alert('인증 이메일이 발송되었습니다.');
           this.updateModalContent('LOGIN')
         });
       })
@@ -180,12 +182,16 @@ input::placeholder {
 }
 .check-message {
   font-size: 12px;
-  margin-bottom: 10px;
   margin-top: -6px;
+  margin-bottom: 16px;
 }
 .default-message {
   font-size: 12px;
   color: #888;
-  margin-bottom: 25px;
+  margin-bottom: 17px;
+  margin-top: -6px;
+}
+.password-check-message {
+  margin-bottom: 20px;
 }
 </style>

@@ -1,6 +1,7 @@
 package com.sky7th.devtimeline.api.user;
 
 import com.sky7th.devtimeline.core.domain.user.domain.User;
+import com.sky7th.devtimeline.core.domain.user.exception.NotEmailVerifiedException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
@@ -54,6 +55,9 @@ public class CustomUserDetails extends User implements UserDetails, OAuth2User {
 
     @Override
     public boolean isAccountNonLocked() {
+        if (!super.getEmailVerified()) {
+            throw new NotEmailVerifiedException();
+        }
         return true;
     }
 

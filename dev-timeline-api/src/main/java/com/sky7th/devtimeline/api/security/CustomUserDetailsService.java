@@ -1,9 +1,7 @@
 package com.sky7th.devtimeline.api.security;
 
 import com.sky7th.devtimeline.api.user.CustomUserDetails;
-import com.sky7th.devtimeline.core.domain.user.domain.User;
-import com.sky7th.devtimeline.core.domain.user.domain.UserRepository;
-import com.sky7th.devtimeline.api.security.exception.ResourceNotFoundException;
+import com.sky7th.devtimeline.core.domain.user.service.UserInternalService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -15,26 +13,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final UserRepository userRepository;
+    private final UserInternalService userInternalService;
 
     @Override
     @Transactional
-    public UserDetails loadUserByUsername(String email)
-            throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() ->
-                        new UsernameNotFoundException("가입된 이메일이 아닙니다 : " + email)
-                );
-        return new CustomUserDetails(user);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        return new CustomUserDetails(userInternalService.findByEmail(email));
     }
-
-    @Transactional
-    public UserDetails loadUserById(Long id) {
-        User user = userRepository.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("User", "id", id)
-        );
-
-        return new CustomUserDetails(user);
-    }
-
 }

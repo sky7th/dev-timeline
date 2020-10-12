@@ -9,7 +9,7 @@
 <script>
   var message = "${message?js_string}";
   alert(message);
-  history.back();
+  window.close();
 </script>
 </body>
 </html>

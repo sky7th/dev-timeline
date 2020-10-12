@@ -141,7 +141,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/api/v1/likes/**",
                         "/api/v1/companies/**")
                         .permitAll()
-                    .antMatchers("/auth/**", "/oauth2/**", "/login**", "/health")
+                    .antMatchers("/auth/**", "/auth**", "/oauth2/**", "/login**", "/health")
                         .permitAll()
                     .anyRequest()
                         .authenticated()

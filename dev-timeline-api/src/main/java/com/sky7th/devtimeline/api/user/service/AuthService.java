@@ -3,6 +3,7 @@ package com.sky7th.devtimeline.api.user.service;
 import com.sky7th.devtimeline.api.generic.mail.domain.token.EmailVerificationToken;
 import com.sky7th.devtimeline.api.generic.mail.domain.token.EmailVerificationTokenService;
 import com.sky7th.devtimeline.api.generic.mail.event.OnGenerateEmailVerificationEvent;
+import com.sky7th.devtimeline.api.generic.mail.exception.OverSendEmailLimitException;
 import com.sky7th.devtimeline.api.security.TokenProvider;
 import com.sky7th.devtimeline.api.security.exception.UserLoginException;
 import com.sky7th.devtimeline.api.user.CustomUserDetails;
@@ -24,6 +25,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -56,12 +58,13 @@ public class AuthService {
     return new AuthResponseDto(tokenProvider.createToken(customUserDetails));
   }
 
+  @Transactional
   public UserDetailResponseDto register(SignUpRequestDto requestDto) {
     String encodedPassword = passwordEncoder.encode(requestDto.getPassword());
     User user = userInternalService.save(requestDto, encodedPassword);
     sendVerificationEmail(user);
 
-    return UserDetailResponseDto.of(userInternalService.save(requestDto, encodedPassword));
+    return UserDetailResponseDto.of(user);
   }
 
   private void sendVerificationEmail(User user) {
@@ -70,6 +73,7 @@ public class AuthService {
     applicationEventPublisher.publishEvent(onGenerateEmailVerificationEvent);
   }
 
+  @Transactional
   public String emailVerify(String key) {
     try {
       EmailVerificationToken token = emailVerificationTokenService.findById(key);
@@ -87,6 +91,10 @@ public class AuthService {
   public void resendVerificationEmail(LoginRequestDto loginRequestDto) {
     User user = userInternalService.findByEmail(loginRequestDto.getEmail());
     validateUser(user, loginRequestDto.getPassword());
+
+    if (emailVerificationTokenService.isOverEmailRequestLimit(user.getId())) {
+      throw new OverSendEmailLimitException();
+    }
 
     sendVerificationEmail(user);
   }

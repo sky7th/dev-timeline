@@ -10,6 +10,7 @@
               <input type="password" name="password"
                       class="form" placeholder="비밀번호"
                       v-model="user.password"/>
+              <div ref="resendEmailButton" class="resend-email" style="display: none;" @click="resendEmail()">인증 이메일 재발송</div>
               <button type="submit" class="btn-login">로그인</button>
           </form>
           <span class="signup-link" @click="updateModalContent('SIGNUP')">회원가입</span>
@@ -43,6 +44,9 @@ export default {
       password: '',
     }
   }),
+  mounted() {
+    this.resendEmailButton = this.$refs.resendEmailButton;
+  },
   methods: {
     ...mapActions(['updateModalContent']),
     async login() {
@@ -64,14 +68,33 @@ export default {
       })
       .catch(err => {
         if (err.response.data.message === 'Bad credentials') 
-          notification.warn('이메일 혹은 비밀번호가 옳지 않습니다.')
-        else {
-          notification.warn('비어있는 항목이 존재합니다.')
+          notification.warn('비밀번호가 일치하지 않습니다.')
+        else if (err.response.data.message === '이메일 인증이 완료되지 않았습니다.') {
+          notification.warn(err.response.data.message)
+          this.resendEmailButton.style.display = 'block';
+        } else {
+          notification.warn(err.response.data.message)
         }
       })
     },
+
     getOauthUrl(platfrom) {
       return `${process.env.VUE_APP_API}/oauth2/authorize/${platfrom}?redirect_uri=${process.env.VUE_APP_ORIGIN}${process.env.VUE_APP_OAUTH2_REDIRECT_URI}`
+    },
+
+    resendEmail() {
+      this.axios.post('/auth/resend/verification-email', this.user)
+      .then(() => {
+          notification.success('인증 이메일이 발송되었습니다.', () => {
+        });
+      })
+      .catch(err => {
+        if (err.response.data.message === 'Bad credentials') 
+          notification.warn('비밀번호가 일치하지 않습니다.')
+        else {
+          notification.warn(err.response.data.message)
+        }
+      })
     }
   }
 }
@@ -198,5 +221,16 @@ export default {
 }
 input::placeholder {
   font-size: 14px;
+}
+.resend-email {
+  display: block;
+  width: 100%;
+  text-align: end;
+  font-size: 13px;
+  margin-bottom: 9px;
+  margin-top: -5px;
+  color: cornflowerblue;
+  font-weight: bold;
+  cursor: pointer;
 }
 </style>

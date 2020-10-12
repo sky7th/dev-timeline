@@ -19,7 +19,6 @@ import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 public class MailService {
 
     private final JavaMailSender mailSender;
-
     private final Configuration templateConfiguration;
 
     @Value("${app.velocity.templates.location}")
