@@ -1,8 +1,8 @@
 <template>
   <div class="tech-posts">
     <CompanyList/>
-    <CountBar/>
     <div class="filter-button">
+      <CountBar/>
       <div class="filter-button-wrapper">
         <FilterButton :typeMap=orderTypeMap :type=sortOrder :updateType=updateSortOrder />  
       </div> 
@@ -44,16 +44,16 @@
           </a>
           <NewIcon :date="sortDate" :period="4" class="new-icon"/>
         </li>
+        <infinite-loading class="infinite-message" @infinite="handlerInfinite" ref="infiniteLoading" spinner="waveDots">
+          <div slot="no-more">
+            <ScrollUp/>
+          </div>
+          <div slot="no-results">
+            <ScrollUp/>
+          </div>
+        </infinite-loading>
       </ul>
     </div>
-    <infinite-loading class="infinite-message" @infinite="handlerInfinite" ref="infiniteLoading" spinner="waveDots">
-      <div slot="no-more">
-        <ScrollUp/>
-      </div>
-      <div slot="no-results">
-        <ScrollUp/>
-      </div>
-    </infinite-loading>
   </div>
 </template>
 
@@ -66,6 +66,7 @@ import { mapGetters, mapActions } from "vuex";
 import { timeForToday } from '@/utils/time';
 import InfiniteLoading from 'vue-infinite-loading';
 import FilterButton from '@/components/sortButton/FilterButton'
+import ScrollUp from '@/components/common/ScrollUp'
 
 export default {
   components: {
@@ -74,7 +75,8 @@ export default {
     Like,
     NewIcon,
     InfiniteLoading,
-    FilterButton
+    FilterButton,
+    ScrollUp
   },
   data: () => ({
       orderTypeMap: {
@@ -109,14 +111,22 @@ export default {
 .content-container {
   text-align: center;
   display: flex;
-  flex-direction: row;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  overflow-y: scroll;
+  height: 100%;
+  width: 100%;
+}
+
+.tech-posts {
+  height: 100%;
 }
 
 .tech-posts ul {
   text-align: center;
-  padding: 10px 10px;
-  width: 1200px;
+  padding: 5px 10px 200px 10px;
+  max-width: 1200px;
+  width: 100%;
 }
 .tech-posts ul li {
   display: inline-flex;
@@ -191,13 +201,14 @@ export default {
 }
 .author {
   margin-right: 15px;
-  font-size: 14px;
+  font-size: 13px;
 }
 .between {
-  margin-right: 10px;
+  margin-right: 13px;
+  font-size: 12px;
 }
 .date {
-  font-size: 14px;
+  font-size: 13px;
 }
 .right {
   display: flex;
@@ -238,19 +249,18 @@ export default {
   display: flex;
   flex-direction: row;
   justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
 }
 .filter-button-wrapper {
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
   text-align: center;
-  padding: 10px 20px 0 20px;
+  padding: 0px 20px 0px 20px;
   width: 1170px;
 }
 @media screen and (max-width: 480px) {
-    .tech-posts ul {
-        padding: 15px 10px;
-    }
     .tech-posts ul li {
         width: 95%;
         margin: 0 0 10px 0;

@@ -30,11 +30,12 @@ export default {
     ...mapGetters(['selectedMenu'])
   },
   methods: {
-    ...mapActions(['resetAll', 'updateSelectedMenu']),
+    ...mapActions(['resetAll', 'updateSelectedMenu', 'updateIsOnChatRooms']),
     handleUpdateSelectedMenu(val) {
       this.resetAll();
       this.updateSelectedMenu({ selectedMenu: val });
       this.closeMenuBars();
+      this.updateIsOnChatRooms(false);
     },
     closeMenuBars() {
         document.querySelector('#toggle').checked = false;

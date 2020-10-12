@@ -130,6 +130,7 @@ export default {
   background-color: #fff;
   transition: all 600ms cubic-bezier(0.36, 0, 0.07, 1);
   z-index: 1;
+  overflow-y: scroll;
 }
 .chat-rooms-hidden {
   margin-right: -350px;

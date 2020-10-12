@@ -23,8 +23,8 @@ export default {
   position: absolute;
   color: red;
   font-size: 10px;
-  left: 6px;
-  top: -4px;
+  left: 8px;
+  top: -2px;
   animation: twinkle 1s ease-in-out;
   animation-iteration-count: 9999;
   font-weight: bold;

@@ -13,8 +13,7 @@
           :class="{ 'user-me-message': isCurrentUser(msg)}"
         >
           <div 
-            :class="{ 'notice-message': isNoticeMessage(msg) }" 
-            class="user-message">{{ msg.message }}</div>
+            :class="{ 'notice-message': isNoticeMessage(msg), 'user-message': !isNoticeMessage(msg) }">{{ msg.message }}</div>
           <div v-if="!isNoticeMessage(msg)" class="date">{{ convertDate(msg.createdDate) }}</div>
         </div>
       </div>
@@ -133,6 +132,16 @@ li {
   text-align: center;
   background-color: white;
   font-size: 12px;
+}
+.alert-message {
+  margin-top: 23px;
+}
+.alert-message + .alert-message {
+  margin-top: 14px;
+  margin-bottom: 16px;
+}
+.message-item:nth-child(1) {
+  margin-top: 8px;
 }
 .user-me {
   align-items: flex-start;

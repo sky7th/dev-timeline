@@ -13,7 +13,7 @@ faLibrary.add(faHandPointUp)
 export default {
   methods: {
     scrollUp() {
-      window.scrollTo(0,0)
+      document.querySelector('.content-container').scrollTo(0,0)
     }
   }
 }

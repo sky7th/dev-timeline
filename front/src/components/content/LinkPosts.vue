@@ -1,8 +1,8 @@
 <template>
   <div class="link-posts">
     <FixedTagBar/>
-    <CountBar style="margin-bottom: 11px;"/>
     <div class="filter-button">
+      <CountBar/>
       <div class="filter-button-wrapper">
         <FilterButton v-if="this.isClickedMyLike" :typeMap=filterTypeMap :type=filterType :updateType=updateFilterType />
         <FilterButton :typeMap=orderTypeMap :type=sortOrder :updateType=updateSortOrder />    
@@ -51,16 +51,16 @@
           </div>
           <NewIcon :date="createdDate" :period="2" class="new-icon"/>
         </li>
+        <infinite-loading class="infinite-message" @infinite="handlerInfinite" ref="infiniteLoading"  spinner="waveDots">
+          <div slot="no-more">
+            <ScrollUp/>
+          </div>
+          <div slot="no-results">
+            <ScrollUp/>
+          </div>
+        </infinite-loading>
       </ul>
     </div>
-    <infinite-loading class="infinite-message" @infinite="handlerInfinite" ref="infiniteLoading"  spinner="waveDots">
-        <div slot="no-more">
-          <ScrollUp/>
-        </div>
-        <div slot="no-results">
-          <ScrollUp/>
-        </div>
-      </infinite-loading>
   </div>
 </template>
 
@@ -141,10 +141,14 @@ export default {
 .content-container {
   text-align: center;
   display: flex;
-  flex-direction: row;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  overflow-y: scroll;
+  height: 100%;
+  width: 100%;
 }
 .link-posts {
+  height: 100%;
   animation: fadeIn 0.3s ease-in-out;
 }
 .link-posts .post-container {
@@ -159,8 +163,9 @@ export default {
 }
 .link-posts ul {
   text-align: center;
-  padding: 10px 20px;
-  width: 1200px;
+  padding: 5px 10px 200px 10px;
+  max-width: 1200px;
+  width: 100%;
 }
 .link-posts ul li {
   position: relative;
@@ -318,20 +323,21 @@ export default {
   text-align: center;
   display: flex;
   flex-direction: row;
+  align-items: center;
   justify-content: center;
+  margin-bottom: 10px;
 }
 .filter-button-wrapper {
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
   text-align: center;
-  padding: 10px 20px 0 20px;
+  padding: 0px 20px 0px 20px;
   width: 1125px;
 }
 @media screen and (max-width: 480px) {
     .link-posts ul {
-        padding: 10px 10px;
-        width: 100%;
+      width: 100%;
     }
     .link-posts ul li {
         width: 100%;

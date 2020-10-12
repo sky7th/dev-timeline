@@ -37,6 +37,7 @@ export default {
       this.updateCheckedCompanies({ checkedCompanies: this.checkedCompanies });
       this.resetOffset();
       this.updatePosts();
+      document.querySelector('.content-container').scrollTo(0,0)
     },
     selectedMenu() {
         this.findCompanyByUrlType();
@@ -66,7 +67,7 @@ export default {
 
 <style scoped>
 .company-list {
-  margin: 0px 30px 13px 30px;
+  margin: 0px 30px 10px 30px;
   padding: 22px 0 0px 0;
   border-bottom: 2px solid #dadada;
   animation: fadeIn 0.3s ease-in-out;
@@ -111,7 +112,7 @@ input[type=checkbox] + label {
 }
 @media screen and (max-width: 480px) {
   .company-list {
-    margin: 0px 10px 13px 10px;
+    margin: 0px 10px 10px 10px;
   }
   .company-list ul {
     height: 75px;

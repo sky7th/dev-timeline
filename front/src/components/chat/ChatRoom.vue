@@ -7,7 +7,7 @@
       <div class="re-connect" @click="initChatConnect(room.id)">다시 연결</div>
     </div>
     <div class="loading-wrapper">
-        <img src="../../assets/images/loading.gif" class="loading"/>
+        <img src="../../assets/images/loading.gif" class="loading" ref="spinner"/>
     </div>
     <div class="bottom" v-if="isLogined">
       <textarea type="text" class="form-text" placeholder="내용을 입력해주세요..."
@@ -61,6 +61,7 @@ export default {
   },
   mounted() {
     this.messageElement = this.$refs.messageList.$refs.messageList;
+    this.spinner = this.$refs.spinner;
     reverseScrollFetch(() => this.insertMessages(), this.messageElement);
     this.subscribe(this.room.id);
   },
@@ -142,14 +143,12 @@ export default {
     },
 
     startSpinner() {
-      let loadingElement = document.querySelector('.loading');
-      loadingElement.style.display = 'block';
-      loadingElement.style.visibility = 'visible';
+      this.spinner.style.display = 'block';
+      this.spinner.style.visibility = 'visible';
     },
 
     stopSpinner() {
-      let loadingElement = document.querySelector('.loading');
-      loadingElement.style.visibility = 'hidden';
+      this.spinner.style.visibility = 'hidden';
     },
 
     initChatConnect() {
@@ -189,22 +188,22 @@ export default {
 
           }).catch(() => {
               notification.warn('최근 채팅 목록을 불러오지 못했습니다.');
-          });
+          }).finally(() => this.stopSpinner());
 
         await this.insertMessages(true);
         this.scrollDown(true);
 
-        this.subscribeObject = await this.chatConnect.ws.subscribe(`/sub/chat/rooms/${roomId}`, (message) => {
+        this.subscribeObject = this.chatConnect.ws.subscribe(`/sub/chat/rooms/${roomId}`, (message) => {
           var recv = JSON.parse(message.body);
           this.recvMessage(recv);
         }, { id: roomId });
 
         this.pushMessage('ENTER', null, '', { type: 'ENTER', id: this.room.id });
-        this.stopSpinner();
       }
     },
 
     async insertMessages(isFirst=false) {
+      this.startSpinner();
       await this.axios.get(`${process.env.VUE_APP_CHAT_API}/chat/rooms/${this.room.id}/messages?start=${this.start}&page=${this.page}`)
         .then(({ data }) => {
           if (data.messages.length === 0) {
@@ -222,12 +221,13 @@ export default {
 
         }).catch(() => {
             notification.warn('과거 채팅 목록을 불러오지 못했습니다.');
-        });
+        }).finally(() => this.stopSpinner());
     },
 
     connectFailCallback() {
       this.chatConnect.connected = false;
       notification.warn('연결에 실패했습니다.');
+      this.stopSpinner();
     },
 
     unsubscribe() {
@@ -236,6 +236,10 @@ export default {
       }
 
       this.removeSelectedChatRoom(this.room.id);
+
+      if (this.subscribeObject == null) {
+        return;
+      }
 
       if (this.chatConnect.connected) {
         this.subscribeObject.unsubscribe(this.room.id, {});
@@ -302,7 +306,7 @@ export default {
   display: flex;
 }
 .bottom .form-text {
-  height: 52px;
+  height: 60px;
   border: 1.5px solid #dadada;
   border-radius: 4px;
   box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.2) inset;
@@ -369,14 +373,17 @@ export default {
   height: 90%;
 }
 .loading {
-    display: none;
-    height: 50px;
-    margin-top: -10px;
+  display: none;
+  height: 50px;
+  margin-top: -10px;
 }
 
 @media screen and (max-width: 480px) {
   .chat-room {
     height: 71vh;
+  }
+  .top {
+    height: 37px;
   }
 }
 

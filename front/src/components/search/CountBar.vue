@@ -1,6 +1,5 @@
 <template>
   <div class="count-bar">
-    <span v-if="isClickedMyLike">보관함에 </span>
     <span class="count">{{ postCounts }}</span>
     <span>{{ handlerCountDescription() }}</span>
   </div>
@@ -33,6 +32,7 @@ export default {
 <style scoped>
 .count-bar {
   text-align: center;
+  position: absolute;
   font-size: 13px;
   -webkit-animation: fadeIn 1s ease-in-out;
   animation: twinkle 1s ease-in-out;

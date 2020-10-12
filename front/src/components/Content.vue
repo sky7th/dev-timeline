@@ -74,9 +74,8 @@ export default {
 .content {
   height: auto;
   width: 100%;
-  height: auto;
-  min-height: 100%;
-  position: absolute;
+  height: 100%;
+  position: fixed;
   box-sizing: border-box;
   padding-left: 72px;
   padding-top: 57px;

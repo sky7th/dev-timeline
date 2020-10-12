@@ -1,8 +1,8 @@
 <template>
   <div class="recruit-posts">
     <CompanyList/>
-    <CountBar/>
     <div class="filter-button">
+      <CountBar/>
       <div class="filter-button-wrapper">
         <FilterButton :typeMap=orderTypeMap :type=sortOrder :updateType=updateSortOrder />  
       </div> 
@@ -28,23 +28,23 @@
           <Like :isLike="like" :postId="id" :likeCount="likeCount" class="like-wrapper"/>
           <a :href="contentUrl" target="_blank">
             <img class="logo" :src="company.logoUrl" alt="">
-              <div style="width: auto; flex: 1;">
+              <div>
                 <div class="date">{{ closingDate }}</div>
               </div>
             <div class="title">{{ title }}</div>
           </a>
           <NewIcon :date="sortDate" :period="5"/>
         </li>
+        <infinite-loading class="infinite-message" @infinite="handlerInfinite" ref="infiniteLoading" spinner="waveDots">
+          <div slot="no-more">
+            <ScrollUp/>
+          </div>
+          <div slot="no-results">
+            <ScrollUp/>
+          </div>
+        </infinite-loading>
       </ul>
     </div>
-    <infinite-loading class="infinite-message" @infinite="handlerInfinite" ref="infiniteLoading" spinner="waveDots">
-      <div slot="no-more">
-        <ScrollUp/>
-      </div>
-      <div slot="no-results">
-        <ScrollUp/>
-      </div>
-    </infinite-loading>
     </div>
 </template>
 
@@ -98,20 +98,27 @@ export default {
 .content-container {
   text-align: center;
   display: flex;
-  flex-direction: row;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  overflow-y: scroll;
+  height: 100%;
+  width: 100%;
+}
+.recruit-posts {
+  height: 100%;
 }
 .recruit-posts ul {
-  padding: 3px 20px;
+  padding: 5px 5px 200px 5px;
   text-align: center;
-  width: 1500px;
+  max-width: 1500px;
+  width: 100%;
 }
 .recruit-posts ul li {
   padding: 20px 20px;
   width: 260px;
   padding: 0 25px;
   display: inline-flex;
-  margin: 13px 15px;
+  margin: 10px 15px;
   padding: 18px 20px 11px 20px;
   border: 1px solid #dedede;
   box-shadow: 0px 0px 1px 0 rgba(0, 0, 0, 0.2);
@@ -142,6 +149,10 @@ export default {
 .recruit-posts ul li a{
   width: 100%;
   margin-top: -11px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 .logo {
   height: 60px;
@@ -196,6 +207,8 @@ export default {
   text-align: center;
   display: flex;
   flex-direction: row;
+  align-items: center;
+  margin-bottom: 10px;
   justify-content: center;
 }
 .filter-button-wrapper {
@@ -203,20 +216,62 @@ export default {
   flex-direction: row;
   justify-content: flex-end;
   text-align: center;
-  padding: 10px 20px 0 20px;
+  padding: 0px 20px 0px 20px;
   width: 1460px;
 }
-@media screen and (max-width: 380px) { 
+@media screen and (max-width: 680px) { 
     .recruit-posts ul {
-        padding: 3px 0px;
+      /* display: grid;
+      grid-template-columns: 1fr 1fr; */
+      align-items: baseline;
+      justify-items: center;
     }
     .recruit-posts ul li {
-        width: 90%;
-        margin: 7px 5px;
+      width: 47%;
+      padding: 0 25px;
+      display: inline-flex;
+      margin: 4px 4px;
+      padding: 8px 15px 8px 15px; 
+    }
+    .recruit-posts ul li a {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      margin-top: -3px;
+    }
+    .logo {
+      height: 50px;
+      margin-bottom: 8px;
     }
     .filter-button-wrapper {
       text-align: right;
       padding-right: 18px;
+    }
+    .date {
+      font-size: 13px;
+    }
+    .title {
+      font-size: 13px;
+      line-height: 160%;
+    }
+    .like-wrapper {
+      right: 14px;
+    }
+}
+@media screen and (max-width: 425px) { 
+    .date {
+      font-size: 12px;
+    }
+    .title {
+      font-size: 12px;
+      line-height: 160%;
+    }
+}
+@media screen and (max-width: 340px) { 
+    .recruit-posts ul {
+      display: block;
     }
 }
 </style>
