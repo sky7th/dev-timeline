@@ -121,8 +121,12 @@ export default {
       if (recv.type === 'MULTIPLE') {
         return;
       }
-      this.messages.push({"type":recv.type, "sender":recv.sender, "message":recv.message,
-        "createdDate": recv.createdDate});
+
+      if (this.messages.length === 0 || !this.isSameDate(recv.createdDate, this.messages[this.messages.length - 1].createdDate)) {
+        this.messages.push({"type": "DATE", "sender":recv.sender, "message": this.convertDate(recv.createdDate), "createdDate": recv.createdDate})
+      }
+      
+      this.messages.push({"type":recv.type, "sender":recv.sender, "message":recv.message, "createdDate": recv.createdDate});
     },
 
     recvMessages(messages, isReverse=false) {
@@ -131,7 +135,19 @@ export default {
         messages = messages.reverse();
       }
 
-      this.messages = [...messages, ...this.messages];
+      messages.forEach(message => {
+        if (message.type === 'MULTIPLE') {
+          return;
+        }
+
+        if (this.messages.length !== 0 && this.messages[0].type === 'DATE' && this.isSameDate(message.createdDate, this.messages[0].createdDate)) {
+          this.messages.shift();
+        }
+
+        this.messages.unshift(message);
+        this.messages.unshift({"type": "DATE", "sender":message.sender, "message": this.convertDate(message.createdDate), "createdDate": message.createdDate});
+      });
+      // this.messages = [...messages, ...this.messages];
     },
 
     subscribe(roomId) {
@@ -184,7 +200,7 @@ export default {
 
         await this.axios.get(`${process.env.VUE_APP_CHAT_API}/chat/rooms/${roomId}/messages/first`)
           .then(({ data }) => {
-            this.recvMessages(data);
+            this.recvMessages(data, true);
 
           }).catch(() => {
               notification.warn('최근 채팅 목록을 불러오지 못했습니다.');
@@ -211,10 +227,10 @@ export default {
             return;
           }
           
-          this.recvMessages(data.messages, true);
+          this.recvMessages(data.messages);
             
           if (isFirst) {
-            this.start = this.messages[0].id - 1;
+            this.start = this.messages[1].id - 1;
           } else {
             this.page += 1;
           }
@@ -271,6 +287,21 @@ export default {
       this.updateModalContent('LOGIN');
       this.onModalState();
     },
+
+    isSameDate(datetime1, datetime2) {
+      return datetime1.split(' ')[0] === datetime2.split(' ')[0];
+    },
+
+    convertDate(datetime) {
+      const date = datetime.split(' ')[0].replaceAll('-', '. ');
+      const dateObj = new Date(date);
+      const week = ['일', '월', '화', '수', '목', '금', '토'];
+      const dayOfWeek = week[dateObj.getDay()];
+      const todayDateObj = new Date();
+      const todayDate = `${todayDateObj.getFullYear()}. ${todayDateObj.getMonth() + 1}. ${todayDateObj.getDate()}`;
+
+      return `${date} ${dayOfWeek} ${date === todayDate ? ' - 오늘' : ''}`;
+    }
   }
 }
 </script>

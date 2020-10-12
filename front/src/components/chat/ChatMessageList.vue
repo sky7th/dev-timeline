@@ -1,7 +1,7 @@
 <template>
   <ul id="message-list" ref="messageList">
     <li class="message-item" 
-      :class="{ 'user-me': isCurrentUser(msg), 'alert-message': isNoticeMessage(msg) }" 
+      :class="{ 'user-me': isCurrentUser(msg), 'alert-message': isNoticeMessage(msg), 'date-message-item': isDateMessage(msg) }" 
       v-for="(msg, i) in messages" :key="i"
     >
       <img v-if="!isNoticeMessage(msg)" class="img-user" :src="msg.sender.imageUrl" alt="">
@@ -10,7 +10,7 @@
           v-if="!isNoticeMessage(msg)" 
           class="user-name">{{ msg.sender.name }}</div>
         <div class="user-message-wrapper" 
-          :class="{ 'user-me-message': isCurrentUser(msg)}"
+          :class="{ 'user-me-message': isCurrentUser(msg), 'date-message': isDateMessage(msg) }"
         >
           <div 
             :class="{ 'notice-message': isNoticeMessage(msg), 'user-message': !isNoticeMessage(msg) }">{{ msg.message }}</div>
@@ -62,7 +62,11 @@ export default {
     },
 
     isNoticeMessage(msg) {
-      return msg.type === 'ENTER' || msg.type === 'QUIT'
+      return msg.type === 'ENTER' || msg.type === 'QUIT' || msg.type === 'DATE'
+    },
+
+    isDateMessage(msg) {
+      return msg.type === 'DATE'
     },
 
     isCurrentUser(msg) {
@@ -165,7 +169,19 @@ li {
 .alert-message {
   justify-content: center;
 }
-
+.date-message-item {
+  position: sticky;
+  top: 0;
+}
+.date-message {
+  border: 1px solid #aaa;
+  border-radius: 20px;
+  padding: 3px 8px;
+  background-color: white;
+  font-weight: bold;
+  color: #777;
+  margin-top: 2px;
+}
 ::-webkit-scrollbar { width: 3.2px; } /* 스크롤 바 */
 ::-webkit-scrollbar-track { background-color:#f7f7f7; } /* 스크롤 바 밑의 배경 */
 ::-webkit-scrollbar-thumb { background: #dadada; } /* 실질적 스크롤 바 */
