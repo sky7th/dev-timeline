@@ -1,31 +1,40 @@
 <template>
-  <div class="loading-content-background">
-    <img src="../../assets/images/loading.gif" class="loading-content"/>
+  <div class="loading-content-background" :class="{ 'visible': isLoadingContent }">
+    <img src="../../assets/images/loading.gif" class="loading-content"/> 
   </div>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
+  computed: {
+    ...mapGetters(['isLoadingContent'])
+  },
 }
 </script>
 
 <style scoped>
 .loading-content-background {
-  background-color: rgba(120, 120, 120, 0.2);
   position: fixed;
-  width: 100%;
+  visibility: hidden;
+  background-color: rgba(120, 120, 120, 0.4);
+  z-index: 9999;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
   height: 100%;
-  top: 0;
-  transition: 0.125s all ease-in;
+  width: 100%;
+  transition: 0.1s all ease-in;
   animation: fadeIn 0.3s ease-in-out;
 }
 
 .loading-content {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 100px;
-  transform: translate(-50%, -40%);
-  transition: 0.125s all ease-in;
+  height: 120px;
+}
+
+.visible {
+  visibility: visible;
 }
 </style>

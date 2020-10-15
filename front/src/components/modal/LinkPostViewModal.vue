@@ -74,7 +74,7 @@ export default {
     ...mapGetters(['currentUser', 'posts', 'post'])
   },
   methods: {
-    ...mapActions(['offModalState', 'resetOffset', 'updatePosts', 'removePost', 'updatePostState', 'updatePost']),
+    ...mapActions(['offModalState', 'resetOffset', 'updatePosts', 'removePost', 'updatePostState', 'updatePost', 'updateIsLoadingContent']),
     update() {
       this.updatePostState(Constant.UPDATE);
     },
@@ -82,6 +82,7 @@ export default {
         if (!confirm('게시글을 삭제할까요?')) {
             return;
         }
+        this.updateIsLoadingContent(true);
         this.axios.delete(`${process.env.VUE_APP_API}/api/v1/link-posts/${this.post.id}`)
             .then(() => {
                 notification.success('게시글을 삭제했습니다.');
@@ -89,7 +90,7 @@ export default {
                 this.removePost(this.post.id);
             }).catch(error => {
                 notification.warn(error.response.data.message);
-            })
+            }).finally(() => this.updateIsLoadingContent(false))
     },
     handlerClosePopup() {
       this.$emit('closePopup');

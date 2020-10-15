@@ -68,7 +68,7 @@ export default new Vuex.Store({
       reconnect: 0,
       subscribeObject: null
     },
-    isLogined: false
+    isLogined: false,
   },
   getters: {
     token: state => state.token,
@@ -108,8 +108,11 @@ export default new Vuex.Store({
       state.authenticated = payload !== null;
     },
     updatePosts: state => {
+      if (state.offset === 0) {
+        state.isLoadingContent = true;
+      }
+
       let updatingMenu = state.selectedMenu;
-      state.isLoadingContent = true;
 
       axios.get(`${process.env.VUE_APP_API}/api/v1/`+state.selectedMenu+'?'
                 + getOffsetQuery(state.offset)
@@ -138,6 +141,10 @@ export default new Vuex.Store({
       })
     },
     insertPosts: (state, payload) => {
+      if (state.offset === 0) {
+        state.isLoadingContent = true;
+      }
+      
       let updatingMenu = state.selectedMenu;
       const updatingCheckedCompanies = state.checkedCompanies.join();
 
@@ -166,9 +173,9 @@ export default new Vuex.Store({
       }).catch(e => {
         console.log('error : ', e)
       })
-      // .finally(() => {
-      //   state.isLoadingContent = false;
-      // })
+      .finally(() => {
+        state.isLoadingContent = false;
+      })
     },
     removePost: (state, payload) => state.posts = state.posts.filter(post => post.id !== payload),
     updatePost: (state, payload) => state.post = payload,
@@ -211,7 +218,7 @@ export default new Vuex.Store({
     updateClickMenuLocation: (state, payload) => state.clickMenuLocation = payload,
     updateIsClickedMyLike: (state, payload) => state.isClickedMyLike = payload,
     updateIsOnChatRooms: (state, payload) => state.isOnChatRooms = payload,
-    updateChatConnect: (state, payload) => state.chatConnect = payload
+    updateChatConnect: (state, payload) => state.chatConnect = payload,
   },
   actions: {
     setToken: (context, payload) => context.commit('setToken', payload),

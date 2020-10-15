@@ -12,7 +12,7 @@
 import TextareaForm from '@/components/common/TextareaForm'
 import BlueButton from '@/components/common/button/BlueButton'
 import notification from '../../libs/notification';
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
     data: () => ({
@@ -27,6 +27,7 @@ export default {
     ...mapGetters(['currentUser', 'post', 'posts'])
     },
     methods: {
+      ...mapActions(['updateIsLoadingContent']),
         submit() {
             if (this.content == '') {
                 notification.warn('댓글 내용을 입력해주세요.');
@@ -38,6 +39,7 @@ export default {
                 postId: this.postId,
                 content: this.content
             }
+            this.updateIsLoadingContent(true)
             this.axios.post(`${process.env.VUE_APP_API}/api/v1/posts/${this.postId}/comments`, formData)
                 .then(response => {
                     notification.success('댓글을 작성했습니다.');
@@ -49,7 +51,7 @@ export default {
 
                 }).catch(error => {
                     notification.warn(error.response.data.message);
-                })
+                }).finally(() => this.updateIsLoadingContent(false))
         },
         handlerAddComment(comment) {
             this.$emit('addComment', comment)

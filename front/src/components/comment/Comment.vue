@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 import notification from '../../libs/notification';
 import { timeForToday } from '@/utils/time';
 import NewIcon from '../common/NewIcon'
@@ -48,10 +48,12 @@ export default {
     ...mapGetters(['currentUser', 'post', 'posts'])
     },
     methods: {
+        ...mapActions(['updateIsLoadingContent']),
         remove() {
             if (!confirm('댓글을 삭제할까요?')) {
                 return;
             }
+            this.updateIsLoadingContent(true)
             this.axios.delete(`${process.env.VUE_APP_API}/api/v1/posts/${this.post.id}/comments/${this.comment.id}`)
                 .then(() => {
                     notification.success('댓글을 삭제했습니다.');
@@ -62,7 +64,7 @@ export default {
                     
                 }).catch(error => {
                     notification.warn(error.response.data.message);
-                })
+                }).finally(() => this.updateIsLoadingContent(false))
         },
         handlerRemoveComment(commentId) {
             this.$emit('removeComment', commentId)

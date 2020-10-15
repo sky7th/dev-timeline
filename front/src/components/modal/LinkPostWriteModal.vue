@@ -76,7 +76,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['offModalState', 'resetOffset', 'updatePosts', 'updatePost']),
+    ...mapActions(['offModalState', 'resetOffset', 'updatePosts', 'updatePost', 'updateIsLoadingContent']),
     submit() {
       if (this.linkPost.title == '') {
         notification.warn('제목을 입력해주세요.');
@@ -89,6 +89,7 @@ export default {
         return;
       }
       if (this.isStateUpdate) {
+        this.updateIsLoadingContent(true);
         this.axios.put(`${process.env.VUE_APP_API}/api/v1/link-posts/${this.linkPost.id}`, this.linkPost)
         .then(({ data }) => {
           notification.success('글 수정이 완료되었습니다.');
@@ -102,8 +103,10 @@ export default {
           this.handlerClosePopup();
         }).catch(() => {
           notification.warn('글 수정에 실패했습니다.');
-        })
+        }).finally(() => this.updateIsLoadingContent(false))
+
       } else {
+        this.updateIsLoadingContent(true);
         this.axios.post(`${process.env.VUE_APP_API}/api/v1/link-posts`, this.linkPost)
         .then(() => {
           notification.success('좋은 링크 공유해주셔서 감사합니다 ^-^');
@@ -111,7 +114,7 @@ export default {
           window.scrollTo(0, 0);
         }).catch(() => {
           notification.warn('글쓰기에 실패했습니다.');
-        })
+        }).finally(() => this.updateIsLoadingContent(false))
       }
     },
     handlerRefresh() {

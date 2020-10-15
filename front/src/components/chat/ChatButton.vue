@@ -1,9 +1,12 @@
 <template>
   <div class="chat-button">
     <notifications group="notify" position="bottom center"/>
-    <button class="list-group-item list-group-item-action" v-on:click="open()">
+    <div class="spinner" :class="{ 'visible': spinnerState }">
+      <img src="../../assets/images/loading.gif"/> 
+    </div>
+    <div class="list-group-item list-group-item-action" v-on:click="open()">
       <div>채팅방</div>
-    </button>
+    </div>
   </div>
 </template>
 
@@ -14,22 +17,27 @@ import notification from '@/libs/notification';
 export default {
   data() {
     return {
-      chatRoom: ''
+      chatRoom: '',
+      spinnerState: false
     }
   },
   computed: {
-    ...mapGetters(['selectedMenu', 'currentUser', 'chatRooms', 'selectedChatRooms', 'isOnChatRooms']),
+    ...mapGetters(['selectedMenu', 'currentUser', 'chatRooms', 'selectedChatRooms', 'isOnChatRooms', 'isLoadingContent']),
     chatRoomName() {
       return this.selectedMenu;
     } 
   },
   methods: {
-    ...mapActions(['updateChatRooms', 'insertSelectedChatRooms', 'updateIsOnChatRooms']),
+    ...mapActions(['updateChatRooms', 'insertSelectedChatRooms', 'updateIsOnChatRooms', 'updateIsLoadingContent']),
     async findRooms() {
+      this.spinnerState = true;
       const response = await this.axios.get(`${process.env.VUE_APP_CHAT_API}/chat/rooms`)
         .catch(e => {
           if (e.message === 'Network Error')
             notification.warn('채팅 서버가 꺼져있습니다.');
+        })
+        .finally(() => {
+          this.spinnerState = false;
         })
       return response.data;
     },
@@ -55,8 +63,6 @@ export default {
   right: 0;
   animation: fadeIn 0.3s ease-in-out;
   z-index: 1;
-}
-.chat-button button {
   border: 0px solid black;
   padding: 10px;
   /* border-radius: 100px; */
@@ -69,6 +75,20 @@ export default {
 .chat-button button:hover {
   background-color: #cacaca;
   transition: background-color .3s;
+}
+.spinner {
+  visibility: hidden;
+  height: 30px;
+  width: 100%;
+  position: absolute;
+  top: 2px;
+  background-color: white;
+}
+.spinner img {
+  height: 100%;
+}
+.visible {
+  visibility: visible;
 }
 
 @media screen and (max-width: 480px) {
