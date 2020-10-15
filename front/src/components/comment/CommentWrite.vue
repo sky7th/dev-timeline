@@ -1,10 +1,9 @@
 <template>
     <div class="comment-wrapper">
-        <TextareaForm class="comment-input" name="content" placeholder="댓글 내용을 입력해주세요..." 
-            v-model="content"
-        />
-        <BlueButton class="btn-submit" type="submit" :name="'댓글 달기'"
-        @click="submit"/>
+        <TextareaForm v-if="isLogined" class="comment-input" name="content" placeholder="댓글 내용을 입력해주세요..." v-model="content"/>
+        <TextareaForm v-else class="comment-input" name="content" placeholder="댓글 작성은 로그인 후에 가능합니다." disabled/>
+        <BlueButton v-if="isLogined" class="btn-submit" type="submit" :name="'댓글 달기'" @click="submit"/>
+        <BlueButton v-else class="btn-submit" type="submit" :name="'로그인'" @click="login" />
     </div>
 </template>
 
@@ -24,10 +23,10 @@ export default {
         BlueButton
     },
     computed: {
-    ...mapGetters(['currentUser', 'post', 'posts'])
+    ...mapGetters(['currentUser', 'post', 'posts', 'isLogined'])
     },
     methods: {
-      ...mapActions(['updateIsLoadingContent']),
+      ...mapActions(['updateIsLoadingContent', 'updateModalContent', 'onModalState']),
         submit() {
             if (this.content == '') {
                 notification.warn('댓글 내용을 입력해주세요.');
@@ -55,7 +54,11 @@ export default {
         },
         handlerAddComment(comment) {
             this.$emit('addComment', comment)
-        }
+        },
+        login() {
+          this.updateModalContent('LOGIN');
+          this.onModalState();
+        },
     }
 }
 </script>

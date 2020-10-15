@@ -5,7 +5,7 @@
       <img src="../../assets/images/loading.gif"/> 
     </div>
     <div class="list-group-item list-group-item-action" v-on:click="open()">
-      <div>채팅방</div>
+      <div v-if="!spinnerState">채팅방</div>
     </div>
   </div>
 </template>
@@ -61,6 +61,8 @@ export default {
   position: fixed;
   bottom: 80px;
   right: 0;
+  width: 56px;
+  height: 35px;
   animation: fadeIn 0.3s ease-in-out;
   z-index: 1;
   border: 0px solid black;
@@ -72,7 +74,7 @@ export default {
   font-weight: 500;
   box-shadow: 0 1px 3px 0 rgba(9,30,66,0.25), 0 0 1px 0 rgba(9,30,66,0.31);
 }
-.chat-button button:hover {
+.chat-button:hover {
   background-color: #cacaca;
   transition: background-color .3s;
 }
@@ -82,7 +84,6 @@ export default {
   width: 100%;
   position: absolute;
   top: 2px;
-  background-color: white;
 }
 .spinner img {
   height: 100%;
