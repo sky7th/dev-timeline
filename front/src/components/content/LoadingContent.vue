@@ -17,16 +17,16 @@ export default {
 <style scoped>
 .loading-content-background {
   position: fixed;
-  visibility: hidden;
+  opacity: 0;
   background-color: rgba(120, 120, 120, 0.4);
-  z-index: 9999;
+  z-index: -1;
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
   height: 100%;
   width: 100%;
-  transition: 0.1s all ease-in;
+  transition: 0.3s all ease-in;
   animation: fadeIn 0.3s ease-in-out;
 }
 
@@ -35,6 +35,7 @@ export default {
 }
 
 .visible {
-  visibility: visible;
+  opacity: 1;
+  z-index: 9999;
 }
 </style>

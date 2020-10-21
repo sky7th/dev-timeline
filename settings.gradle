@@ -6,8 +6,12 @@ pluginManagement {
 
 rootProject.name = 'dev-timeline'
 
-include 'dev-timeline-batch'
 include 'dev-timeline-core'
-include 'dev-timeline-api'
+include 'dev-timeline-user'
 include 'dev-timeline-chat'
-include 'dev-timeline-gateway'
+include 'dev-timeline-post'
+include 'dev-timeline-crawlpost'
+include 'dev-timeline-generalpost'
+
+include 'dev-timeline-app-api'
+include 'dev-timeline-batch'

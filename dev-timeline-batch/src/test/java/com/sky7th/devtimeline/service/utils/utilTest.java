@@ -1,7 +1,7 @@
 //package com.sky7th.devtimeline.service.utils;
 //
 //import com.sky7th.devtimeline.batch.dto.CrawlingDto;
-//import com.sky7th.devtimeline.core.domain.recruitpost.domain.RecruitPostRepository;
+//import com.sky7th.devtimeline.crawlpost.recruitpost.domain.RecruitPostRepository;
 //import org.junit.jupiter.api.Test;
 //import org.junit.runner.RunWith;
 //import org.springframework.beans.factory.annotation.Autowired;

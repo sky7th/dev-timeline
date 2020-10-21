@@ -49,19 +49,60 @@ subprojects {
 
 project(':dev-timeline-core') {
 	dependencies {
-		compile 'com.querydsl:querydsl-jpa'
-		compile 'com.querydsl:querydsl-apt'
 		compile 'org.springframework.boot:spring-boot-starter-data-jpa'
 		compile 'org.springframework.boot:spring-boot-starter-json'
 		compile 'com.h2database:h2'
 		compile 'mysql:mysql-connector-java'
-		implementation 'org.springframework.boot:spring-boot-starter-validation'
+		compile 'org.springframework.boot:spring-boot-starter-validation'
+		compile 'com.querydsl:querydsl-jpa'
+		compile 'com.querydsl:querydsl-apt'
 	}
 }
 
-project(':dev-timeline-api') {
+project(':dev-timeline-user') {
 	dependencies {
-		implementation project(':dev-timeline-core')
+		compile project(':dev-timeline-core')
+	}
+}
+
+project(':dev-timeline-post') {
+	dependencies {
+		compile project(':dev-timeline-user')
+	}
+}
+
+project(':dev-timeline-crawlpost') {
+	dependencies {
+		compile project(':dev-timeline-post')
+	}
+}
+
+project(':dev-timeline-generalpost') {
+	dependencies {
+		compile project(':dev-timeline-post')
+	}
+}
+
+project(':dev-timeline-chat') {
+	dependencies {
+		compile project(':dev-timeline-user')
+		compile 'org.springframework.boot:spring-boot-starter-data-redis'
+		implementation 'org.springframework.boot:spring-boot-starter-security'
+		compile group: 'it.ozimov', name: 'embedded-redis', version: '0.7.2'
+		compile 'org.springframework.boot:spring-boot-starter-websocket'
+		implementation 'io.jsonwebtoken:jjwt:0.9.1'
+		implementation 'javax.xml.bind:jaxb-api'
+		testImplementation('org.springframework.boot:spring-boot-starter-test') {
+			exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+		}
+	}
+}
+
+project(':dev-timeline-app-api') {
+	dependencies {
+		compile project(':dev-timeline-crawlpost')
+		compile project(':dev-timeline-generalpost')
+		compile project(':dev-timeline-chat')
 		implementation 'org.springframework.boot:spring-boot-starter-web'
 		implementation 'org.springframework.boot:spring-boot-starter-security'
 		implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
@@ -79,7 +120,7 @@ project(':dev-timeline-api') {
 
 project(':dev-timeline-batch') {
 	dependencies {
-		implementation project(':dev-timeline-core')
+		compile project(':dev-timeline-crawlpost')
 		implementation 'org.springframework.boot:spring-boot-starter-batch'
         implementation 'org.springframework.boot:spring-boot-starter-web'
 		implementation group: 'org.jsoup', name: 'jsoup', version: '1.12.1'
@@ -87,40 +128,6 @@ project(':dev-timeline-batch') {
 		testImplementation 'org.springframework.batch:spring-batch-test'
 		testImplementation('org.springframework.boot:spring-boot-starter-test') {
 			exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-		}
-	}
-}
-
-project(':dev-timeline-chat') {
-	dependencies {
-		implementation project(':dev-timeline-core')
-		compile 'org.springframework.boot:spring-boot-starter-data-redis'
-		implementation 'org.springframework.boot:spring-boot-starter-security'
-		compile group: 'it.ozimov', name: 'embedded-redis', version: '0.7.2'
-		implementation 'org.springframework.boot:spring-boot-starter-websocket'
-		implementation 'io.jsonwebtoken:jjwt:0.9.1'
-		implementation 'javax.xml.bind:jaxb-api'
-		testImplementation('org.springframework.boot:spring-boot-starter-test') {
-			exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-		}
-	}
-}
-
-project(':dev-timeline-gateway') {
-	ext {
-		set('springCloudVersion', "Hoxton.SR7")
-	}
-
-	dependencies {
-		implementation 'org.springframework.cloud:spring-cloud-starter-netflix-zuul'
-		testImplementation('org.springframework.boot:spring-boot-starter-test') {
-			exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-		}
-	}
-
-	dependencyManagement {
-		imports {
-			mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
 		}
 	}
 }
