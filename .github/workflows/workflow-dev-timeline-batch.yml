@@ -11,6 +11,15 @@ on:
       - 'dev-timeline-user/**'
       - 'dev-timeline-core/**'
 
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: 'Log level'
+        required: true
+        default: 'warning'
+      tags:
+        description: 'Test scenario tags'
+
 env:
   PROJECT_NAME: dev-timeline-batch
   BUCKET: dev-timeline-deploy

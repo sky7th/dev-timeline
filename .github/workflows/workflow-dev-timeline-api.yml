@@ -11,7 +11,16 @@ on:
       - 'dev-timeline-post/**'
       - 'dev-timeline-user/**'
       - 'dev-timeline-core/**'
-    
+
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: 'Log level'
+        required: true
+        default: 'warning'
+      tags:
+        description: 'Test scenario tags'
+
 env:
   PROJECT_NAME: dev-timeline-api
   BUCKET: dev-timeline-deploy
