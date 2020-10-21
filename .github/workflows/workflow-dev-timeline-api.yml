@@ -4,7 +4,12 @@ on:
   push:
     branches: [ master ]
     paths:
-      - 'dev-timeline-api/**'
+      - 'dev-timeline-app-api/**'
+      - 'dev-timeline-chat/**'
+      - 'dev-timeline-crawlpost/**'
+      - 'dev-timeline-generalpost/**'
+      - 'dev-timeline-post/**'
+      - 'dev-timeline-user/**'
       - 'dev-timeline-core/**'
     
 env:

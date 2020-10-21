@@ -5,6 +5,10 @@ on:
     branches: [ master ]
     paths:
       - 'dev-timeline-batch/**'
+      - 'dev-timeline-crawlpost/**'
+      - 'dev-timeline-generalpost/**'
+      - 'dev-timeline-post/**'
+      - 'dev-timeline-user/**'
       - 'dev-timeline-core/**'
 
 env:
