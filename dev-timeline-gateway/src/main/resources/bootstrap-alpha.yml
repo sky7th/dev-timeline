@@ -1,7 +1,0 @@
-# bootstrap-local.yml
-spring:
-  profiles: alpha
-  cloud:
-    config:
-      uri: http://localhost:9000
-      fail-fast: true

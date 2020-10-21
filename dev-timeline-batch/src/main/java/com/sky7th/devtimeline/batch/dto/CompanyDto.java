@@ -1,7 +1,7 @@
 package com.sky7th.devtimeline.batch.dto;
 
-import com.sky7th.devtimeline.core.domain.company.domain.Company;
-import com.sky7th.devtimeline.core.domain.company.domain.CompanyUrl;
+import com.sky7th.devtimeline.crawlpost.company.domain.Company;
+import com.sky7th.devtimeline.crawlpost.company.domain.CompanyUrl;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

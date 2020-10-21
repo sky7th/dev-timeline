@@ -1,12 +1,12 @@
 //package com.sky7th.devtimeline.batch;
 //
 //import com.sky7th.devtimeline.batch.repository.recruitpost.RecruitPostBatchRepository;
-//import com.sky7th.devtimeline.core.domain.company.domain.Company;
-//import com.sky7th.devtimeline.core.domain.company.domain.CompanyRepository;
-//import com.sky7th.devtimeline.core.domain.company.domain.CompanyType;
-//import com.sky7th.devtimeline.core.domain.company.domain.CompanyUrl;
-//import com.sky7th.devtimeline.core.domain.company.domain.CompanyUrlRepository;
-//import com.sky7th.devtimeline.core.domain.company.domain.CompanyUrlType;
+//import com.sky7th.devtimeline.crawlpost.company.domain.Company;
+//import com.sky7th.devtimeline.crawlpost.company.domain.CompanyRepository;
+//import com.sky7th.devtimeline.crawlpost.company.domain.CompanyType;
+//import com.sky7th.devtimeline.crawlpost.company.domain.CompanyUrl;
+//import com.sky7th.devtimeline.crawlpost.company.domain.CompanyUrlRepository;
+//import com.sky7th.devtimeline.crawlpost.company.domain.CompanyUrlType;
 //import org.junit.Test;
 //import org.junit.runner.RunWith;
 //import org.springframework.batch.core.BatchStatus;
