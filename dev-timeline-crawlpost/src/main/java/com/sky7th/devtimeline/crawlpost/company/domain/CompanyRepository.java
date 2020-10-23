@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CompanyRepository extends JpaRepository<Company,Long> {
 
-  @Query(value = "SELECT c FROM Company c LEFT JOIN CompanyUrl cu ON c.id = cu.company.id WHERE cu.companyUrlType = :companyUrlType")
+  @Query(value = "SELECT c FROM Company c LEFT JOIN CompanyUrl cu ON c.id = cu.company.id WHERE cu.companyUrlType = :companyUrlType ORDER BY cu.priority")
   List<Company> findAllByCompanyUrlType(CompanyUrlType companyUrlType);
 }

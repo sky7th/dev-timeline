@@ -37,10 +37,13 @@ public class CompanyUrl extends BaseTimeEntity {
 
     private String url;
 
+    private Integer priority;
+
     @Builder
-    public CompanyUrl(CompanyUrlType companyUrlType, String url) {
+    public CompanyUrl(CompanyUrlType companyUrlType, String url, Integer priority) {
         this.companyUrlType = companyUrlType;
         this.url = url;
+        this.priority = priority;
     }
 
     public void setCompany(Company company) {
