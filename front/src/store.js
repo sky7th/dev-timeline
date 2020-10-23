@@ -16,12 +16,8 @@ const initUser = (store) => {
   }
 };
 
-var getCheckedCompaniesQuery = (companies) => {
-  var companiesQuery = '';
-  companies.forEach(company => {
-    companiesQuery += '&companies='+company
-  });
-  return companiesQuery;
+var getCheckedCompanyQuery = (company) => {
+  return '&company='+company;
 }
 var getTagsQuery = (tags) => {
   var tagsQuery = '';
@@ -44,7 +40,7 @@ export default new Vuex.Store({
     selectedMenu: 'recruit-posts',
     posts: [],
     post: {},
-    checkedCompanies: [],
+    checkedCompany: 'ALL',
     offset: 0,
     tags: [],
     sortOrder: 'DESC',
@@ -77,7 +73,7 @@ export default new Vuex.Store({
     selectedMenu: state => state.selectedMenu,
     posts: state => state.posts,
     post: state => state.post,
-    checkedCompanies: state => state.checkedCompanies,
+    checkedCompany: state => state.checkedCompany,
     offset: state => state.offset,
     tags: state => state.tags,
     sortOrder: state => state.sortOrder,
@@ -117,7 +113,7 @@ export default new Vuex.Store({
       axios.get(`${process.env.VUE_APP_API}/api/v1/`+state.selectedMenu+'?'
                 + getOffsetQuery(state.offset)
                 + getLimitQuery(Constant.POST_LIMIT)
-                + getCheckedCompaniesQuery(state.checkedCompanies)
+                + getCheckedCompanyQuery(state.checkedCompany)
                 + getTagsQuery(state.tags)
                 + '&liked='+ (state.isClickedMyLike ? 'true' : 'false')
                 + getSortOrderQuery(state.sortOrder)
@@ -146,19 +142,19 @@ export default new Vuex.Store({
       }
       
       let updatingMenu = state.selectedMenu;
-      const updatingCheckedCompanies = state.checkedCompanies.join();
+      const updatingcheckedCompany = state.checkedCompany;
 
       axios.get(`${process.env.VUE_APP_API}/api/v1/`+state.selectedMenu+'?'
                 + getOffsetQuery(state.offset)
                 + getLimitQuery(Constant.POST_LIMIT)
-                + getCheckedCompaniesQuery(state.checkedCompanies)
+                + getCheckedCompanyQuery(state.checkedCompany)
                 + getTagsQuery(state.tags)
                 + '&liked='+ (state.isClickedMyLike ? 'true' : 'false')
                 + getSortOrderQuery(state.sortOrder)
                 + getFilterTypeQuery(state.filterType)
                 + '&onlyMyPost='+ (state.isClickedMyPost ? 'true' : 'false'))
       .then(({ data }) => {
-        if (state.selectedMenu !== updatingMenu || state.checkedCompanies.join() != updatingCheckedCompanies)
+        if (state.selectedMenu !== updatingMenu || state.checkedCompany != updatingcheckedCompany)
           return;
         if (data.posts.length) {
           state.offset = data.offset
@@ -179,7 +175,7 @@ export default new Vuex.Store({
     },
     removePost: (state, payload) => state.posts = state.posts.filter(post => post.id !== payload),
     updatePost: (state, payload) => state.post = payload,
-    updateCheckedCompanies: (state, payload) => state.checkedCompanies = payload.checkedCompanies,
+    updateCheckedCompany: (state, payload) => state.checkedCompany = payload.checkedCompany,
     resetOffset: state => state.offset = 0,
     updateOffset: (state, payload) => state.offset = payload.offset,
     insertTag: (state, payload) => 
@@ -194,7 +190,7 @@ export default new Vuex.Store({
     resetAll: state => {
       state.selectedMenu = 'recruit-posts';
       state.posts = [];
-      state.checkedCompanies = [];
+      state.checkedCompany = [];
       state.tags = [];
       state.offset = 0;
       state.postCounts = 0;
@@ -227,7 +223,7 @@ export default new Vuex.Store({
     insertPosts: (context, payload) => context.commit('insertPosts', { infiniteState: payload.infiniteState }),
     removePost: (context, payload) => context.commit('removePost', payload),
     updatePost: (context, payload) => context.commit('updatePost', payload),
-    updateCheckedCompanies: (context, payload) => context.commit('updateCheckedCompanies', { checkedCompanies: payload.checkedCompanies }),
+    updateCheckedCompany: (context, payload) => context.commit('updateCheckedCompany', { checkedCompany: payload.checkedCompany }),
     resetOffset: context => context.commit('resetOffset'),
     updateOffset: (context, payload) => context.commit('updateOffset', { offset: payload.offset }),
     insertTag: (context, payload) => context.commit('insertTag', { tagName: payload.tagName }),
