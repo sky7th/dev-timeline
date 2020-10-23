@@ -21,18 +21,18 @@ public class CrawlPostSearchForm {
 
     Long offset = 0L;
     Long limit = PagingConstant.POST_PAGE_SIZE;
-    List<String> companies;
+    CompanyType company = CompanyType.ALL;
     List<String> tags;
     boolean liked;
     OrderType orderType;
     FilterType filterType;
 
     @Builder
-    public CrawlPostSearchForm(Long offset, Long limit, List<String> companies, List<String> tags, boolean liked,
+    public CrawlPostSearchForm(Long offset, Long limit, CompanyType company, List<String> tags, boolean liked,
         OrderType orderType, FilterType filterType) {
         this.offset = offset;
         this.limit = limit;
-        this.companies = companies;
+        this.company = company;
         this.tags = tags;
         this.liked = liked;
         this.orderType = orderType;
@@ -41,14 +41,5 @@ public class CrawlPostSearchForm {
 
     public boolean isFirstLoad() {
         return this.offset == 0L;
-    }
-
-    public List<CompanyType> getCompanies() {
-        if (StringUtils.isEmpty(companies)) {
-            return null;
-        }
-        return companies.stream()
-                .map(CompanyType::valueOf)
-                .collect(Collectors.toList());
     }
 }

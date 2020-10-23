@@ -3,8 +3,10 @@ package com.sky7th.devtimeline.api.recruitpost.repository;
 import static com.sky7th.devtimeline.crawlpost.recruitpost.domain.QRecruitPost.recruitPost;
 import static com.sky7th.devtimeline.crawlpost.company.domain.QCompanyUrl.companyUrl;
 import static com.sky7th.devtimeline.crawlpost.company.domain.QCompany.company;
+import static com.sky7th.devtimeline.crawlpost.techpost.domain.QTechPost.techPost;
 import static com.sky7th.devtimeline.post.post.domain.QPost.post;
 import static com.sky7th.devtimeline.post.postlike.domain.QPostLike.postLike;
+import static java.util.Objects.isNull;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.ExpressionUtils;
@@ -45,7 +47,7 @@ public class RecruitPostWebRepositoryImpl implements RecruitPostWebRepositoryCus
                 .leftJoin(recruitPost.companyUrl, companyUrl).fetchJoin()
                 .leftJoin(companyUrl.company, company).fetchJoin()
                 .where(containsTags(postSearchForm.getTags()),
-                        inCompany(postSearchForm.getCompanies()),
+                        inCompany(postSearchForm.getCompany()),
                         liked(postSearchForm.isLiked()))
                 .offset(postSearchForm.getOffset())
                 .limit(postSearchForm.getLimit())
@@ -72,7 +74,7 @@ public class RecruitPostWebRepositoryImpl implements RecruitPostWebRepositoryCus
                 .leftJoin(recruitPost.companyUrl, companyUrl).fetchJoin()
                 .leftJoin(companyUrl.company, company).fetchJoin()
                 .where(containsTags(postSearchForm.getTags()),
-                        inCompany(postSearchForm.getCompanies()),
+                        inCompany(postSearchForm.getCompany()),
                         liked(postSearchForm.isLiked()))
                 .fetchCount();
     }
@@ -88,11 +90,11 @@ public class RecruitPostWebRepositoryImpl implements RecruitPostWebRepositoryCus
         return builder;
     }
 
-    private BooleanExpression inCompany(List<CompanyType> companies) {
-        if (StringUtils.isEmpty(companies)) {
+    private BooleanExpression inCompany(CompanyType companyType) {
+        if (companyType == CompanyType.ALL || isNull(companyType)) {
             return null;
         }
-        return recruitPost.companyUrl.company.companyType.in(companies);
+        return recruitPost.companyUrl.company.companyType.eq(companyType);
     }
 
     private BooleanExpression liked(boolean liked) {

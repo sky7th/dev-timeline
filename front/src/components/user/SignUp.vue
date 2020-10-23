@@ -57,7 +57,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(['updateModalContent']),
+    ...mapActions(['updateModalContent', 'updateIsLoadingContent']),
     async signup() {
       if (this.user.name === '') {
         notification.warn('이름을 입력해주세요.')
@@ -79,6 +79,8 @@ export default {
         notification.warn('사용할 수 없는 비밀번호 입니다.')
         return
       }
+      this.updateIsLoadingContent(true);
+
       this.axios.post('/auth/signup', this.user)
       .then(() => {
         notification.success('회원가입을 완료했습니다.', () => {
@@ -88,7 +90,7 @@ export default {
       })
       .catch(err => {
         notification.error(err)
-      })
+      }).finally(() => this.updateIsLoadingContent(false))
     },
 
     checkEmailForm(info, reg, loadCheckMessage) {

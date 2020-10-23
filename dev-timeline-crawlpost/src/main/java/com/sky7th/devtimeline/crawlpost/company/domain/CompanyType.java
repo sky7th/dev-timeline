@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum CompanyType {
 
+    ALL("ALL"),
     NAVER("네이버"),
     KAKAO("카카오"),
     WOOWABROS("우아한형제들"),
