@@ -48,7 +48,7 @@ export default {
     this.resendEmailButton = this.$refs.resendEmailButton;
   },
   methods: {
-    ...mapActions(['updateModalContent']),
+    ...mapActions(['updateModalContent', 'updateIsLoadingContent']),
     async login() {
       if (this.user.email === '') {
         notification.warn('이메일을 입력해주세요.')
@@ -58,6 +58,8 @@ export default {
         notification.warn('비밀번호를 입력해주세요.')
         return
       }
+      this.updateIsLoadingContent(true);
+      
       this.axios.post('/auth/login', this.user)
       .then(response => {
         notification.success('로그인 성공', () => {
@@ -75,7 +77,7 @@ export default {
         } else {
           notification.warn(err.response.data.message)
         }
-      })
+      }).finally(() => this.updateIsLoadingContent(false))
     },
 
     getOauthUrl(platfrom) {
@@ -83,6 +85,8 @@ export default {
     },
 
     resendEmail() {
+      this.updateIsLoadingContent(true);
+
       this.axios.post('/auth/resend/verification-email', this.user)
       .then(() => {
           notification.success('인증 이메일이 발송되었습니다.', () => {
@@ -94,7 +98,7 @@ export default {
         else {
           notification.warn(err.response.data.message)
         }
-      })
+      }).finally(() => this.updateIsLoadingContent(false))
     }
   }
 }
