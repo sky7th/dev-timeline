@@ -32,7 +32,7 @@ public class LineTechCrawlingService implements CompanyCrawlingService {
         this.companyDto = companyDto;
         this.driver.get(companyDto.getCompanyUrl().getUrl());
 
-        List<WebElement> webElements = this.driver.findElements(By.className("page-number"));
+        List<WebElement> webElements = this.driver.findElements(By.className("page-numbers"));
         int pageSize = Integer.parseInt(webElements.get(webElements.size()-2).getText());
 
         return getAllCrawlingDtoUntilLastPage(pageSize);
@@ -43,7 +43,7 @@ public class LineTechCrawlingService implements CompanyCrawlingService {
 
         for (int i = 1; i <= pageSize; i++) {
             this.driver.get(this.companyDto.getCompanyUrl().getUrl() + "/page/" + i);
-            By by = By.id("post-list");
+            By by = By.id("main");
             WebElement element = CrawlingUtils.getWebElement(this.driver, by);
             crawlingItems.addAll(parseWebElement(element));
         }
@@ -63,9 +63,9 @@ public class LineTechCrawlingService implements CompanyCrawlingService {
     @Override
     public CrawlingDto getCrawlingDto(WebElement element) {
         String title = element.findElement(By.cssSelector(".entry-title > a")).getText();
-        String author = element.findElement(By.cssSelector(".entry-author .author-name")).getText().split("[|]")[0].trim();
+        String author = element.findElement(By.cssSelector(".entry-meta .author-name")).getText().split("[|]")[0].trim();
         String contentUrl = element.findElement(By.cssSelector(".entry-title > a")).getAttribute("href");
-        String date = element.findElement(By.cssSelector(".entry-author .author-name > .byline")).getText().split("[|]")[1].trim();;
+        String date = element.findElement(By.cssSelector(".entry-meta .published")).getText().trim();;
         Pattern p = Pattern.compile("(?<=blog/).+(?=/)");
         Matcher matcher = p.matcher(contentUrl);
         String key = matcher.find() ? matcher.group() : "";
