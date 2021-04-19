@@ -22,7 +22,7 @@ on:
         description: 'Test scenario tags'
 
 env:
-  PROJECT_NAME: dev-timeline-api
+  PROJECT_NAME: dev-timeline-app-api
   BUCKET: dev-timeline-deploy
 
 jobs:
