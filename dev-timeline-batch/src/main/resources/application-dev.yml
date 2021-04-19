@@ -26,4 +26,4 @@ spring:
     allow-bean-definition-overriding: true
 
 selenium:
-  web-driver-path: C:\\chromedriver\\chromedriver.exe
+  web-driver-path: /Users/itaehwa/Downloads/chromedriver

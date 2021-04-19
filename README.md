@@ -1,5 +1,5 @@
 # dev-timeline  &#128187; &#128064; 
-[사이트로 이동](http://dev-timeline-front.s3-website.ap-northeast-2.amazonaws.com/)
+[사이트로 이동](https://devtimeline.com/)
 
 ![screenshot1](./screenshot1.gif)
 ![screenshot2](./screenshot2.gif)
